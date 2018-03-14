@@ -18,4 +18,3 @@ void ScoutingManager::addScout(const BWAPI::Unit* scout) {
 	//Receive control of a new worker
 	scoutingUnits.push_back(scout);
 }
-

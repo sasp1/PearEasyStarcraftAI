@@ -8,7 +8,9 @@ class UnitManager
 	BuildingManager* buildingManager;
 	GatheringManager* gatheringManager;
 	ConstructionManager* constructionManager;
+
 public:
+	std::list<const BWAPI::Unit*> workers;
 	void UnitManager::setManagers(BuildingManager* buildingManager, GatheringManager* gatheringManager, ConstructionManager* constructionManager);
 	~UnitManager();
 	UnitManager();
