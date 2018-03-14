@@ -8,7 +8,15 @@ const BWAPI::Unit* commandCenter;
 const BWAPI::Unit* barracks;
 int nrOfBarracks = 0;
 
-
+/**
+* @file
+* @author  Sebastian Arcos Specht <sebastian.a.specht@gmail.com>
+* @version 1.0
+*
+* @section DESCRIPTION
+*
+* The time class represents a moment of time.
+*/
 void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 
 	if ((*u)->getType() == UnitTypes::Terran_Barracks) {
@@ -18,6 +26,7 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 
 	if ((*u)->getType() == UnitTypes::Terran_Supply_Depot) {
 		Broodwar->sendText("%s", "Completed building supl. depot");
+
 	}
 }
 
@@ -32,6 +41,7 @@ void BuildingManager::addBarracks(const BWAPI::Unit* barracksUnit) {
 	nrOfBarracks++;
 }
 
+
 void BuildingManager::executeOrders() {
 	//"Main" of this class
 	BuildingManager::handleCommandCenter();
@@ -41,6 +51,11 @@ void BuildingManager::executeOrders() {
 
 }
 
+/**
+* Execute orders for build manager
+*
+* @param boolean that tells if a worker should be built.
+*/
 void BuildingManager::setIsDesiredToBuildWorkers(bool buildWorkers) {
 	//Change request to build borkers or not
 	this->isDesiredToBuildWorkers = buildWorkers;
