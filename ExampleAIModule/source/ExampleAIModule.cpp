@@ -37,6 +37,7 @@ void ExampleAIModule::onStart()
 	buildingManager = new BuildingManager();
 	unitManager = new UnitManager();
 	constructionManager = new ConstructionManager();
+	scoutingManager = new ScoutingManager();
 
 	desireBuildingSupplyDepot = true;
 	desireBuildingBarracks = true;
@@ -119,12 +120,15 @@ void ExampleAIModule::onFrame()
 		}
 
 		
+
+
 		//End of strategy 1
 
 		// Finally execute the strategy
 		gatheringManager->executeOrders();
 		buildingManager->executeOrders();
 		unitManager->executeOrders();
+		scoutingManager->executeOrders();
 	}
 
 		
