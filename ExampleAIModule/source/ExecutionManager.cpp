@@ -16,7 +16,7 @@ void ExecutionManager::executeOrders() {
 		if (unitManager->requestBuilding(building))
 		{
 			priorityQueue.pop_front();
-			Broodwar->sendText("Queue size %i", priorityQueue.size());
+			Broodwar->sendText("Queue size now %i after build is put in progress", priorityQueue.size());
 		}
 	}
 	

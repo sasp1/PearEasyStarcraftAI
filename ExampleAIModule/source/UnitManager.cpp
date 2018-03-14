@@ -18,10 +18,14 @@ void UnitManager::eventConstructionComplete() {
 
 bool UnitManager::requestBuilding(BWAPI::UnitType building) {
 
-	Broodwar->sendText("Unitmanager: Sending request");
-	constructionManager->createBuilding(building, gatheringManager->removeWorker());
+	bool requestIsAccepted = Broodwar->self()->minerals() > building.mineralPrice();
 
-	return true;
+	Broodwar->sendText("Unitmanager: request: %s", (requestIsAccepted ? "accepted" : "denied") );
+	if (Broodwar->self()->minerals() > building.mineralPrice()) {
+		constructionManager->createBuilding(building, gatheringManager->removeWorker());
+	}
+
+	return requestIsAccepted;
 }
 
 void UnitManager::executeOrders() {
