@@ -23,6 +23,7 @@ void BuildingManager::executeOrders() {
 	BuildingManager::handleCommandCenter();
 }
 
+
 void BuildingManager::setBuildWorkers(bool buildWorkers) {
 	//Change request to build borkers or not
 	this->buildWorkers = buildWorkers;
