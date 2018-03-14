@@ -24,6 +24,8 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 		addBarracks(u);
 	}
 
+
+
 	if ((*u)->getType() == UnitTypes::Terran_Supply_Depot) {
 		Broodwar->sendText("%s", "Completed building supl. depot");
 
@@ -46,7 +48,7 @@ void BuildingManager::executeOrders() {
 	//"Main" of this class
 	BuildingManager::handleCommandCenter();
 
-	if (nrOfBarracks > 0)
+	if (nrOfBarracks > 0 && isDesiredToTrainMarines)
 	(*barracks)->train(UnitTypes::Terran_Marine);
 
 }
@@ -54,16 +56,21 @@ void BuildingManager::executeOrders() {
 /**
 * Execute orders for build manager
 *
-* @param boolean that tells if a worker should be built.
+* @param buildWorkers that tells if a worker should be built.
 */
-void BuildingManager::setIsDesiredToBuildWorkers(bool buildWorkers) {
+void BuildingManager::setIsDesiredToTrainWorkers(bool buildWorkers) {
 	//Change request to build borkers or not
-	this->isDesiredToBuildWorkers = buildWorkers;
+	this->isDesiredToTrainWorkers = buildWorkers;
+}
+
+void BuildingManager::setIsDesiredToTrainMarines(bool trainWorkers) {
+	//Change request to build borkers or not
+	this->isDesiredToTrainMarines = trainWorkers;
 }
 
 void BuildingManager::handleCommandCenter() {
 	//Issue orders for command center
-	if (isDesiredToBuildWorkers) {
+	if (isDesiredToTrainWorkers) {
 
 	BWAPI::UnitType type = BWAPI::Broodwar->self()->getRace().getWorker();
 

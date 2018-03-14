@@ -3,7 +3,8 @@
 class BuildingManager
 {
 
-	bool isDesiredToBuildWorkers = true;
+	bool isDesiredToTrainWorkers = false;
+	bool isDesiredToTrainMarines = false;
 	
 public:
 	BuildingManager();
@@ -14,6 +15,7 @@ public:
 	void BuildingManager::addBarracks(const BWAPI::Unit* center);
 	void BuildingManager::buildingCreated(const BWAPI::Unit* u);
 	void BuildingManager::executeOrders();
-	void BuildingManager::setIsDesiredToBuildWorkers(bool buildWorkers);
+	void BuildingManager::setIsDesiredToTrainWorkers(bool buildWorkers);
+	void BuildingManager::setIsDesiredToTrainMarines(bool trainWorkers);
 
 };

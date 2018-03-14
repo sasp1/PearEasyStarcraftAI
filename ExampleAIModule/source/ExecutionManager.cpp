@@ -7,25 +7,47 @@ using namespace BWAPI;
 using namespace Filter;
 
 std::list <UnitType> priorityQueue;
+int reservedMinerals;
+
 
 void ExecutionManager::executeOrders() {
 
+	//Check for new desires
 	if (priorityQueue.size() > 0) {
-
 		BWAPI::UnitType building = priorityQueue.front();
 		if (unitManager->requestBuilding(building))
 		{
 			priorityQueue.pop_front();
-			Broodwar->sendText("Queue size now %i after build is put in progress", priorityQueue.size());
+			reservedMinerals = reservedMinerals + building.mineralPrice();
+			Broodwar->sendText("Minerals reserved: %i", reservedMinerals);
 		}
 	}
+
+	//Check if minerals is reserved for buildings, and if then stop producing moving units
+	controlTrainingOfMovingUnits();
 	
 	buildingManager->executeOrders();
 	unitManager->executeOrders();
 }
 
+
 void ExecutionManager::addPriorityItem(BWAPI::UnitType unit) {
 	priorityQueue.push_back(unit);
+}
+
+void ExecutionManager::controlTrainingOfMovingUnits() {
+	if (Broodwar->self()->minerals() - reservedMinerals < UnitTypes::Terran_SCV.mineralPrice()) {
+		buildingManager->setIsDesiredToTrainWorkers(false);
+	}
+	else {
+		buildingManager->setIsDesiredToTrainWorkers(true);
+	}
+	if (Broodwar->self()->minerals() - reservedMinerals < UnitTypes::Terran_Marine.mineralPrice()) {
+		buildingManager->setIsDesiredToTrainMarines(false);
+	}
+	else {
+		buildingManager->setIsDesiredToTrainMarines(true);
+	}
 }
 
 void ExecutionManager::handleWorker(const BWAPI::Unit* u) {
@@ -33,15 +55,24 @@ void ExecutionManager::handleWorker(const BWAPI::Unit* u) {
 
 }
 
-void ExecutionManager::eventConstructionInitiated() {
+void ExecutionManager::eventConstructionInitiated(BWAPI::Unit unit) {
 	//When a construction has begun building
-	buildingManager->setIsDesiredToBuildWorkers(true);
+	if ((unit)->getType() == UnitTypes::Terran_Barracks) {
+		reservedMinerals = reservedMinerals - (UnitTypes::Terran_Barracks.mineralPrice());
+	}
+
+
+
+	if ((unit)->getType() == UnitTypes::Terran_Supply_Depot) {
+		reservedMinerals = reservedMinerals - (UnitTypes::Terran_Supply_Depot.mineralPrice());
+	}
 }
 
 
 //Initial setup of class
 ExecutionManager::ExecutionManager()
 {
+	reservedMinerals = 0;
 }
 
 ExecutionManager::~ExecutionManager()
