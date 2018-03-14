@@ -16,6 +16,8 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 		addBarracks(u);
 	}
 
+
+
 	if ((*u)->getType() == UnitTypes::Terran_Supply_Depot) {
 		Broodwar->sendText("%s", "Completed building supl. depot");
 	}
