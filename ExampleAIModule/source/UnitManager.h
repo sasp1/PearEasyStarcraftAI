@@ -14,7 +14,6 @@ public:
 	UnitManager();
 	void UnitManager::executeOrders();
 	void UnitManager::newWorker(const BWAPI::Unit* worker);
-	void UnitManager::buildConstruction(BWAPI::UnitType building);
 	void UnitManager::eventConstructionInitiated();
 	void UnitManager::eventConstructionComplete();
 };

@@ -3,13 +3,17 @@
 class BuildingManager
 {
 
-	bool buildWorkers = true;
+	bool isDesiredToBuildWorkers = true;
 	
 public:
 	BuildingManager();
 	~BuildingManager();
 	void BuildingManager::handleCommandCenter();
+
 	void BuildingManager::addCommandCenter(const BWAPI::Unit* center);
+	void BuildingManager::addBarracks(const BWAPI::Unit* center);
+
 	void BuildingManager::executeOrders();
-	void BuildingManager::setBuildWorkers(bool buildWorkers);
+	void BuildingManager::setIsDesiredToBuildWorkers(bool buildWorkers);
+
 };

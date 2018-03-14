@@ -5,5 +5,6 @@ class ScoutingManager
 public:
 	ScoutingManager();
 	~ScoutingManager();
+	void ScoutingManager::addScout(const BWAPI::Unit* scout);
 };
 

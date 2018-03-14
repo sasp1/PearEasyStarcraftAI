@@ -94,8 +94,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BuildingManager.cpp" />
-    <ClCompile Include="CombatManager.cpp" />
     <ClCompile Include="Source\BuildingManager.cpp" />
     <ClCompile Include="Source\CombatManager.cpp" />
     <ClCompile Include="Source\ConstructionManager.cpp" />
@@ -108,8 +106,6 @@
     <ClCompile Include="Source\UnitManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BuildingManager.h" />
-    <ClInclude Include="CombatManager.h" />
     <ClInclude Include="Source\BuildingManager.h" />
     <ClInclude Include="Source\CombatManager.h" />
     <ClInclude Include="Source\ConstructionManager.h" />
@@ -121,17 +117,16 @@
     <ClInclude Include="Source\UnitManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <Object Include="Debug\BuildingManager.obj" />
-    <Object Include="Debug\CombatManager.obj" />
-    <Object Include="Debug\Dll.obj" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="Debug\ExampleAIModule.Build.CppClean.log" />
     <Text Include="Debug\ExampleAIModule.log" />
+    <Text Include="Release\ExampleAIModule.Build.CppClean.log" />
+    <Text Include="Release\ExampleAIModule.log" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Debug\ExampleAIModule.exp" />
     <None Include="Debug\vc141.pdb" />
+    <None Include="Release\ExampleAIModule.exp" />
+    <None Include="Release\vc141.pdb" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
