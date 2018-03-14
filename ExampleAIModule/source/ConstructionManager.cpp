@@ -14,6 +14,9 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 
 	workers.push_back(worker);
 
+	
+	//Sørg for, at når denne funktion kaldes, så skal bygningen forsøges bygges, indtil den succesfuldt bygges.
+	//OBS RETURNERER BUILD EN BOOLEAN OM DET LYKKEDES??
 	TilePosition targetBuildLocation = Broodwar->getBuildLocation(building, (*worker)->getTilePosition());
 	(*worker)->build(building, targetBuildLocation);
 
