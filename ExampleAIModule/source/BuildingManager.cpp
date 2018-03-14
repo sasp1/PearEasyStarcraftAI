@@ -38,14 +38,19 @@ void BuildingManager::executeOrders() {
 	//"Main" of this class
 	BuildingManager::handleCommandCenter();
 
-	if (nrOfBarracks > 0)
+	if (nrOfBarracks > 0 && isDesiredToTrainMarines)
 	(*barracks)->train(UnitTypes::Terran_Marine);
 
 }
 
-void BuildingManager::setIsDesiredToBuildWorkers(bool buildWorkers) {
+void BuildingManager::setIsDesiredToTrainWorkers(bool buildWorkers) {
 	//Change request to build borkers or not
 	this->isDesiredToBuildWorkers = buildWorkers;
+}
+
+void BuildingManager::setIsDesiredToTrainMarines(bool trainWorkers) {
+	//Change request to build borkers or not
+	this->isDesiredToTrainMarines = trainWorkers;
 }
 
 void BuildingManager::handleCommandCenter() {

@@ -17,6 +17,7 @@ public:
 	void ExecutionManager::addPriorityItem(BWAPI::UnitType unit);
 	void ExecutionManager::executeOrders();
 	void ExecutionManager::referenceManagers(UnitManager* unitManager, BuildingManager* buildingManager);
-	void ExecutionManager::eventConstructionInitiated();
+	void ExecutionManager::eventConstructionInitiated(BWAPI::Unit unit);
+	void ExecutionManager::controlTrainingOfMovingUnits();
 };
 
