@@ -3,6 +3,8 @@
 #include "BuildingManager.h"
 #include "UnitManager.h"
 #include "ConstructionManager.h"
+#include "CombatManager.h"
+#include "StrategyManager.h"
 #include "ScoutingManager.h"
 #include <iostream>
 
@@ -14,21 +16,10 @@ GatheringManager* gatheringManager;
 BuildingManager* buildingManager;
 UnitManager* unitManager;
 ConstructionManager* constructionManager;
+ExecutionManager* executionManager;
+CombatManager* combatManager;
 ScoutingManager* scoutingManager;
-
-bool desireBuildingSupplyDepot;
-bool desireBuildingBarracks;
-
-
-void ExampleAIModule::buildConstruction(BWAPI::UnitType building)
-{
-	//Issue an order to build a construction
-	constructionManager->createBuilding(building, gatheringManager->removeWorker());
-}
-
-
-
-
+StrategyManager* strategyManager;
 
 void ExampleAIModule::onStart()
 {
@@ -37,18 +28,15 @@ void ExampleAIModule::onStart()
 	buildingManager = new BuildingManager();
 	unitManager = new UnitManager();
 	constructionManager = new ConstructionManager();
+	executionManager = new ExecutionManager();
+	combatManager = new CombatManager();
 	scoutingManager = new ScoutingManager();
+	strategyManager = new StrategyManager();
 
-	desireBuildingSupplyDepot = true;
-	desireBuildingBarracks = true;
-	
 	//Make managers aware of each other
-	unitManager->setManagers(buildingManager, gatheringManager, constructionManager);
-
-  // HEJ 
-  // Hello World!
-  Broodwar->sendText("Test v1.0");
-
+	unitManager->setManagers(combatManager, gatheringManager, constructionManager, scoutingManager);
+	executionManager->referenceManagers(unitManager, buildingManager);
+	strategyManager->referenceManagers(executionManager);
   // Enable the UserInput flag, which allows us to control the bot and type messages.
   Broodwar->enableFlag(Flag::UserInput);
 
@@ -67,7 +55,6 @@ void ExampleAIModule::onStart()
 
 	  else if (u->getType().isResourceDepot())
 		  (*buildingManager).addCommandCenter(&u);
-
   }
 }
 
@@ -87,92 +74,31 @@ void ExampleAIModule::onFrame()
 	if (Broodwar->getFrameCount() % Broodwar->getLatencyFrames() != 0)
 		return;
 
+	//Begin strategy evaluation
 	if (Broodwar->getFrameCount() > 2) {
-
-		//Build strategy 1 
-		int unusedSupplies = (Broodwar->self()->supplyTotal()) - Broodwar->self()->supplyUsed();
-
-		//Spam supply depots when needed
-		if (unusedSupplies <= 4 && desireBuildingSupplyDepot) {
-
-			BWAPI::UnitType building = Broodwar->self()->getRace().getSupplyProvider();
-			Broodwar->sendText("Want To build supply depot");
-
-			if (Broodwar->self()->minerals() > building.mineralPrice()) {
-				Broodwar->sendText("IsBuilding");
-				//buildingManager->setIsDesiredToBuildWorkers(false);
-				buildConstruction(building);
-				desireBuildingSupplyDepot = false;
-			}
-		}
-
-		//Build barracks
-		if (Broodwar->self()->supplyUsed() >= 22 && desireBuildingBarracks){
-			BWAPI::UnitType building = UnitTypes::Terran_Barracks;
-			Broodwar->sendText("Want To build barracks %i", Broodwar->self()->supplyUsed());
-
-			if (Broodwar->self()->minerals() > building.mineralPrice()) {
-				Broodwar->sendText("Is Building barracks");
-				//buildingManager->setIsDesiredToBuildWorkers(false);
-				buildConstruction(building);
-				desireBuildingBarracks = false;
-			}
-		}
-
-		
-
-
-		//End of strategy 1
-
-		// Finally execute the strategy
-		gatheringManager->executeOrders();
-		buildingManager->executeOrders();
-		unitManager->executeOrders();
-		scoutingManager->executeOrders();
+		strategyManager->calculateOrders();
 	}
-
-		
-	
-} // closure: unit iterator
+}
 
 void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 {//When a unit build is complete
-	
-
 	BWAPI::Unit* u = new Unit(unit);
 
+	//Make sure we are ingame
 	if (Broodwar->getFrameCount() > 10) {
-		if ((*u)->getType().isWorker())
-			(*gatheringManager).addWorker(u);
+
+		if ((*u)->getType().isWorker()) 
+			(*unitManager).newWorker(u);
+		
 		if ((*u)->getType() == UnitTypes::Terran_Marine)
 			(*scoutingManager).addScout(u);
 
 		else if ((*u)->getType().isBuilding()) {
-			//unitManager->eventConstructionComplete();
-			//Tjek at bygning er supplydepot!!
-			if ((*u)->getType() == UnitTypes::Terran_Barracks) {
-				Broodwar->sendText("%s", "Completed building barracks");
-				buildingManager->addBarracks(u);
-
-			}
-			if ((*u)->getType() == UnitTypes::Terran_Supply_Depot) {
-				desireBuildingSupplyDepot = true;
-				Broodwar->sendText("%s", "Completed building supl. depot");
-			}
-			//Kan blive null!?
-			//gatheringManager->addWorker(constructionManager->removeWorkersDoneConstructing);
-			
-			
-
-
-		
-
+			buildingManager->buildingCreated(u);
+			strategyManager->unitComplete(u);
 		}
-
 	}
 }
-
-
 
 void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 {
@@ -184,16 +110,16 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 			int seconds = Broodwar->getFrameCount() / 24;
 			int minutes = seconds / 60;
 			seconds %= 60;
-			Broodwar->sendText("%.2d:%.2d: %s createsssss a %s", minutes, seconds, unit->getPlayer()->getName().c_str(), unit->getType().c_str());
+			Broodwar->sendText("%.2d:%.2d: %s creates a %s", minutes, seconds, unit->getPlayer()->getName().c_str(), unit->getType().c_str());
 		}
 	}
-	Broodwar->sendText("Creatingsssss");
 
+	Broodwar->sendText("Creating");
 	//When construction of a unit has begun
 
 	if (Broodwar->getFrameCount() > 10) {
 		if (unit->getType().isBuilding()) {
-			unitManager->eventConstructionInitiated();
+			executionManager->eventConstructionInitiated();
 		}
 	}
 }
@@ -257,7 +183,6 @@ void ExampleAIModule::onUnitShow(BWAPI::Unit unit)
 void ExampleAIModule::onUnitHide(BWAPI::Unit unit)
 {
 }
-
 
 void ExampleAIModule::onUnitDestroy(BWAPI::Unit unit)
 {

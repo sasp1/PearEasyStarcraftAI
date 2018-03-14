@@ -1,22 +1,23 @@
 #pragma once
 #include <BWAPI.h>
-#include "BuildingManager.h"
+#include "CombatManager.h"
 #include "GatheringManager.h"
 #include "ConstructionManager.h"
+#include "ScoutingManager.h"
 class UnitManager
 {
-	BuildingManager* buildingManager;
+	CombatManager* combatManager;
 	GatheringManager* gatheringManager;
 	ConstructionManager* constructionManager;
+	ScoutingManager* scoutingManager;
 
 public:
-	std::list<const BWAPI::Unit*> workers;
-	void UnitManager::setManagers(BuildingManager* buildingManager, GatheringManager* gatheringManager, ConstructionManager* constructionManager);
+	void UnitManager::setManagers(CombatManager* combatManager, GatheringManager* gatheringManager, ConstructionManager* constructionManager, ScoutingManager* scoutingManager);
 	~UnitManager();
 	UnitManager();
 	void UnitManager::executeOrders();
 	void UnitManager::newWorker(const BWAPI::Unit* worker);
-	void UnitManager::eventConstructionInitiated();
 	void UnitManager::eventConstructionComplete();
+	bool UnitManager::requestBuilding(BWAPI::UnitType building);
 };
 

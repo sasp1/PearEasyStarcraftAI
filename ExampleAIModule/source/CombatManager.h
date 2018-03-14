@@ -5,5 +5,6 @@ class CombatManager
 public:
 	CombatManager();
 	~CombatManager();
+	void CombatManager::executeOrders();
 };
 

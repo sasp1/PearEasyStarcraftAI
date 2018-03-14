@@ -3,11 +3,13 @@
 using namespace BWAPI;
 using namespace Filter;
 
+void CombatManager::executeOrders() {
+
+}
 
 CombatManager::CombatManager()
 {
 }
-
 
 CombatManager::~CombatManager()
 {

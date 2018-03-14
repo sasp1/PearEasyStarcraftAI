@@ -3,21 +3,16 @@
 using namespace BWAPI;
 using namespace Filter;
 
-std::list<const BWAPI::Unit*> constructionWorkers;
+std::list<const BWAPI::Unit*> workers;
 
+void ConstructionManager::executeOrders() {
 
-ConstructionManager::ConstructionManager()
-{
-}
-
-ConstructionManager::~ConstructionManager()
-{
 }
 
 void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::Unit* worker) {
 	//Receive an order to build a building, using a specific worker
 
-	constructionWorkers.push_back(worker);
+	workers.push_back(worker);
 
 	TilePosition targetBuildLocation = Broodwar->getBuildLocation(building, (*worker)->getTilePosition());
 	(*worker)->build(building, targetBuildLocation);
@@ -26,11 +21,11 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 
 const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing()
 {
-	for (auto &u : constructionWorkers)
+	for (auto &u : workers)
 	{
 		if ((*u)->isIdle()) {
 			const BWAPI::Unit* worker = u;
-			constructionWorkers.remove(u);
+			workers.remove(u);
 		
 			return worker;
 		}
@@ -38,3 +33,10 @@ const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing()
 	return nullptr;
 }
 
+ConstructionManager::ConstructionManager()
+{
+}
+
+ConstructionManager::~ConstructionManager()
+{
+}

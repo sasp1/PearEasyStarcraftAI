@@ -7,5 +7,6 @@ public:
 	~ConstructionManager();
 	void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::Unit* worker);
 	const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing();
+	void ConstructionManager::executeOrders();
 };
 

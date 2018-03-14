@@ -9,13 +9,18 @@ const BWAPI::Unit* barracks;
 int nrOfBarracks = 0;
 
 
-BuildingManager::BuildingManager()
-{
+void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
+
+	if ((*u)->getType() == UnitTypes::Terran_Barracks) {
+		Broodwar->sendText("%s", "Completed building barracks");
+		addBarracks(u);
+	}
+
+	if ((*u)->getType() == UnitTypes::Terran_Supply_Depot) {
+		Broodwar->sendText("%s", "Completed building supl. depot");
+	}
 }
 
-BuildingManager::~BuildingManager()
-{
-}
 
 void BuildingManager::addCommandCenter(const BWAPI::Unit* unit) {
 	//Receive info about existing commandcenter (Change to all buildings)
@@ -41,9 +46,6 @@ void BuildingManager::setIsDesiredToBuildWorkers(bool buildWorkers) {
 	this->isDesiredToBuildWorkers = buildWorkers;
 }
 
-
-
-
 void BuildingManager::handleCommandCenter() {
 	//Issue orders for command center
 	if (isDesiredToBuildWorkers) {
@@ -53,4 +55,14 @@ void BuildingManager::handleCommandCenter() {
 	if ((*commandCenter)->isIdle())
 		(*commandCenter)->train(type);
 	}
+}
+
+
+//Initial class setup
+BuildingManager::BuildingManager()
+{
+}
+
+BuildingManager::~BuildingManager()
+{
 }
