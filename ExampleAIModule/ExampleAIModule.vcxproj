@@ -94,8 +94,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BuildingManager.cpp" />
-    <ClCompile Include="CombatManager.cpp" />
     <ClCompile Include="Source\BuildingManager.cpp" />
     <ClCompile Include="Source\CombatManager.cpp" />
     <ClCompile Include="Source\ConstructionManager.cpp" />
@@ -108,8 +106,6 @@
     <ClCompile Include="Source\UnitManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BuildingManager.h" />
-    <ClInclude Include="CombatManager.h" />
     <ClInclude Include="Source\BuildingManager.h" />
     <ClInclude Include="Source\CombatManager.h" />
     <ClInclude Include="Source\ConstructionManager.h" />
@@ -119,11 +115,6 @@
     <ClInclude Include="Source\ScoutingManager.h" />
     <ClInclude Include="Source\StrategyManager.h" />
     <ClInclude Include="Source\UnitManager.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="Debug\BuildingManager.obj" />
-    <Object Include="Debug\CombatManager.obj" />
-    <Object Include="Debug\Dll.obj" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Debug\ExampleAIModule.Build.CppClean.log" />

@@ -50,3 +50,4 @@ Shared/*
 Starcraft/*
 UnitTest1/Debug/*
 UnitTest1/Release/*
+UnitTest1/.vs/*
