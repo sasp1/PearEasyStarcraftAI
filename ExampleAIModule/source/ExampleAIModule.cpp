@@ -3,6 +3,7 @@
 #include "BuildingManager.h"
 #include "UnitManager.h"
 #include "ConstructionManager.h"
+#include "ScoutingManager.h"
 #include <iostream>
 
 using namespace BWAPI;
@@ -13,6 +14,7 @@ GatheringManager* gatheringManager;
 BuildingManager* buildingManager;
 UnitManager* unitManager;
 ConstructionManager* constructionManager;
+ScoutingManager* scoutingManager;
 
 bool desireBuildingSupplyDepot;
 bool desireBuildingBarracks;
@@ -138,6 +140,8 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 	if (Broodwar->getFrameCount() > 10) {
 		if ((*u)->getType().isWorker())
 			(*gatheringManager).addWorker(u);
+		if ((*u)->getType() == UnitTypes::Terran_Marine)
+			(*scoutingManager).addScout(u);
 
 		else if ((*u)->getType().isBuilding()) {
 			//unitManager->eventConstructionComplete();

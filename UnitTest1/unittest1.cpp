@@ -16,6 +16,7 @@ namespace UnitTest1
 			BuildingManager manager; 
 			//manager.executeOrders(); 
 			Assert::AreEqual(3, 3); 
+
 		}
 	};
 }
