@@ -33,3 +33,18 @@
 
 AIModuleLoader/*
 BWAPIClient/*
+BWAPILIB/*
+Chaoslauncher/*
+Debug/*
+documentation/*
+ExampleAIClient/*
+ExampleAIModule/Debug/*
+ExampleAIModule/Release/*
+ExampleTournamentModule/*
+include/*
+lib/*
+MPQDraft/*
+Release/*
+Shared/*
+Starcraft/*
+
