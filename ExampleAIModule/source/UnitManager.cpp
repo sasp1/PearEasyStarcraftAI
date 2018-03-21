@@ -18,11 +18,15 @@ void UnitManager::eventConstructionComplete() {
 
 bool UnitManager::requestBuilding(BWAPI::UnitType building) {
 
-	bool requestIsAccepted = Broodwar->self()->minerals() > building.mineralPrice();
+	bool mineralPriceOk = Broodwar->self()->minerals() > building.mineralPrice();
+	//newConstruction is available/is sat whenever a building has started being created
+	bool requestIsAccepted = mineralPriceOk && newConstructionIsAvailable;
 
 	Broodwar->sendText("Unitmanager: request: %s", (requestIsAccepted ? "accepted" : "denied") );
-	if (Broodwar->self()->minerals() > building.mineralPrice()) {
+
+	if (requestIsAccepted) {
 		constructionManager->createBuilding(building, gatheringManager->removeWorker());
+		newConstructionIsAvailable = false;
 	}
 
 	return requestIsAccepted;
@@ -33,7 +37,7 @@ void UnitManager::executeOrders() {
 
 	gatheringManager->executeOrders();
 	scoutingManager->executeOrders();
-	combatManager->executeOrders(),
+	combatManager->executeOrders();
 	constructionManager->executeOrders();
 }
 
