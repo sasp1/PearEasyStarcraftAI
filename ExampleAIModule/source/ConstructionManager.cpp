@@ -13,13 +13,20 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 	//Receive an order to build a building, using a specific worker
 
 	workers.push_back(worker);
+	bool hasBuilt = false;
 
-	
-	//Sørg for, at når denne funktion kaldes, så skal bygningen forsøges bygges, indtil den succesfuldt bygges.
-	//OBS RETURNERER BUILD EN BOOLEAN OM DET LYKKEDES??
-	TilePosition targetBuildLocation = Broodwar->getBuildLocation(building, (*worker)->getTilePosition());
-	(*worker)->build(building, targetBuildLocation);
+	if (building.isRefinery()) {
+		ConstructionManager::buildRefinery(worker);
+	}
+	else {
 
+		while (!hasBuilt) {
+			//Sørg for, at når denne funktion kaldes, så skal bygningen forsøges bygges, indtil den succesfuldt bygges.
+			//OBS RETURNERER BUILD EN BOOLEAN OM DET LYKKEDES??
+			TilePosition targetBuildLocation = Broodwar->getBuildLocation(building, (*worker)->getTilePosition());
+			hasBuilt = (*worker)->build(building, targetBuildLocation);
+		}
+	}
 }
 
 const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing()
@@ -34,6 +41,15 @@ const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing()
 		}
 	}
 	return nullptr;
+}
+
+void ConstructionManager::buildRefinery(const BWAPI::Unit* worker) {
+
+	BWAPI::UnitType building = Broodwar->self()->getRace().getRefinery();
+
+	TilePosition targetBuildLocation = Broodwar->getBuildLocation(building, (*worker)->getTilePosition());
+	(*worker)->build(building, targetBuildLocation);
+
 }
 
 ConstructionManager::ConstructionManager()
