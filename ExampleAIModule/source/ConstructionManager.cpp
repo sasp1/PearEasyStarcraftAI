@@ -49,6 +49,7 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 		}
 		else {
 		
+
 			TilePosition targetBuildLocation = Broodwar->getBuildLocation(building, (*worker)->getTilePosition());
 			(*worker)->build(building, targetBuildLocation);
 			
