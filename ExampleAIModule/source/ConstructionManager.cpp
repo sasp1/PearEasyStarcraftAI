@@ -11,13 +11,11 @@ void ConstructionManager::executeOrders() {
 	
 	
 		if (NULL != (constructionsWorker) && (*constructionsWorker)->isIdle()) {
-			Broodwar->sendText("%s", "WANTS TO BUILD!");
 
 			//tilføj dannys kode
 
 			TilePosition targetBuildLocation = Broodwar->getBuildLocation(orderedBuilding, (*constructionsWorker)->getTilePosition());
 			(*constructionsWorker)->build(orderedBuilding, targetBuildLocation);				
-				
 		}
 	
 

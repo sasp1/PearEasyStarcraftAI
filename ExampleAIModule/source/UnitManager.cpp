@@ -35,6 +35,14 @@ bool UnitManager::requestBuilding(BWAPI::UnitType building) {
 void UnitManager::executeOrders() {
 	// onFrame request to perform calculations. The "main" of this class
 
+	for (auto &u : unitWorkers) {
+		if ((*u)->isIdle() && (*u)->getID != (*constructionManager->constructionsWorker)->getID) {
+			Broodwar->sendText("ID IDLE WORKER: %i", (*u)->getID);
+			gatheringManager->addWorker(u);
+		}
+	}
+
+
 	gatheringManager->executeOrders();
 	scoutingManager->executeOrders();
 	combatManager->executeOrders();
