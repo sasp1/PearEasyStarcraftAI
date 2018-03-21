@@ -38,7 +38,7 @@ void ExampleAIModule::onStart()
 	//Make managers aware of each other
 	unitManager->setManagers(combatManager, gatheringManager, constructionManager, scoutingManager);
 	executionManager->referenceManagers(unitManager, buildingManager);
-	strategyManager->referenceManagers(executionManager, unitManager);
+	strategyManager->referenceManagers(executionManager, unitManager, buildingManager);
   // Enable the UserInput flag, which allows us to control the bot and type messages.
   Broodwar->enableFlag(Flag::UserInput);
 
@@ -92,6 +92,7 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 
 		if ((*u)->getType().isWorker()) 
 			(*unitManager).newWorker(u);
+
 		
 		if ((*u)->getType() == UnitTypes::Terran_Marine)
 			(*scoutingManager).addScout(u);
@@ -99,6 +100,7 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 		else if ((*u)->getType().isBuilding()) {
 			buildingManager->buildingCreated(u);
 			strategyManager->unitComplete(u);
+			unitManager->eventConstructionComplete(u);
 		}
 
 	}

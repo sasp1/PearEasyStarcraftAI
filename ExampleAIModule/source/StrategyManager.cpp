@@ -21,12 +21,16 @@ void StrategyManager::calculateStrategy() {
 	//Build strategy 1 
 	int unusedSupplies = (Broodwar->self()->supplyTotal()) - Broodwar->self()->supplyUsed();
 
+	
 	//Maintain 1 soldier for scouting
-	if (unitManager->soldiers.size > 0) {
-		buildingManager->setIsDesiredToTrainMarines(false);
+	if (unitManager->soldiers.size() > 0) {
+		buildingManager->setIsDesiredToTrainMarines(false); 
 	} else {
 		buildingManager->setIsDesiredToTrainMarines(true);
 	}
+
+	buildingManager->setIsDesiredToTrainWorkers(true);
+	
 
 	//Construct supply depots when needed (2 supplies left)
 	if (unusedSupplies <= 4 && supplyDepotsAreNotUnderConstruction) {
@@ -47,15 +51,14 @@ void StrategyManager::calculateStrategy() {
 		desireBuildingBarracks = false;
 	}
 
-	//Build refinery
+	//Order a refinery
 	if (Broodwar->self()->supplyUsed() >= 22 && refineriesOrdered == 0) {
 		BWAPI::UnitType building = UnitTypes::Terran_Refinery;
 		executionManager->addPriorityItem(building);
 		refineriesOrdered++;
-
-
-
 	}
+
+
 
 }
 
@@ -71,6 +74,7 @@ void StrategyManager::unitComplete(const BWAPI::Unit* unit) {
 void StrategyManager::referenceManagers(ExecutionManager* executionManager, UnitManager* unitManager, BuildingManager* buildingManager) {
 	this->executionManager = executionManager;
 	this->unitManager = unitManager;
+	this->buildingManager = buildingManager;
 }
 
 StrategyManager::~StrategyManager()

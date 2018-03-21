@@ -30,12 +30,12 @@ void ExecutionManager::executeOrders() {
 	unitManager->executeOrders();
 }
 
-
 void ExecutionManager::addPriorityItem(BWAPI::UnitType unit) {
 	priorityQueue.push_back(unit);
 }
 
 void ExecutionManager::controlTrainingOfMovingUnits() {
+	/*
 	if (Broodwar->self()->minerals() - reservedMinerals < UnitTypes::Terran_SCV.mineralPrice()) {
 		buildingManager->setIsDesiredToTrainWorkers(false);
 	}
@@ -48,6 +48,7 @@ void ExecutionManager::controlTrainingOfMovingUnits() {
 	else {
 		buildingManager->setIsDesiredToTrainMarines(true);
 	}
+	*/
 }
 
 void ExecutionManager::handleWorker(const BWAPI::Unit* u) {
@@ -57,17 +58,16 @@ void ExecutionManager::handleWorker(const BWAPI::Unit* u) {
 
 void ExecutionManager::eventConstructionInitiated(BWAPI::Unit unit) {
 	//When a construction has begun building
-	if ((unit)->getType() == UnitTypes::Terran_Barracks) {
-		reservedMinerals = reservedMinerals - (UnitTypes::Terran_Barracks.mineralPrice());
-	}
 
-
-
-	if ((unit)->getType() == UnitTypes::Terran_Supply_Depot) {
-		reservedMinerals = reservedMinerals - (UnitTypes::Terran_Supply_Depot.mineralPrice());
+	if (unit->getType().isBuilding()) {
+		reservedMinerals = reservedMinerals - unit->getType().mineralPrice();
 	}
 }
 
+void ExecutionManager::referenceManagers(UnitManager* unitManager, BuildingManager* buildingManager) {
+	this->buildingManager = buildingManager;
+	this->unitManager = unitManager;
+}
 
 //Initial setup of class
 ExecutionManager::ExecutionManager()
@@ -79,7 +79,3 @@ ExecutionManager::~ExecutionManager()
 {
 }
 
-void ExecutionManager::referenceManagers(UnitManager* unitManager, BuildingManager* buildingManager) {
-	this->buildingManager = buildingManager;
-	this->unitManager = unitManager;
-}

@@ -24,13 +24,16 @@ void ConstructionManager::executeOrders() {
 	
 		if (NULL != (constructionsWorker) && (*constructionsWorker)->isIdle()) {
 
-			//tilføj dannys kode
+			if (orderedBuilding == UnitTypes::Terran_Refinery) {
+				buildRefinery(constructionsWorker);
+			}
+			else
+			{
+				TilePosition targetBuildLocation = Broodwar->getBuildLocation(orderedBuilding, (*constructionsWorker)->getTilePosition());
+				(*constructionsWorker)->build(orderedBuilding, targetBuildLocation);
 
-			TilePosition targetBuildLocation = Broodwar->getBuildLocation(orderedBuilding, (*constructionsWorker)->getTilePosition());
-			(*constructionsWorker)->build(orderedBuilding, targetBuildLocation);				
+			}
 		}
-	
-
 }
 
 
@@ -84,14 +87,28 @@ const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing()
 	return nullptr;
 }
 */
-
 void ConstructionManager::buildRefinery(const BWAPI::Unit* worker) {
 
-	BWAPI::UnitType building = Broodwar->self()->getRace().getRefinery();
+	BWAPI::Unit* gasLocation = new Unit();
+	int distance = 10000;
 
-	TilePosition targetBuildLocation = Broodwar->getBuildLocation(building, (*worker)->getTilePosition());
-	(*worker)->build(building, targetBuildLocation);
+	for (auto &u : Broodwar->getGeysers())
+	{
+		if ((*worker)->getDistance(u) < distance) {
+			*gasLocation = u;
+			distance = (*worker)->getDistance(u);
+		}
+	}
 
+	if (distance != 10000) {
+
+		Broodwar->sendText("Refinery");
+
+		BWAPI::Position pos = (*gasLocation)->getPosition();
+
+		TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Refinery, (*gasLocation)->getTilePosition());
+		(*worker)->build(UnitTypes::Terran_Refinery, targetBuildLocation);
+	}
 }
 
 ConstructionManager::ConstructionManager()
