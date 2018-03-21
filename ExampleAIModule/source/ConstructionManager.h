@@ -9,5 +9,9 @@ public:
 	const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing();
 	void ConstructionManager::executeOrders();
 	void ConstructionManager::buildRefinery(const BWAPI::Unit* worker);
+	const BWAPI::Unit* constructionsWorker;
+
+
+
 };
 

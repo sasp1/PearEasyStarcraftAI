@@ -19,5 +19,7 @@ public:
 	void UnitManager::newWorker(const BWAPI::Unit* worker);
 	void UnitManager::eventConstructionComplete();
 	bool UnitManager::requestBuilding(BWAPI::UnitType building);
+	bool newConstructionIsAvailable = true;
+
 };
 

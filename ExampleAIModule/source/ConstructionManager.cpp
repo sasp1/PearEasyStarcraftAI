@@ -3,22 +3,35 @@
 using namespace BWAPI;
 using namespace Filter;
 
-std::list<const BWAPI::Unit*> workers;
+BWAPI::UnitType orderedBuilding;
+
+
 
 void ConstructionManager::executeOrders() {
+	
+	
+		if (NULL != (constructionsWorker) && (*constructionsWorker)->isIdle()) {
+			Broodwar->sendText("%s", "WANTS TO BUILD!");
+
+			//tilføj dannys kode
+
+			TilePosition targetBuildLocation = Broodwar->getBuildLocation(orderedBuilding, (*constructionsWorker)->getTilePosition());
+			(*constructionsWorker)->build(orderedBuilding, targetBuildLocation);				
+				
+		}
+	
 
 }
+
 
 void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::Unit* worker) {
 	//Receive an order to build a building, using a specific worker
 
-	workers.push_back(worker);
-	bool hasBuilt = false;
 
-	if (building.isRefinery()) {
-		ConstructionManager::buildRefinery(worker);
-	}
-	else {
+	constructionsWorker = worker;
+	(*worker)->stop();
+	orderedBuilding = (building);
+
 
 		
 			//Sørg for, at når denne funktion kaldes, så skal bygningen forsøges bygges, indtil den succesfuldt bygges.
@@ -27,8 +40,25 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 			(*worker)->build(building, targetBuildLocation);
 		
 	}
-}
 
+
+	/*
+		//Try to build building
+		if (building.isRefinery()) {
+			ConstructionManager::buildRefinery(worker);
+		}
+		else {
+		
+			TilePosition targetBuildLocation = Broodwar->getBuildLocation(building, (*worker)->getTilePosition());
+			(*worker)->build(building, targetBuildLocation);
+			
+		}
+
+		*/
+		
+	
+	
+/*
 const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing()
 {
 	for (auto &u : workers)
@@ -42,6 +72,7 @@ const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing()
 	}
 	return nullptr;
 }
+*/
 
 void ConstructionManager::buildRefinery(const BWAPI::Unit* worker) {
 
@@ -54,6 +85,7 @@ void ConstructionManager::buildRefinery(const BWAPI::Unit* worker) {
 
 ConstructionManager::ConstructionManager()
 {
+	constructionsWorker = NULL;
 }
 
 ConstructionManager::~ConstructionManager()
