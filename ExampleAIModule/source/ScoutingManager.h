@@ -7,7 +7,7 @@ public:
 	ScoutingManager();
 	~ScoutingManager();
 	void ScoutingManager::addScout(const BWAPI::Unit* scout);
-	void ScoutingManager::moveScoutToTile(const BWAPI::Unit* scout, int tileNr, int tileScale);
+	void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout);
 	void ScoutingManager::executeOrders();
 };
 
