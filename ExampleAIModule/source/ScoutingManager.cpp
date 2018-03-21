@@ -7,6 +7,8 @@ using namespace BWAPI;
 using namespace Filter;
 
 std::list<const BWAPI::Unit*> scoutingUnits;
+bool enemyBaseFound = false;
+BWAPI::Position lastEnemyBuildingPosition;
 //The map is 4096x4096 pixels (64^2)
 int corner = 0;
 BWAPI::Position cornerCoords0= Position(100, 100);
@@ -49,18 +51,21 @@ void ScoutingManager::setStartingCorner(BWAPI::Position pos) {
 void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
 	//Scout clockwise each corner of the map
 	
-
 	if (corner == 0) {
 		(*scout)->move(cornerCoords0);
-	}else if (corner == 1) {
+	}
+	else if (corner == 1) {
 		(*scout)->move(cornerCoords1);
-	}else if (corner == 2) {
+	}
+	else if (corner == 2) {
 		(*scout)->move(cornerCoords2);
-	}else {
+	}
+	else {
 		(*scout)->move(cornerCoords3);
 	}
 	corner = (corner + 1) % 4;
-}
+	}
+
 
 void ScoutingManager::executeOrders() {
 
@@ -75,7 +80,9 @@ void ScoutingManager::executeOrders() {
 
 void ScoutingManager::onUnitDiscover(BWAPI::Unit unit)
 {
-	if (unit->getPlayer() != Broodwar->self()) {
-		Broodwar->sendText("FJENDE?");
+	 if ((BWAPI::Broodwar->self()->isEnemy(unit->getPlayer()) && (unit->getType().isBuilding()))){
+		Broodwar->sendText("FJENDE!");
+		enemyBaseFound = true;
+		lastEnemyBuildingPosition = unit->getPosition();
 	}
 }

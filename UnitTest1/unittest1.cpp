@@ -30,5 +30,7 @@ namespace UnitTest1
 			numberOfWorkers = manager.workers.size(); 
 			Assert::AreEqual(1, numberOfWorkers);
 		}
+
+		
 	};
 }
