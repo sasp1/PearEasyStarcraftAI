@@ -3,8 +3,10 @@
 using namespace BWAPI;
 using namespace Filter;
 
-bool desireBuildingSupplyDepot = true;
+bool supplyDepotsAreNotUnderConstruction = true;
 bool desireBuildingBarracks = true;
+int refineriesOrdered = 0;
+int factoriesOrdered = 0;
 
 
 void StrategyManager::calculateOrders() {
@@ -19,43 +21,56 @@ void StrategyManager::calculateStrategy() {
 	//Build strategy 1 
 	int unusedSupplies = (Broodwar->self()->supplyTotal()) - Broodwar->self()->supplyUsed();
 
-	//Spam supply depots when needed
-	if (unusedSupplies <= 4 && desireBuildingSupplyDepot) {
+	//Maintain 1 soldier for scouting
+	if (unitManager->soldiers.size > 0) {
+		buildingManager->setIsDesiredToTrainMarines(false);
+	} else {
+		buildingManager->setIsDesiredToTrainMarines(true);
+	}
+
+	//Construct supply depots when needed (2 supplies left)
+	if (unusedSupplies <= 4 && supplyDepotsAreNotUnderConstruction) {
 
 		BWAPI::UnitType building = Broodwar->self()->getRace().getSupplyProvider();
-		Broodwar->sendText("Want To build supply depot");
 
-		//if (Broodwar->self()->minerals() > building.mineralPrice()) {
 			Broodwar->sendText("adding supply depot to priorityQueue");
 			executionManager->addPriorityItem(building);
-			desireBuildingSupplyDepot = false;
-		//}
+			supplyDepotsAreNotUnderConstruction = false;
 	}
 
 	//Build barracks
 	if (Broodwar->self()->supplyUsed() >= 22 && desireBuildingBarracks) {
 		BWAPI::UnitType building = UnitTypes::Terran_Barracks;
-		Broodwar->sendText("Want To build barracks %i", Broodwar->self()->supplyUsed());
 
-		//if (Broodwar->self()->minerals() > building.mineralPrice()) {
-			Broodwar->sendText("adding barracks to priorityQueue");
-			executionManager->addPriorityItem(building);
-			desireBuildingBarracks = false;
-		//}
+		Broodwar->sendText("adding barracks to priorityQueue");
+		executionManager->addPriorityItem(building);
+		desireBuildingBarracks = false;
 	}
+
+	//Build refinery
+	if (Broodwar->self()->supplyUsed() >= 22 && refineriesOrdered == 0) {
+		BWAPI::UnitType building = UnitTypes::Terran_Refinery;
+		executionManager->addPriorityItem(building);
+		refineriesOrdered++;
+
+
+
+	}
+
 }
 
 void StrategyManager::unitComplete(const BWAPI::Unit* unit) {
 
 	if ((*unit)->getType() == UnitTypes::Terran_Supply_Depot) {
-		desireBuildingSupplyDepot = true;
+		supplyDepotsAreNotUnderConstruction = true;
 	}
 }
 
 
 // Iniitial class setup
-void StrategyManager::referenceManagers(ExecutionManager* executionManager) {
+void StrategyManager::referenceManagers(ExecutionManager* executionManager, UnitManager* unitManager, BuildingManager* buildingManager) {
 	this->executionManager = executionManager;
+	this->unitManager = unitManager;
 }
 
 StrategyManager::~StrategyManager()

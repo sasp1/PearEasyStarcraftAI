@@ -11,6 +11,7 @@ class UnitManager
 	ConstructionManager* constructionManager;
 	ScoutingManager* scoutingManager;
 
+
 public:
 	void UnitManager::setManagers(CombatManager* combatManager, GatheringManager* gatheringManager, ConstructionManager* constructionManager, ScoutingManager* scoutingManager);
 	~UnitManager();
@@ -21,5 +22,7 @@ public:
 	bool UnitManager::requestBuilding(BWAPI::UnitType building);
 	bool newConstructionIsAvailable = true;
 
+	std::list<const BWAPI::Unit*> unitWorkers;
+	std::list<const BWAPI::Unit*> soldiers;
 };
 

@@ -1,5 +1,17 @@
 #include "ConstructionManager.h"
 #include <BWAPI.h>
+
+/**
+* @file ConstructionManager.cpp
+* @brief The manager who make the construction of a desired building. 
+*
+* @author  Thomas Dahl Heshe <s164399@gstudent.dtu.dk>
+
+* @date 21/03/2018
+*
+*/
+
+
 using namespace BWAPI;
 using namespace Filter;
 
