@@ -31,6 +31,13 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 	orderedBuilding = (building);
 
 
+		
+			//Sørg for, at når denne funktion kaldes, så skal bygningen forsøges bygges, indtil den succesfuldt bygges.
+			//OBS RETURNERER BUILD EN BOOLEAN OM DET LYKKEDES??
+			TilePosition targetBuildLocation = Broodwar->getBuildLocation(building, (*worker)->getTilePosition());
+			(*worker)->build(building, targetBuildLocation);
+		
+	}
 
 
 	/*
@@ -49,7 +56,6 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 		
 	
 	
-}
 /*
 const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing()
 {
