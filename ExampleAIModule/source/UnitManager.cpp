@@ -36,8 +36,8 @@ void UnitManager::executeOrders() {
 	// onFrame request to perform calculations. The "main" of this class
 
 	for (auto &u : unitWorkers) {
-		if ((*u)->isIdle() && (*u)->getID != (*constructionManager->constructionsWorker)->getID) {
-			Broodwar->sendText("ID IDLE WORKER: %i", (*u)->getID);
+		if ((*u)->isIdle() && (constructionManager->constructionsWorker) != NULL && (*u)->getID() != (*constructionManager->constructionsWorker)->getID()) {
+			
 			gatheringManager->addWorker(u);
 		}
 	}
