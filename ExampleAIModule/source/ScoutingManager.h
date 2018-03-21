@@ -9,5 +9,7 @@ public:
 	void ScoutingManager::addScout(const BWAPI::Unit* scout);
 	void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout);
 	void ScoutingManager::executeOrders();
+	void ScoutingManager::onUnitDiscover(BWAPI::Unit unit);
+	void ScoutingManager::setStartingCorner(BWAPI::Position pos);
 };
 

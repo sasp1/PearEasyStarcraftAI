@@ -33,6 +33,8 @@ void ExampleAIModule::onStart()
 	scoutingManager = new ScoutingManager();
 	strategyManager = new StrategyManager();
 
+	
+
 	//Make managers aware of each other
 	unitManager->setManagers(combatManager, gatheringManager, constructionManager, scoutingManager);
 	executionManager->referenceManagers(unitManager, buildingManager);
@@ -172,7 +174,7 @@ void ExampleAIModule::onNukeDetect(BWAPI::Position target)
 
 void ExampleAIModule::onUnitDiscover(BWAPI::Unit unit)
 {
-
+	scoutingManager->onUnitDiscover(unit);
 }
 
 void ExampleAIModule::onUnitEvade(BWAPI::Unit unit)
