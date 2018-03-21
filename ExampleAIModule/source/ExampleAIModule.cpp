@@ -33,6 +33,8 @@ void ExampleAIModule::onStart()
 	scoutingManager = new ScoutingManager();
 	strategyManager = new StrategyManager();
 
+	
+
 	//Make managers aware of each other
 	unitManager->setManagers(combatManager, gatheringManager, constructionManager, scoutingManager);
 	executionManager->referenceManagers(unitManager, buildingManager);
@@ -117,12 +119,16 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 		}
 	}
 
-	Broodwar->sendText("Creating");
+	//Broodwar->sendText("Creating");
 	//When construction of a unit has begun
 
 	if (Broodwar->getFrameCount() > 10) {
 		if (unit->getType().isBuilding()) {
 			executionManager->eventConstructionInitiated(unit);
+
+			//Variables sat so a new construction can be build, and the worker stops building
+			unitManager->newConstructionIsAvailable = true;
+			constructionManager->constructionsWorker = NULL;
 		}
 	}
 }
@@ -172,7 +178,7 @@ void ExampleAIModule::onNukeDetect(BWAPI::Position target)
 
 void ExampleAIModule::onUnitDiscover(BWAPI::Unit unit)
 {
-
+	scoutingManager->onUnitDiscover(unit);
 }
 
 void ExampleAIModule::onUnitEvade(BWAPI::Unit unit)
