@@ -5,7 +5,7 @@ class BuildingManager
 
 	bool isDesiredToTrainWorkers = false;
 	bool isDesiredToTrainMarines = false;
-	bool isDesiredToTrainVultures = false;
+	bool isDesiredToTrainVultures = true;
 	
 public:
 	BuildingManager();
@@ -15,5 +15,6 @@ public:
 	void BuildingManager::setIsDesiredToTrainWorkers(bool buildWorkers);
 	void BuildingManager::setIsDesiredToTrainMarines(bool trainWorkers);
 	void BuildingManager::setIsDesiredToTrainVultures(bool trainVultures);
+	bool expandFactory = false;
 
 };

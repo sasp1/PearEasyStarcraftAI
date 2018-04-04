@@ -53,12 +53,13 @@ void StrategyManager::calculateStrategy() {
 
 	//Order a refinery
 	if (Broodwar->self()->supplyUsed() >= 22 && refineriesOrdered == 0) {
+		Broodwar->sendText("adding refinerty to priorityQueue");
 		BWAPI::UnitType building = UnitTypes::Terran_Refinery;
 		executionManager->addPriorityItem(building);
 		refineriesOrdered++;
 	}
 
-
+	
 
 }
 

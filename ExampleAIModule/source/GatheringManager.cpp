@@ -3,19 +3,27 @@
 using namespace BWAPI;
 using namespace Filter;
 
-std::list<const BWAPI::Unit*> mineralWorkers;
-std::list<const BWAPI::Unit*> gasWorkers;
+//std::list<const BWAPI::Unit*> mineralWorkers;
+//std::list<const BWAPI::Unit*> gasWorkers;
 BWAPI::Unit* gas = NULL;
+int gasWorkerLimit = 3; 
 
 void GatheringManager::addWorker(const BWAPI::Unit* worker) {
 	//Receive control of a new worker
-	mineralWorkers.push_back(worker);
+
+	if (gasWorkers.size() < gasWorkerLimit && gas != NULL) {
+		gasWorkers.push_back(worker); 
+	}
+	else {
+		mineralWorkers.push_back(worker); 
+	}
 }
 
 void GatheringManager::addGasworker() {
 	//Add unit to gas gathering from mineral gathering
 	gasWorkers.push_back(mineralWorkers.back());
 	mineralWorkers.pop_back();
+	Broodwar->sendText("gas worker was taken from mineral workers"); 
 }
 
 const BWAPI::Unit* GatheringManager::removeWorker() {
@@ -32,9 +40,10 @@ void GatheringManager::executeOrders() {
 	if (gas == NULL) {
 		for (auto &u : Broodwar->getAllUnits()) {
 			if (u->getType().isBuilding()) {
-				if (u->getType() == UnitTypes::Terran_Refinery) {
-					BWAPI::Unit* gas = new Unit();
+				if (u->getType() == UnitTypes::Terran_Refinery && (u->isCompleted())) {
+					gas = new Unit();
 					*gas = u;
+					Broodwar->sendText("Gas refinery found and set.");
 				}
 			}
 		}
@@ -52,6 +61,9 @@ void GatheringManager::executeOrders() {
 
 			else (*u)->gather(mine);
 		}
+		else if ((*u)->isCarryingGas()) {
+			(*u)->gather(mine); 
+		}
 	}
 	
 	//Make gas workers work
@@ -63,9 +75,20 @@ void GatheringManager::executeOrders() {
 
 			else if (gas != NULL) {
 				(*u)->rightClick(*gas);
+				Broodwar->sendText("Right clicked gas on unit");	
 			}
 		}
+		else if ((*u)->isCarryingMinerals() ){
+			(*u)->rightClick(*gas); 
+		}
+	}	
+
+	// Update limit to number of gasworkers: 
+	if (Broodwar->self()->supplyUsed() >= 30) {
+		gasWorkerLimit = 6; 
 	}
+
+
 }
 
 //Initial class setup

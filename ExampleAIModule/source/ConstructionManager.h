@@ -1,5 +1,6 @@
 #pragma once
 #include <BWAPI.h>
+#include "BuildingManager.h"
 class ConstructionManager
 {
 public:
@@ -10,8 +11,6 @@ public:
 	void ConstructionManager::executeOrders();
 	void ConstructionManager::buildRefinery(const BWAPI::Unit* worker);
 	const BWAPI::Unit* constructionsWorker;
-
-
-
+	BuildingManager* buildingManager;
 };
 

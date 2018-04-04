@@ -14,11 +14,11 @@ bool wantToAttack = false;
 
 
 void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit) {
-	if ((*unit)->getType() == UnitTypes::Terran_Refinery) {
+	/*if ((*unit)->getType() == UnitTypes::Terran_Refinery) {
 		for (int i = 0; i <=2; i++) {
 			gatheringManager->addGasworker();
 		}
-	}
+	}*/
 }
 
 bool UnitManager::requestBuilding(BWAPI::UnitType building) {
@@ -27,7 +27,7 @@ bool UnitManager::requestBuilding(BWAPI::UnitType building) {
 	//newConstruction is available/is sat whenever a building has started being created
 	bool requestIsAccepted = mineralPriceOk && newConstructionIsAvailable;
 
-	Broodwar->sendText("Unitmanager: request: %s", (requestIsAccepted ? "accepted" : "denied") );
+	//Broodwar->sendText("Unitmanager: request: %s", (requestIsAccepted ? "accepted" : "denied") );
 
 	if (requestIsAccepted) {
 		constructionManager->createBuilding(building, gatheringManager->removeWorker());
