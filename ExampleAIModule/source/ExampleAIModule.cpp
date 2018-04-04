@@ -201,6 +201,7 @@ void ExampleAIModule::onUnitHide(BWAPI::Unit unit)
 
 void ExampleAIModule::onUnitDestroy(BWAPI::Unit unit)
 {
+
 }
 
 void ExampleAIModule::onUnitMorph(BWAPI::Unit unit)
