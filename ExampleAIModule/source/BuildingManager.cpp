@@ -35,6 +35,8 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 void BuildingManager::executeOrders() {
 	//"Main" of this class
 	//Går igennem alle bygninger i buildings, og udfører handlinger baseret på bygningstype og spilstate
+	bool foundFactory = false;
+
 	for (auto &b : buildings) {
 
 		if (*b != NULL) {
@@ -57,10 +59,14 @@ void BuildingManager::executeOrders() {
 
 			if (((*b)->getType() == UnitTypes::Terran_Factory) ) {
 
-				if (expandFactory && (NULL == (*b)->getAddon())) {
+				
 
-					TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Machine_Shop, (*b)->getTilePosition());
+				if (expandFactory && (NULL == (*b)->getAddon()) && !foundFactory) {
+
+					foundFactory = true;
+					TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Machine_Shop, (*b)->getTilePosition() + TilePosition(2,0));
 					(*b)->build(UnitTypes::Terran_Machine_Shop, targetBuildLocation);
+
 				}
 				else if ((*b)->isIdle() && isDesiredToTrainVultures) {
 					(*b)->train(UnitTypes::Terran_Vulture);
