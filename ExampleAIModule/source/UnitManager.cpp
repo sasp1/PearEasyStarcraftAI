@@ -75,8 +75,13 @@ UnitManager::UnitManager() {
 
 }
 
-void UnitManager::addUnit(const BWAPI::Unit * unit){
-
+void UnitManager::addUnit(const BWAPI::Unit* unit){
+	if ((scoutingManager->scoutingUnits.size() < 1) & (*unit)->getType() == UnitTypes::Terran_Marine) {
+		(*scoutingManager).addScout(unit);
+	}
+	else {
+		(*combatManager).addCombatUnit(unit);
+	}
 }
 
 void UnitManager::setManagers(CombatManager* combatManager, GatheringManager* gatheringManager, ConstructionManager* constructionManager, ScoutingManager* scoutingManager) {
