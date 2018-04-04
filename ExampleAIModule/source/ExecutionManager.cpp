@@ -8,18 +8,19 @@ using namespace Filter;
 
 std::list <UnitType> priorityQueue;
 int reservedMinerals;
-
+int reservedGas;
 
 void ExecutionManager::executeOrders() {
 
 	//Check for new desires
 	if (priorityQueue.size() > 0) {
 		BWAPI::UnitType building = priorityQueue.front();
-		if (unitManager->requestBuilding(building))
+		if (unitManager->requestBuilding(building, reservedMinerals, reservedGas))
 		{
 			priorityQueue.pop_front();
 			reservedMinerals = reservedMinerals + building.mineralPrice();
-			Broodwar->sendText("Minerals reserved: %i", reservedMinerals);
+			reservedGas = reservedGas + building.gasPrice();
+
 		}
 	}
 
@@ -61,6 +62,7 @@ void ExecutionManager::eventConstructionInitiated(BWAPI::Unit unit) {
 
 	if (unit->getType().isBuilding()) {
 		reservedMinerals = reservedMinerals - unit->getType().mineralPrice();
+		reservedGas = reservedGas - unit->getType().gasPrice();
 	}
 }
 
@@ -73,6 +75,7 @@ void ExecutionManager::referenceManagers(UnitManager* unitManager, BuildingManag
 ExecutionManager::ExecutionManager()
 {
 	reservedMinerals = 0;
+	reservedGas = 0;
 }
 
 ExecutionManager::~ExecutionManager()

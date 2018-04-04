@@ -19,15 +19,22 @@ void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit) {
 			gatheringManager->addGasworker();
 		}
 	}*/
+
+	if ((*unit)->getType() == UnitTypes::Terran_Refinery) {
+		Broodwar->sendText("Refinery done!");
+		newConstructionIsAvailable = true;
+	}
 }
 
-bool UnitManager::requestBuilding(BWAPI::UnitType building) {
+bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals, int reservedGas) {
 
-	bool mineralPriceOk = Broodwar->self()->minerals() > building.mineralPrice();
+	bool mineralPriceOk = Broodwar->self()->minerals() >= building.mineralPrice() + reservedMinerals;
+	bool gasPriceOk = Broodwar->self()->gas() >= building.gasPrice() + reservedGas;
+
 	//newConstruction is available/is sat whenever a building has started being created
-	bool requestIsAccepted = mineralPriceOk && newConstructionIsAvailable;
+	bool requestIsAccepted = mineralPriceOk && gasPriceOk && newConstructionIsAvailable;
 
-	//Broodwar->sendText("Unitmanager: request: %s", (requestIsAccepted ? "accepted" : "denied") );
+	Broodwar->sendText("Unitmanager: minerals: %s    gas: %s    newConstr: %s", (mineralPriceOk ? "OK" : "denied"), (gasPriceOk ? "OK" : "denied"), (newConstructionIsAvailable ? "OK" : "denied"));
 
 	if (requestIsAccepted) {
 		constructionManager->createBuilding(building, gatheringManager->removeWorker());
@@ -40,12 +47,15 @@ bool UnitManager::requestBuilding(BWAPI::UnitType building) {
 void UnitManager::executeOrders() {
 	// onFrame request to perform calculations. The "main" of this class
 
+	/*
 	for (auto &u : unitWorkers) {
 		if ((*u)->isIdle() && (constructionManager->constructionsWorker) != NULL && (*u)->getID() != (*constructionManager->constructionsWorker)->getID()) {
 			
 			gatheringManager->addWorker(u);
 		}
 	}
+	*/
+	
 
 
 	gatheringManager->executeOrders();

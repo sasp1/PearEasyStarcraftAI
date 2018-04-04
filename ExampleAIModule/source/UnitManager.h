@@ -22,7 +22,7 @@ public:
 	void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit);
 	
 	
-	bool UnitManager::requestBuilding(BWAPI::UnitType building);
+	bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals, int reservedGas);
 	bool newConstructionIsAvailable = true;
 
 	std::list<const BWAPI::Unit*> unitWorkers;
