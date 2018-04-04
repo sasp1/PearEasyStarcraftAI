@@ -62,9 +62,10 @@ void BuildingManager::executeOrders() {
 				
 
 				if (expandFactory && (NULL == (*b)->getAddon()) && !foundFactory) {
-
+					int x = rand() % 10 - 5;
+					int y = rand() % 10 - 5;
 					foundFactory = true;
-					TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Machine_Shop, (*b)->getTilePosition() + TilePosition(2,0));
+					TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Machine_Shop, (*b)->getTilePosition() + TilePosition(x,y));
 					(*b)->build(UnitTypes::Terran_Machine_Shop, targetBuildLocation);
 
 				}
