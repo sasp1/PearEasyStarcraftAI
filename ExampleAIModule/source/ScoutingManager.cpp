@@ -12,9 +12,9 @@ BWAPI::Position lastEnemyBuildingPosition;
 //The map is 4096x4096 pixels (64^2)
 int corner = 0;
 BWAPI::Position cornerCoords0= Position(100, 100);
-BWAPI::Position cornerCoords1 = Position(100, 4000);
+BWAPI::Position cornerCoords1 = Position(4000, 100);
 BWAPI::Position cornerCoords2 = Position(4000, 4000);
-BWAPI::Position cornerCoords3 = Position(4000, 100);
+BWAPI::Position cornerCoords3 = Position(100, 4000);
 
 
 ScoutingManager::ScoutingManager()

@@ -3,6 +3,7 @@
 #include "../ExampleAIModule/Source/BuildingManager.h"
 #include "../ExampleAIModule/Source/UnitManager.h"
 
+
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UnitTest1
@@ -24,11 +25,22 @@ namespace UnitTest1
 			UnitManager manager;
 			BWAPI::Unit* unit = new BWAPI::Unit();
 		
-			int numberOfWorkers = manager.workers.size();
+		/*	int numberOfWorkers = manager.workers.size();
 			Assert::AreEqual(0, numberOfWorkers);
 			manager.newWorker(unit); 
 			numberOfWorkers = manager.workers.size(); 
-			Assert::AreEqual(1, numberOfWorkers);
+			Assert::AreEqual(1, numberOfWorkers);*/
+		}
+
+		TEST_METHOD(shouldScoutCornerClockwise) {
+			ScoutingManager manager; 
+			BWAPI::Unit* unit = new BWAPI::Unit();
+			BWAPI::Unit* valenT = BWAPI::UnitTypes:: 
+			manager.addScout(valenT); 
+
+			
+
+
 		}
 
 		
