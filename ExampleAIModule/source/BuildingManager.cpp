@@ -16,22 +16,27 @@ std::list<const BWAPI::Unit*> buildings;
 * The time class represents a moment of time.
 */
 void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
+	//Tilføj bygning til liste over ejede bygninger, hvis den ikke er et supply depot.
+	//Send besked om at bygning er bygget.
+
+	if ((*u)->getType() == UnitTypes::Terran_Machine_Shop) {
+		Broodwar->sendText("%s", "MachineShopBuilt");
+		expandFactory = false;
+	}
 
 	if ((*u)->getType() != UnitTypes::Terran_Supply_Depot)
 	{
 		buildings.push_back(u);
 		Broodwar->sendText("%s", "Building completed");
-	}
-
-	Broodwar->sendText("%s", "Depot completed");
+	} else Broodwar->sendText("%s", "Depot completed");
 }
 
 void BuildingManager::executeOrders() {
 	//"Main" of this class
+	//Går igennem alle bygninger i buildings, og udfører handlinger baseret på bygningstype og spilstate
 	for (auto &b : buildings) {
 
 		if (*b != NULL) {
-
 			if ((*b)->getType() == UnitTypes::Terran_Command_Center && isDesiredToTrainWorkers) {
 				if ((*b)->isIdle()) {
 					(*b)->train(UnitTypes::Terran_SCV);
@@ -42,8 +47,17 @@ void BuildingManager::executeOrders() {
 					(*b)->train(UnitTypes::Terran_Marine);
 				}
 			}
-			if (((*b)->getType() == UnitTypes::Terran_Factory && isDesiredToTrainVultures)) {
-				if ((*b)->isIdle()) {
+
+			if (((*b)->getType() == UnitTypes::Terran_Factory) ) {
+
+
+				if (expandFactory && (NULL == (*b)->getAddon())) {
+
+					TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Machine_Shop, (*b)->getTilePosition());
+					(*b)->build(UnitTypes::Terran_Machine_Shop, targetBuildLocation);
+				}
+
+				else if ((*b)->isIdle() && isDesiredToTrainVultures) {
 					(*b)->train(UnitTypes::Terran_Vulture);
 				}
 			}

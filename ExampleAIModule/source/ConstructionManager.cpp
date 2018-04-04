@@ -3,7 +3,7 @@
 
 /**
 * @file ConstructionManager.cpp
-* @brief The manager who make the construction of a desired building. 
+* @brief The manager who make the construction of a desired building.
 *
 * @author  Thomas Dahl Heshe <s164399@gstudent.dtu.dk>
 
@@ -17,76 +17,36 @@ using namespace Filter;
 
 BWAPI::UnitType orderedBuilding;
 
-
-
 void ConstructionManager::executeOrders() {
-	
-	
-		if (NULL != (constructionsWorker) && (*constructionsWorker)->isIdle()) {
 
-			if (orderedBuilding == UnitTypes::Terran_Refinery) {
-				buildRefinery(constructionsWorker);
-			}
-			else
-			{
-				TilePosition targetBuildLocation = Broodwar->getBuildLocation(orderedBuilding, (*constructionsWorker)->getTilePosition());
-				(*constructionsWorker)->build(orderedBuilding, targetBuildLocation);
+	//Hvis vi har kontrol over en worker, og han ikke laver noget, så sættes han igang med at bygge bygningen specificeret i orderedBuilding
+	if (NULL != (constructionsWorker) && (*constructionsWorker)->isIdle()) {
 
-			}
+		if (orderedBuilding == UnitTypes::Terran_Refinery) {
+			buildRefinery(constructionsWorker);
 		}
+		else if (orderedBuilding == UnitTypes::Terran_Machine_Shop) {
+			buildingManager->expandFactory = true;
+		}
+		else
+		{
+			TilePosition targetBuildLocation = Broodwar->getBuildLocation(orderedBuilding, (*constructionsWorker)->getTilePosition());
+			(*constructionsWorker)->build(orderedBuilding, targetBuildLocation);
+		}
+	}
 }
 
-
 void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::Unit* worker) {
-	//Receive an order to build a building, using a specific worker
-
+	//Find et sted hvor bygningen kan placeres, og sæt worker til at bygge den.
 
 	constructionsWorker = worker;
 	(*worker)->stop();
 	orderedBuilding = (building);
+	TilePosition targetBuildLocation = Broodwar->getBuildLocation(building, (*worker)->getTilePosition());
+	(*worker)->build(building, targetBuildLocation);
 
-
-		
-			//Sørg for, at når denne funktion kaldes, så skal bygningen forsøges bygges, indtil den succesfuldt bygges.
-			//OBS RETURNERER BUILD EN BOOLEAN OM DET LYKKEDES??
-			TilePosition targetBuildLocation = Broodwar->getBuildLocation(building, (*worker)->getTilePosition());
-			(*worker)->build(building, targetBuildLocation);
-		
-	}
-
-
-	/*
-		//Try to build building
-		if (building.isRefinery()) {
-			ConstructionManager::buildRefinery(worker);
-		}
-		else {
-		
-
-			TilePosition targetBuildLocation = Broodwar->getBuildLocation(building, (*worker)->getTilePosition());
-			(*worker)->build(building, targetBuildLocation);
-			
-		}
-
-		*/
-		
-	
-	
-/*
-const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing()
-{
-	for (auto &u : workers)
-	{
-		if ((*u)->isIdle()) {
-			const BWAPI::Unit* worker = u;
-			workers.remove(u);
-		
-			return worker;
-		}
-	}
-	return nullptr;
 }
-*/
+
 void ConstructionManager::buildRefinery(const BWAPI::Unit* worker) {
 
 	BWAPI::Unit* gasLocation = new Unit();
