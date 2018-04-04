@@ -9,7 +9,7 @@ class StrategyManager
 	BuildingManager* buildingManager;
 
 public:
-	ScoutingManager * scoutingManager;
+	ScoutingManager* scoutingManager;
 	StrategyManager();
 	~StrategyManager();
 	void StrategyManager::calculateOrders();
