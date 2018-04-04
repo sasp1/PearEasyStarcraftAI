@@ -20,8 +20,7 @@ public:
 	void UnitManager::executeOrders();
 	void UnitManager::newWorker(const BWAPI::Unit* worker);
 	void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit);
-	
-	
+	void UnitManager::cleanUpUnits(const BWAPI::Unit* unit, std::list<const BWAPI::Unit*> unitList); 
 	bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals, int reservedGas);
 	bool newConstructionIsAvailable = true;
 
