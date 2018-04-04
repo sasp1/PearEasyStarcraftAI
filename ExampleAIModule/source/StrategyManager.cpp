@@ -38,7 +38,7 @@ void StrategyManager::calculateStrategy() {
 	
 
 	//Construct supply depots when needed (2 supplies left)
-	if ((unusedSupplies <= 4) || (unusedSupplies <=8 && factoriesOrdered>1) && supplyDepotsAreNotUnderConstruction) {
+	if (  ((unusedSupplies <= 4) || (unusedSupplies <=16 && factoriesOrdered>=1))   && supplyDepotsAreNotUnderConstruction) {
 
 		BWAPI::UnitType building = Broodwar->self()->getRace().getSupplyProvider();
 
