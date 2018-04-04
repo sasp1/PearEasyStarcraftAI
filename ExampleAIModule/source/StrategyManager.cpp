@@ -59,6 +59,14 @@ void StrategyManager::calculateStrategy() {
 		refineriesOrdered++;
 	}
 
+	//Order a factory
+	if (Broodwar->self()->supplyUsed() >= 30 && factoriesOrdered == 0) {
+		Broodwar->sendText("adding factory to priorityQueue");
+		BWAPI::UnitType building = UnitTypes::Terran_Factory;
+		executionManager->addPriorityItem(building);
+		factoriesOrdered++;
+	}
+
 	
 
 }
