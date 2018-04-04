@@ -91,6 +91,7 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 	//Make sure we are ingame
 	if (Broodwar->getFrameCount() > 10) {
 
+		
 
 		if ((*u)->getType().isWorker()) 
 			(*unitManager).newWorker(u);
@@ -105,6 +106,7 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 			buildingManager->buildingCreated(u);
 			strategyManager->unitComplete(u);
 			unitManager->eventConstructionComplete(u);
+
 		}
 	}
 }

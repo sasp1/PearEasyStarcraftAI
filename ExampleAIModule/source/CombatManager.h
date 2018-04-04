@@ -7,6 +7,7 @@ public:
 
 	void CombatManager::addCombatUnit(const BWAPI::Unit* unit);
 	void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit);
+	void CombatManager::attackWithAllCombatUnits();
 
 	CombatManager();
 	~CombatManager();

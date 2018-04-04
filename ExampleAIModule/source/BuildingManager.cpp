@@ -6,6 +6,7 @@ using namespace std;
 
 std::list<const BWAPI::Unit*> buildings;
 
+
 /**
 * @file
 * @author  Sebastian Arcos Specht <sebastian.a.specht@gmail.com>
@@ -19,16 +20,16 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 	//Tilføj bygning til liste over ejede bygninger, hvis den ikke er et supply depot.
 	//Send besked om at bygning er bygget.
 
+
 	if ((*u)->getType() == UnitTypes::Terran_Machine_Shop) {
-		Broodwar->sendText("%s", "MachineShopBuilt");
 		expandFactory = false;
+		desiredResearchs.push_front(TechTypes::Spider_Mines);
 	}
 
 	if ((*u)->getType() != UnitTypes::Terran_Supply_Depot)
 	{
 		buildings.push_back(u);
-		Broodwar->sendText("%s", "Building completed");
-	} else Broodwar->sendText("%s", "Depot completed");
+	}
 }
 
 void BuildingManager::executeOrders() {
@@ -48,15 +49,19 @@ void BuildingManager::executeOrders() {
 				}
 			}
 
-			if (((*b)->getType() == UnitTypes::Terran_Factory) ) {
+			if (((*b)->getType() == UnitTypes::Terran_Machine_Shop)) {
+				if ((*b)->isIdle() && desiredResearchs.front() == TechTypes::Spider_Mines) {
+					(*b)->research(TechTypes::Spider_Mines);
+				}
+			}
 
+			if (((*b)->getType() == UnitTypes::Terran_Factory) ) {
 
 				if (expandFactory && (NULL == (*b)->getAddon())) {
 
 					TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Machine_Shop, (*b)->getTilePosition());
 					(*b)->build(UnitTypes::Terran_Machine_Shop, targetBuildLocation);
 				}
-
 				else if ((*b)->isIdle() && isDesiredToTrainVultures) {
 					(*b)->train(UnitTypes::Terran_Vulture);
 				}
