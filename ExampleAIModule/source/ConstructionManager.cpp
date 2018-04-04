@@ -102,7 +102,7 @@ void ConstructionManager::buildRefinery(const BWAPI::Unit* worker) {
 
 	if (distance != 10000) {
 
-		Broodwar->sendText("Refinery");
+		// Broodwar->sendText("Refinery");
 
 		BWAPI::Position pos = (*gasLocation)->getPosition();
 
