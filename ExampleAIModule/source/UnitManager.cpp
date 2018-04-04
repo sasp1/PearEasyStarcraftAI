@@ -8,6 +8,9 @@ using namespace Filter;
 
 
 int timer = 0;
+bool wantToScout = true;
+bool wantToAttack = false;
+
 
 
 void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit) {
@@ -59,6 +62,10 @@ void UnitManager::newWorker(const BWAPI::Unit* worker) {
 
 //Initial class setup
 UnitManager::UnitManager() {
+
+}
+
+void UnitManager::addUnit(const BWAPI::Unit * unit){
 
 }
 

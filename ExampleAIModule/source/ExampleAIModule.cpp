@@ -33,6 +33,7 @@ void ExampleAIModule::onStart()
 	scoutingManager = new ScoutingManager();
 	strategyManager = new StrategyManager();
 
+
 	//Make managers aware of each other
 	unitManager->setManagers(combatManager, gatheringManager, constructionManager, scoutingManager);
 	executionManager->referenceManagers(unitManager, buildingManager);
