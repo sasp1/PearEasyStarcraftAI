@@ -6,11 +6,10 @@ class StrategyManager
 {
 	ExecutionManager* executionManager;
 	UnitManager* unitManager;
-	ScoutingManager* scoutingManager;
 	BuildingManager* buildingManager;
 
 public:
-
+	ScoutingManager * scoutingManager;
 	StrategyManager();
 	~StrategyManager();
 	void StrategyManager::calculateOrders();

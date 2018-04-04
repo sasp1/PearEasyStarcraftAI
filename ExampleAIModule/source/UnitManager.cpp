@@ -65,6 +65,10 @@ UnitManager::UnitManager() {
 
 }
 
+void UnitManager::addUnit(const BWAPI::Unit * unit){
+
+}
+
 void UnitManager::setManagers(CombatManager* combatManager, GatheringManager* gatheringManager, ConstructionManager* constructionManager, ScoutingManager* scoutingManager) {
 	//Make unitmanager aware of the lowaer managers
 	this->gatheringManager = gatheringManager;
