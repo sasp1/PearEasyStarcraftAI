@@ -13,9 +13,11 @@ void GatheringManager::addWorker(const BWAPI::Unit* worker) {
 
 	if (gasWorkers.size() < gasWorkerLimit && gas != NULL) {
 		gasWorkers.push_back(worker); 
+		Broodwar->sendText("added worker to gas list"); 
 	}
 	else {
 		mineralWorkers.push_back(worker); 
+		Broodwar->sendText("added worker to mineral list");
 	}
 }
 
@@ -55,11 +57,11 @@ void GatheringManager::executeOrders() {
 	for (auto &u : mineralWorkers)
 	{
 		BWAPI::Unit mine = (*u)->getClosestUnit(IsMineralField);
-		/*if (u != NULL && (*u)->getHitPoints() == 0) {
+		if (u != NULL && (*u)->getHitPoints() == 0) {
 			mineralWorkers.remove(u); 
 			Broodwar->sendText("removed unit from mineral worker list"); 
 		}
-		else */if ((*u)->isIdle()) {
+		else if ((*u)->isIdle()) {
 			if ((*u)->isCarryingGas() || (*u)->isCarryingMinerals())
 				(*u)->returnCargo();
 
@@ -99,6 +101,8 @@ void GatheringManager::executeOrders() {
 	// Clean up gathering units (if some were destroyed) 
 
 }
+
+
 
 //Initial class setup
 GatheringManager::GatheringManager()

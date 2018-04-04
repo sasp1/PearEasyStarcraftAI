@@ -34,7 +34,7 @@ bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals
 	//newConstruction is available/is sat whenever a building has started being created
 	bool requestIsAccepted = mineralPriceOk && gasPriceOk && newConstructionIsAvailable;
 
-	Broodwar->sendText("Unitmanager: minerals: %s    gas: %s    newConstr: %s", (mineralPriceOk ? "OK" : "denied"), (gasPriceOk ? "OK" : "denied"), (newConstructionIsAvailable ? "OK" : "denied"));
+	//Broodwar->sendText("Unitmanager: minerals: %s    gas: %s    newConstr: %s", (mineralPriceOk ? "OK" : "denied"), (gasPriceOk ? "OK" : "denied"), (newConstructionIsAvailable ? "OK" : "denied"));
 
 	if (requestIsAccepted) {
 		constructionManager->createBuilding(building, gatheringManager->removeWorker());

@@ -21,7 +21,7 @@ void StrategyManager::calculateStrategy() {
 	//Build strategy 1 
 	int unusedSupplies = (Broodwar->self()->supplyTotal()) - Broodwar->self()->supplyUsed();
 
-	
+	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
 	if (scoutingManager->scoutingUnits.size() > 0) {
 		buildingManager->setIsDesiredToTrainMarines(false); 
@@ -29,13 +29,28 @@ void StrategyManager::calculateStrategy() {
 		buildingManager->setIsDesiredToTrainMarines(true);
 	}
 
+	//Maintain 20 workers
 	if (unitManager->unitWorkers.size() > 20) {
 		buildingManager->setIsDesiredToTrainMarines(false);
 	}
 	else {
 		buildingManager->setIsDesiredToTrainWorkers(true);
 	}
+
+	//Spam voltures
+	buildingManager->setIsDesiredToTrainVultures(true);
+
+
+	//___________________________Attacking strategy________________________________
+
+	//Check if enough voltures for attack
+	if (combatManager->combatUnits.size >=8) {
+		Broodwar->sendText("VIL ANGRIBE");
+
+	}
 	
+	//___________________________Building strategy________________________________
+
 
 	//Construct supply depots when needed (2 supplies left)
 	if (  ((unusedSupplies <= 4) || (unusedSupplies <=20 && factoriesOrdered>=1))   && supplyDepotsAreNotUnderConstruction) {
@@ -64,7 +79,7 @@ void StrategyManager::calculateStrategy() {
 		refineriesOrdered++;
 	}
 
-	//Order a factory
+	//Order two factories
 	if (Broodwar->self()->supplyUsed() >= 30 && factoriesOrdered < 2) {
 		Broodwar->sendText("adding factory to priorityQueue");
 		BWAPI::UnitType building = UnitTypes::Terran_Factory;
@@ -72,6 +87,7 @@ void StrategyManager::calculateStrategy() {
 		factoriesOrdered++;
 	}
 
+	//when
 
 	
 
@@ -86,10 +102,11 @@ void StrategyManager::unitComplete(const BWAPI::Unit* unit) {
 
 
 // Iniitial class setup
-void StrategyManager::referenceManagers(ExecutionManager* executionManager, UnitManager* unitManager, BuildingManager* buildingManager) {
+void StrategyManager::referenceManagers(ExecutionManager* executionManager, UnitManager* unitManager, BuildingManager* buildingManager, CombatManager* combatManager) {
 	this->executionManager = executionManager;
 	this->unitManager = unitManager;
 	this->buildingManager = buildingManager;
+	this->combatManager = combatManager;
 }
 
 StrategyManager::~StrategyManager()

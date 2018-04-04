@@ -40,7 +40,7 @@ void ExampleAIModule::onStart()
 	//Make managers aware of each other
 	unitManager->setManagers(combatManager, gatheringManager, constructionManager, scoutingManager);
 	executionManager->referenceManagers(unitManager, buildingManager);
-	strategyManager->referenceManagers(executionManager, unitManager, buildingManager);
+	strategyManager->referenceManagers(executionManager, unitManager, buildingManager, combatManager);
   // Enable the UserInput flag, which allows us to control the bot and type messages.
   Broodwar->enableFlag(Flag::UserInput);
 
@@ -88,10 +88,10 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 {//When a unit build is complete
 	BWAPI::Unit* u = new Unit(unit);
 
-	//Make sure we are ingame
-	if (Broodwar->getFrameCount() > 10) {
+	//Make sure we are ingame 
+	// makes sure unit is ally unit
+	if (Broodwar->self()->isAlly((*u)->getPlayer()) && Broodwar->getFrameCount() > 10) {
 
-		
 
 		if ((*u)->getType().isWorker()) 
 			(*unitManager).newWorker(u);
