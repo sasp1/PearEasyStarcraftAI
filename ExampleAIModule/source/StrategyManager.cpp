@@ -47,7 +47,6 @@ void StrategyManager::calculateStrategy() {
 	if (combatManager->combatUnits.size >=8) {
 		Broodwar->sendText("VIL ANGRIBE");
 
-
 	}
 	
 	//___________________________Building strategy________________________________
