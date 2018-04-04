@@ -56,7 +56,7 @@ void ExampleAIModule::onStart()
 		  (*unitManager).newWorker(&u);
 
 	  else if (u->getType().isResourceDepot())
-		  (*buildingManager).addCommandCenter(&u);
+		  (*buildingManager).buildingCreated(&u);
   }
 }
 
