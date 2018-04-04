@@ -44,7 +44,9 @@ void StrategyManager::calculateStrategy() {
 	//___________________________Attacking strategy________________________________
 
 	//Check if enough voltures for attack
+	if () {
 
+	}
 	
 
 	//Construct supply depots when needed (2 supplies left)
