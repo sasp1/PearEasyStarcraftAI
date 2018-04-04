@@ -11,11 +11,17 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 }
 
 void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
-	
+	(*unit)->attack((*unit),(*unit)->getClosestUnit(IsEnemy));
+}
+
+void CombatManager::attackWithAllCombatUnits() {
+	for (auto &u : combatUnits){
+			attackNearestEnemy(u);
+	}
 }
 
 void CombatManager::executeOrders() {
-
+		attackWithAllCombatUnits();
 }
 
 
