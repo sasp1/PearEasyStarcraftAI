@@ -23,10 +23,7 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 
 	if ((*u)->getType() == UnitTypes::Terran_Machine_Shop) {
 		expandFactory = false;
-	}
-
-	if ((*u)->getType() == UnitTypes::Terran_Factory) {
-		expandFactory = true;
+		desiredResearchs.push_front(TechTypes::Spider_Mines);
 	}
 
 	if ((*u)->getType() != UnitTypes::Terran_Supply_Depot)

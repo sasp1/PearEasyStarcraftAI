@@ -13,7 +13,7 @@ public:
 	void BuildingManager::setIsDesiredToTrainWorkers(bool buildWorkers);
 	void BuildingManager::setIsDesiredToTrainMarines(bool trainWorkers);
 	void BuildingManager::setIsDesiredToTrainVultures(bool trainVultures);
-	bool expandFactory = false;
+	bool expandFactory = true;
 	std::list<BWAPI::TechType> desiredResearchs;
 	bool isDesiredToTrainWorkers = false;
 	bool isDesiredToTrainMarines = false;
