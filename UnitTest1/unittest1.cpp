@@ -23,8 +23,8 @@ namespace UnitTest1
 		TEST_METHOD(shouldTrainWorkers)
 		{
 			UnitManager manager;
-			BWAPI::Unit* unit = new BWAPI::Unit();
-		
+			BWAPI::Unit* unit = new BWAPI::Unit(); 
+
 		/*	int numberOfWorkers = manager.workers.size();
 			Assert::AreEqual(0, numberOfWorkers);
 			manager.newWorker(unit); 
