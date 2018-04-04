@@ -33,6 +33,8 @@ void ExampleAIModule::onStart()
 	scoutingManager = new ScoutingManager();
 	strategyManager = new StrategyManager();
 
+	strategyManager->scoutingManager = scoutingManager;
+
 
 	//Make managers aware of each other
 	unitManager->setManagers(combatManager, gatheringManager, constructionManager, scoutingManager);
@@ -91,19 +93,19 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 
 		if ((*u)->getType().isWorker()) 
 			(*unitManager).newWorker(u);
-
 		
-		if ((*u)->getType() == UnitTypes::Terran_Marine)
-			(*scoutingManager).addScout(u);
+		else if ((*u)->getType() == UnitTypes::Terran_Marine)
+			(*unitManager).addUnit(u);
+
+		else if ((*u)->getType() == UnitTypes::Terran_Vulture)
+			(*unitManager).addUnit(u);
 
 		else if ((*u)->getType().isBuilding()) {
 			buildingManager->buildingCreated(u);
 			strategyManager->unitComplete(u);
 			unitManager->eventConstructionComplete(u);
 		}
-
 	}
-
 }
 
 void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
