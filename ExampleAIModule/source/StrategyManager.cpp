@@ -29,11 +29,16 @@ void StrategyManager::calculateStrategy() {
 		buildingManager->setIsDesiredToTrainMarines(true);
 	}
 
-	buildingManager->setIsDesiredToTrainWorkers(true);
+	if (unitManager->unitWorkers.size() > 20) {
+		buildingManager->setIsDesiredToTrainMarines(false);
+	}
+	else {
+		buildingManager->setIsDesiredToTrainWorkers(true);
+	}
 	
 
 	//Construct supply depots when needed (2 supplies left)
-	if (unusedSupplies <= 4 && supplyDepotsAreNotUnderConstruction) {
+	if ((unusedSupplies <= 4) || (unusedSupplies <=8 && factoriesOrdered>1) && supplyDepotsAreNotUnderConstruction) {
 
 		BWAPI::UnitType building = Broodwar->self()->getRace().getSupplyProvider();
 
@@ -60,12 +65,13 @@ void StrategyManager::calculateStrategy() {
 	}
 
 	//Order a factory
-	if (Broodwar->self()->supplyUsed() >= 30 && factoriesOrdered == 0) {
+	if (Broodwar->self()->supplyUsed() >= 30 && factoriesOrdered < 2) {
 		Broodwar->sendText("adding factory to priorityQueue");
 		BWAPI::UnitType building = UnitTypes::Terran_Factory;
 		executionManager->addPriorityItem(building);
 		factoriesOrdered++;
 	}
+
 
 	
 
