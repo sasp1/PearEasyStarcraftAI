@@ -5,12 +5,15 @@
 class StrategyManager
 {
 	ExecutionManager* executionManager;
+	UnitManager* unitManager;
+	BuildingManager* buildingManager;
+
 public:
 
 	StrategyManager();
 	~StrategyManager();
 	void StrategyManager::calculateOrders();
-	void StrategyManager::referenceManagers(ExecutionManager* executionManager);
+	void StrategyManager::referenceManagers(ExecutionManager* executionManager, UnitManager* unitManager, BuildingManager* buildingManager);
 	void StrategyManager::calculateStrategy();
 	void StrategyManager::unitComplete(const BWAPI::Unit* unit);
 };

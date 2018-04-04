@@ -6,14 +6,16 @@
 using namespace BWAPI;
 using namespace Filter;
 
-std::list<const BWAPI::Unit*> unitWorkers;
-std::list<const BWAPI::Unit*> soldiers;
+
 int timer = 0;
 
 
-void UnitManager::eventConstructionComplete() {
-	//When building of a construction is completed
-	//isBuilding = false;
+void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit) {
+	if ((*unit)->getType() == UnitTypes::Terran_Refinery) {
+		for (int i = 0; i <=2; i++) {
+			gatheringManager->addGasworker();
+		}
+	}
 }
 
 bool UnitManager::requestBuilding(BWAPI::UnitType building) {

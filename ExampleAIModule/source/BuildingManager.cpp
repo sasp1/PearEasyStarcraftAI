@@ -4,9 +4,7 @@ using namespace BWAPI;
 using namespace Filter;
 using namespace std;
 
-const BWAPI::Unit* commandCenter;
-const BWAPI::Unit* barracks;
-int nrOfBarracks = 0;
+std::list<const BWAPI::Unit*> buildings;
 
 /**
 * @file
@@ -19,38 +17,38 @@ int nrOfBarracks = 0;
 */
 void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 
-	if ((*u)->getType() == UnitTypes::Terran_Barracks) {
-		Broodwar->sendText("%s", "Completed building barracks");
-		addBarracks(u);
+	if ((*u)->getType() != UnitTypes::Terran_Supply_Depot)
+	{
+		buildings.push_back(u);
+		Broodwar->sendText("%s", "Building completed");
 	}
 
-
-
-	if ((*u)->getType() == UnitTypes::Terran_Supply_Depot) {
-		Broodwar->sendText("%s", "Completed building supl. depot");
-
-	}
+	Broodwar->sendText("%s", "Depot completed");
 }
-
-
-void BuildingManager::addCommandCenter(const BWAPI::Unit* unit) {
-	//Receive info about existing commandcenter (Change to all buildings)
-	commandCenter = unit;
-}
-
-void BuildingManager::addBarracks(const BWAPI::Unit* barracksUnit) {
-	barracks = (barracksUnit);
-	nrOfBarracks++;
-}
-
 
 void BuildingManager::executeOrders() {
 	//"Main" of this class
-	BuildingManager::handleCommandCenter();
+	for (auto &b : buildings) {
 
-	if (nrOfBarracks > 0 && isDesiredToTrainMarines)
-	(*barracks)->train(UnitTypes::Terran_Marine);
+		if (*b != NULL) {
 
+			if ((*b)->getType() == UnitTypes::Terran_Command_Center && isDesiredToTrainWorkers) {
+				if ((*b)->isIdle()) {
+					(*b)->train(UnitTypes::Terran_SCV);
+				}
+			}
+			if (((*b)->getType() == UnitTypes::Terran_Barracks && isDesiredToTrainMarines)) {
+				if ((*b)->isIdle()) {
+					(*b)->train(UnitTypes::Terran_Marine);
+				}
+			}
+			if (((*b)->getType() == UnitTypes::Terran_Factory && isDesiredToTrainVultures)) {
+				if ((*b)->isIdle()) {
+					(*b)->train(UnitTypes::Terran_Vulture);
+				}
+			}
+		}
+	}
 }
 
 /**
@@ -68,17 +66,10 @@ void BuildingManager::setIsDesiredToTrainMarines(bool trainWorkers) {
 	this->isDesiredToTrainMarines = trainWorkers;
 }
 
-void BuildingManager::handleCommandCenter() {
-	//Issue orders for command center
-	if (isDesiredToTrainWorkers) {
-
-	BWAPI::UnitType type = BWAPI::Broodwar->self()->getRace().getWorker();
-
-	if ((*commandCenter)->isIdle())
-		(*commandCenter)->train(type);
-	}
+void BuildingManager::setIsDesiredToTrainVultures(bool trainVultures) {
+	//Change request to build borkers or not
+	this->isDesiredToTrainVultures = trainVultures;
 }
-
 
 //Initial class setup
 BuildingManager::BuildingManager()
