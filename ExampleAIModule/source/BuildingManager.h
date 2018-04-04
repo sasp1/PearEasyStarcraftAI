@@ -3,9 +3,7 @@
 class BuildingManager
 {
 
-	bool isDesiredToTrainWorkers = false;
-	bool isDesiredToTrainMarines = false;
-	bool isDesiredToTrainVultures = true;
+
 	
 public:
 	BuildingManager();
@@ -16,5 +14,9 @@ public:
 	void BuildingManager::setIsDesiredToTrainMarines(bool trainWorkers);
 	void BuildingManager::setIsDesiredToTrainVultures(bool trainVultures);
 	bool expandFactory = false;
+	std::list<BWAPI::TechType> desiredResearchs;
+	bool isDesiredToTrainWorkers = false;
+	bool isDesiredToTrainMarines = false;
+	bool isDesiredToTrainVultures = true;
 
 };
