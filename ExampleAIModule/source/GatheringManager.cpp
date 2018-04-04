@@ -50,12 +50,16 @@ void GatheringManager::executeOrders() {
 	}
 
 
+
 	//Make mineral gatherers work
 	for (auto &u : mineralWorkers)
 	{
 		BWAPI::Unit mine = (*u)->getClosestUnit(IsMineralField);
-
-		if ((*u)->isIdle()) {
+		/*if (u != NULL && (*u)->getHitPoints() == 0) {
+			mineralWorkers.remove(u); 
+			Broodwar->sendText("removed unit from mineral worker list"); 
+		}
+		else */if ((*u)->isIdle()) {
 			if ((*u)->isCarryingGas() || (*u)->isCarryingMinerals())
 				(*u)->returnCargo();
 
@@ -69,7 +73,11 @@ void GatheringManager::executeOrders() {
 	//Make gas workers work
 	for (auto &u : gasWorkers)
 	{
-		if ((*u)->isIdle()) {
+		// Delete units from lists if they don't exist anymore: 
+		/*if (u != NULL && (*u)->getHitPoints()==0) {
+			gasWorkers.remove(u); 
+			Broodwar->sendText("removed unit from gas worker list");
+		} else*/ if ((*u)->isIdle()) { 
 			if ((*u)->isCarryingGas() || (*u)->isCarryingMinerals())
 				(*u)->returnCargo();
 
@@ -88,6 +96,7 @@ void GatheringManager::executeOrders() {
 		gasWorkerLimit = 6; 
 	}
 
+	// Clean up gathering units (if some were destroyed) 
 
 }
 
