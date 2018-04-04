@@ -21,7 +21,7 @@ void StrategyManager::calculateStrategy() {
 	//Build strategy 1 
 	int unusedSupplies = (Broodwar->self()->supplyTotal()) - Broodwar->self()->supplyUsed();
 
-	
+	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
 	if (scoutingManager->scoutingUnits.size() > 0) {
 		buildingManager->setIsDesiredToTrainMarines(false); 
@@ -29,12 +29,22 @@ void StrategyManager::calculateStrategy() {
 		buildingManager->setIsDesiredToTrainMarines(true);
 	}
 
+	//Maintain 20 workers
 	if (unitManager->unitWorkers.size() > 20) {
 		buildingManager->setIsDesiredToTrainMarines(false);
 	}
 	else {
 		buildingManager->setIsDesiredToTrainWorkers(true);
 	}
+
+	//Spam voltures
+	buildingManager->setIsDesiredToTrainVultures(true);
+
+
+	//___________________________Attacking strategy________________________________
+
+	//Check if enough voltures for attack
+
 	
 
 	//Construct supply depots when needed (2 supplies left)
@@ -64,7 +74,7 @@ void StrategyManager::calculateStrategy() {
 		refineriesOrdered++;
 	}
 
-	//Order a factory
+	//Order two factories
 	if (Broodwar->self()->supplyUsed() >= 30 && factoriesOrdered < 2) {
 		Broodwar->sendText("adding factory to priorityQueue");
 		BWAPI::UnitType building = UnitTypes::Terran_Factory;
@@ -72,6 +82,7 @@ void StrategyManager::calculateStrategy() {
 		factoriesOrdered++;
 	}
 
+	//when
 
 	
 
