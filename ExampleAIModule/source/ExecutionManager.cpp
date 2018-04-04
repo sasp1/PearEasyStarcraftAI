@@ -35,6 +35,7 @@ void ExecutionManager::addPriorityItem(BWAPI::UnitType unit) {
 }
 
 void ExecutionManager::controlTrainingOfMovingUnits() {
+	/*
 	if (Broodwar->self()->minerals() - reservedMinerals < UnitTypes::Terran_SCV.mineralPrice()) {
 		buildingManager->setIsDesiredToTrainWorkers(false);
 	}
@@ -47,6 +48,7 @@ void ExecutionManager::controlTrainingOfMovingUnits() {
 	else {
 		buildingManager->setIsDesiredToTrainMarines(true);
 	}
+	*/
 }
 
 void ExecutionManager::handleWorker(const BWAPI::Unit* u) {

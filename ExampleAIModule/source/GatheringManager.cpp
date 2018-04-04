@@ -28,7 +28,7 @@ const BWAPI::Unit* GatheringManager::removeWorker() {
 void GatheringManager::executeOrders() {
 	//Execute own orders. "Main" of this class
 
-	//Simple look for refinery
+	//Simple look for refinery (handling if the gas is not defined)
 	if (gas == NULL) {
 		for (auto &u : Broodwar->getAllUnits()) {
 			if (u->getType().isBuilding()) {
