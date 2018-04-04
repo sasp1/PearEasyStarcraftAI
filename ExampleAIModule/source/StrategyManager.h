@@ -6,6 +6,7 @@ class StrategyManager
 {
 	ExecutionManager* executionManager;
 	UnitManager* unitManager;
+	ScoutingManager* scoutingManager;
 	BuildingManager* buildingManager;
 
 public:

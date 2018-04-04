@@ -8,6 +8,9 @@ using namespace Filter;
 
 
 int timer = 0;
+bool wantToScout = true;
+bool wantToAttack = false;
+
 
 
 void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit) {

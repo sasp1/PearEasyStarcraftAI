@@ -23,7 +23,7 @@ void StrategyManager::calculateStrategy() {
 
 	
 	//Maintain 1 soldier for scouting
-	if (unitManager->soldiers.size() > 0) {
+	if (scoutingManager->scoutingUnits.size() > 0) {
 		buildingManager->setIsDesiredToTrainMarines(false); 
 	} else {
 		buildingManager->setIsDesiredToTrainMarines(true);
