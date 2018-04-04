@@ -11,7 +11,7 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 }
 
 void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
-	(*unit)->attack((*unit),(*unit)->getClosestUnit(IsEnemy));
+	(*unit)->attack((*unit)->getClosestUnit(IsEnemy), false);
 }
 
 void CombatManager::attackWithAllCombatUnits() {
