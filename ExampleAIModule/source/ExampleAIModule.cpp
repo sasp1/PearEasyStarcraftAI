@@ -59,6 +59,7 @@ void ExampleAIModule::onStart()
 
 	  else if (u->getType().isResourceDepot())
 		  (*buildingManager).buildingCreated(&u);
+	 
   }
 }
 

@@ -22,6 +22,7 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 
 
 	if ((*u)->getType() == UnitTypes::Terran_Machine_Shop) {
+		Broodwar->sendText("%s built Exp");
 		expandFactory = false;
 		desiredResearchs.push_front(TechTypes::Spider_Mines);
 	}
@@ -57,25 +58,21 @@ void BuildingManager::executeOrders() {
 				}
 			}
 
-			if ((*b)->getType() == UnitTypes::Terran_Factory ) {
-
+			if ((*b)->getType() == UnitTypes::Terran_Factory) {
 				if ((*b)->isIdle()) {
+					if (expandFactory && !foundFactory) {
+						int x = rand() % 10 - 5;
+						int y = rand() % 10 - 5;
 
+						Broodwar->sendText("%i", x, "%i", y);
 
-					if (expandFactory && (NULL == (*b)->getAddon()) && !foundFactory) {
-					int x = rand() % 10 - 5;
-					int y = rand() % 10 - 5;
+						TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Machine_Shop, (*b)->getTilePosition() + TilePosition(x, y));
+						(*b)->build(UnitTypes::Terran_Machine_Shop, targetBuildLocation);
+					}
 
-					Broodwar->sendText("%i", x ,"%i", y);
-					
-					TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Machine_Shop, (*b)->getTilePosition() + TilePosition(x,y));
-					(*b)->build(UnitTypes::Terran_Machine_Shop, targetBuildLocation);
-				}
-
-				else if (isDesiredToTrainVultures) {
-					(*b)->train(UnitTypes::Terran_Vulture);
-				}
-
+					else if (isDesiredToTrainVultures) {
+						(*b)->train(UnitTypes::Terran_Vulture);
+					}
 				}
 				foundFactory = true;
 			}
