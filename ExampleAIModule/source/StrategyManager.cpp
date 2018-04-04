@@ -44,10 +44,14 @@ void StrategyManager::calculateStrategy() {
 	//___________________________Attacking strategy________________________________
 
 	//Check if enough voltures for attack
-	if () {
+	if (combatManager->combatUnits.size >=8) {
+		Broodwar->sendText("VIL ANGRIBE");
+
 
 	}
 	
+	//___________________________Building strategy________________________________
+
 
 	//Construct supply depots when needed (2 supplies left)
 	if (  ((unusedSupplies <= 4) || (unusedSupplies <=20 && factoriesOrdered>=1))   && supplyDepotsAreNotUnderConstruction) {
@@ -99,10 +103,11 @@ void StrategyManager::unitComplete(const BWAPI::Unit* unit) {
 
 
 // Iniitial class setup
-void StrategyManager::referenceManagers(ExecutionManager* executionManager, UnitManager* unitManager, BuildingManager* buildingManager) {
+void StrategyManager::referenceManagers(ExecutionManager* executionManager, UnitManager* unitManager, BuildingManager* buildingManager, CombatManager* combatManager) {
 	this->executionManager = executionManager;
 	this->unitManager = unitManager;
 	this->buildingManager = buildingManager;
+	this->combatManager = combatManager;
 }
 
 StrategyManager::~StrategyManager()
