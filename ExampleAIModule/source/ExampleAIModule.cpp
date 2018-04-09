@@ -59,6 +59,7 @@ void ExampleAIModule::onStart()
 
 	  else if (u->getType().isResourceDepot())
 		  (*buildingManager).buildingCreated(&u);
+	 
   }
 }
 
@@ -88,10 +89,10 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 {//When a unit build is complete
 	BWAPI::Unit* u = new Unit(unit);
 
-	//Make sure we are ingame
-	if (Broodwar->getFrameCount() > 10) {
+	//Make sure we are ingame 
+	// makes sure unit is ally unit
+	if (Broodwar->self()->isAlly((*u)->getPlayer()) && Broodwar->getFrameCount() > 10) {
 
-		
 
 		if ((*u)->getType().isWorker()) 
 			(*unitManager).newWorker(u);
