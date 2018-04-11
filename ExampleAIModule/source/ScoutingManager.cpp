@@ -18,10 +18,10 @@ BWAPI::Position cornerCoords2 = Position(4000, 4000);
 BWAPI::Position cornerCoords3 = Position(100, 4000);
 
 
-ScoutingManager::ScoutingManager()
+ScoutingManager::ScoutingManager(BWAPI::Position startingPosition)
 {
-	lastEnemyBuildingPosition = BWAPI::Position(0,0);
-	setStartingCorner(BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation()));
+	lastEnemyBuildingPosition = BWAPI::Position(0, 0); 
+	setStartingCorner(startingPosition);
 }
 
 ScoutingManager::~ScoutingManager()
@@ -85,9 +85,9 @@ void ScoutingManager::executeOrders() {
 
 void ScoutingManager::returnToBase(const BWAPI::Unit* unit) {
 	
-	if ((*unit)->getTargetPosition() != (*buildingManager->commandCenter)->getPosition()) {
+	if ((*unit)->getTargetPosition != (*buildingManager->commandCenter)->getPosition) {
 		(*unit)->move((*buildingManager->commandCenter)->getPosition());
-		Broodwar->sendText("Scouting unit is returning to the base");
+		Broodwar->sendText("Scouting unit is returning to the base"); 
 	}
 
 }

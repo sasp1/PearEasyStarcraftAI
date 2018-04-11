@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include "../ExampleAIModule/Source/BuildingManager.h"
 #include "../ExampleAIModule/Source/UnitManager.h"
+#include "UnitMock.h"
 
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -33,13 +34,13 @@ namespace UnitTest1
 		}
 
 		TEST_METHOD(shouldScoutCornerClockwise) {
-			ScoutingManager manager; 
-			BWAPI::Unit* unit = new BWAPI::Unit();
-			BWAPI::Unit* valenT = BWAPI::UnitTypes:: 
-			manager.addScout(valenT); 
-
+			ScoutingManager* manager = new ScoutingManager(); 
 			
-
+			BWAPI::Unit* unit = new BWAPI::Unit();
+			
+			UnitMock* fakeUnit = new UnitMock(); 
+			
+			Assert::AreEqual(0, (int)manager->scoutingUnits.size()); 
 
 		}
 

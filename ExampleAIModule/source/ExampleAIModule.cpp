@@ -30,9 +30,10 @@ void ExampleAIModule::onStart()
 	constructionManager = new ConstructionManager();
 	executionManager = new ExecutionManager();
 	combatManager = new CombatManager();
-	scoutingManager = new ScoutingManager();
+	scoutingManager = new ScoutingManager(BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation()));
 	strategyManager = new StrategyManager();
 
+	// Setting cross-references:
 	strategyManager->scoutingManager = scoutingManager;
 	constructionManager->buildingManager = buildingManager;
 	scoutingManager->buildingManager = buildingManager; 
