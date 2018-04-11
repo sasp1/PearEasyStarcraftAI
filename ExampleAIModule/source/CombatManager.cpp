@@ -29,24 +29,18 @@ void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position pos) {
 
 void CombatManager::defendBase(){
 	//find min distance to defend base (commandcenter to closest enemy)
-	//if (BWAPI::Unit(buildingManager->commandCenter)->getDistance(BWAPI::Unit(buildingManager->commandCenter)->getClosestUnit(IsEnemy))<1000) {
-		//for (auto &u : combatUnits) {
-		//	attackNearestEnemy(u);
-		//}
-	//}
+	if (BWAPI::Unit(*buildingManager->commandCenter)->getDistance(BWAPI::Unit(*buildingManager->commandCenter)->getClosestUnit(IsEnemy))<1000) {
+		Broodwar->sendText("DEFEND");
+		for (auto &u : combatUnits) {
+			attackNearestEnemy(u);
+		}
+	}
 }
 
 void CombatManager::executeOrders() {
 
-	//if (Broodwar->getFrameCount() > 5) {
+	defendBase();
 
-
-	//	defendBase();
-	//}
-	//BWAPI::Unit(buildingManager->commandCenter)->getDistance(BWAPI::Unit(buildingManager->commandCenter)->getClosestUnit(IsEnemy));
-	//if ((BWAPI::Unit(buildingManager->commandCenter) != NULL) & (BWAPI::Unit(buildingManager->commandCenter))->exists());
-	
-	//Broodwar->sendText("%s", BWAPI::Unit(buildingManager->commandCenter));
 }
 
 
