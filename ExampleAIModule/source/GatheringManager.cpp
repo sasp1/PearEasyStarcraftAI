@@ -121,7 +121,7 @@ void GatheringManager::executeOrders() {
 
 
 	// Update limit to number of gasworkers: 
-	if (Broodwar->self()->gatheredGas() > 300) {
+	if (Broodwar->self()->gatheredGas() > 800) {
 		gasWorkerLimit = 0; 
 	}
 
