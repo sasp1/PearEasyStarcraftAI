@@ -6,6 +6,8 @@
 #include "BWAPI\UnitCommand.h"
 #include "../include/BWAPI/UnitCommand.h"
 #include <../include/BWAPI/UnitCommand.h>
+#include "../BWAPI/Unit.h"
+#include <../BWAPI/Unit.h>
 
 #pragma once
 class UnitMock : public BWAPI::UnitInterface
