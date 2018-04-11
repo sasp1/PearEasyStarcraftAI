@@ -24,6 +24,7 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 
 	if ((*u)->getType() == UnitTypes::Terran_Command_Center) {
 		commandCenter = u;
+		Broodwar->sendText("Hejsa %s", u);
 	}
 
 	if ((*u)->getType() == UnitTypes::Terran_Machine_Shop) {

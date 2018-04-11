@@ -4,7 +4,6 @@ using namespace BWAPI;
 using namespace Filter;
 
 CombatManager::CombatManager() {
-	bool wantToAttackEnemyBase = false;
 	std::list<const BWAPI::Unit*> combatUnits;
 }
 
@@ -21,26 +20,32 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 }
 
 void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position pos) {
-	if (wantToAttackEnemyBase) {
-		for (auto &u : combatUnits) {
+	for (auto &u : combatUnits) {
 			(*u)->move(pos);
 			attackNearestEnemy(u);
-		}
 	}
 }
 
 void CombatManager::defendBase(){
 	//find min distance to defend base (commandcenter to closest enemy)
-	/*if (BWAPI::Broodwar->self()->getStartLocation().getDistance() {
-		for (auto &u : combatUnits) {
-			attackNearestEnemy(u);
-		}
-	}*/
+	//if (BWAPI::Unit(buildingManager->commandCenter)->getDistance(BWAPI::Unit(buildingManager->commandCenter)->getClosestUnit(IsEnemy))<1000) {
+		//for (auto &u : combatUnits) {
+		//	attackNearestEnemy(u);
+		//}
+	//}
 }
-
 
 void CombatManager::executeOrders() {
 
+	//if (Broodwar->getFrameCount() > 5) {
+
+
+	//	defendBase();
+	//}
+	//BWAPI::Unit(buildingManager->commandCenter)->getDistance(BWAPI::Unit(buildingManager->commandCenter)->getClosestUnit(IsEnemy));
+	//if ((BWAPI::Unit(buildingManager->commandCenter) != NULL) & (BWAPI::Unit(buildingManager->commandCenter))->exists());
+	
+	//Broodwar->sendText("%s", BWAPI::Unit(buildingManager->commandCenter));
 }
 
 

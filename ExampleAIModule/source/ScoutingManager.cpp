@@ -19,6 +19,7 @@ BWAPI::Position cornerCoords3 = Position(100, 4000);
 
 ScoutingManager::ScoutingManager()
 {
+	lastEnemyBuildingPosition = BWAPI::Position(0,0);
 	setStartingCorner(BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation()));
 }
 
