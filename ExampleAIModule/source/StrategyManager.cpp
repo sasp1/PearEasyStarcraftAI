@@ -7,17 +7,27 @@ bool supplyDepotsAreNotUnderConstruction = true;
 bool desireBuildingBarracks = true;
 int refineriesOrdered = 0;
 int factoriesOrdered = 0;
+int strategy = 1;
 
 
 void StrategyManager::calculateOrders() {
-	
+
 	//Set executionManager orders
-	calculateStrategy();
+	if (strategy == 1) {
+		calculateStrategyOne();
+	}
+	else if (strategy == 2) {
+		calculateStrategyTwo();
+	}
+
+
+
+
 	executionManager->executeOrders();
 
 }
 
-void StrategyManager::calculateStrategy() {
+void StrategyManager::calculateStrategyOne() {
 	//Build strategy 1 
 	int unusedSupplies = (Broodwar->self()->supplyTotal()) - Broodwar->self()->supplyUsed();
 
@@ -39,15 +49,7 @@ void StrategyManager::calculateStrategy() {
 
 	//Spam voltures
 	buildingManager->setIsDesiredToTrainVultures(true);
-
-
-	//___________________________Attacking strategy________________________________
-
-	//Check if enough voltures for attack
-	if (combatManager->combatUnits.size() >=8) {
-		Broodwar->sendText("VIL ANGRIBE");
-		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
-	}
+	
 	
 	//___________________________Building strategy________________________________
 
@@ -57,7 +59,6 @@ void StrategyManager::calculateStrategy() {
 
 		BWAPI::UnitType building = Broodwar->self()->getRace().getSupplyProvider();
 
-			Broodwar->sendText("adding supply depot to priorityQueue");
 			executionManager->addPriorityItem(building);
 			supplyDepotsAreNotUnderConstruction = false;
 	}
@@ -87,9 +88,25 @@ void StrategyManager::calculateStrategy() {
 		factoriesOrdered++;
 	}
 
-	//when
+
+
+	//___________________________Attacking strategy________________________________
+
+	//Check if enough voltures for attack
+	if (combatManager->combatUnits.size() >= 8) {
+		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
+		strategy++;
+		Broodwar->sendText("PHASE TWO");
+	}
 	
-	
+}
+
+
+void StrategyManager::calculateStrategyTwo() {
+
+
+	Broodwar->sendText("TROLOLOLOLOL");
+
 
 }
 

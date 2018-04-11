@@ -8,25 +8,26 @@ using namespace Filter;
 BWAPI::Unit* gas = NULL;
 int gasWorkerLimit = 3; 
 
+
 void GatheringManager::addWorker(const BWAPI::Unit* worker) {
 	//Receive control of a new worker
 
 	if (gasWorkers.size() < gasWorkerLimit && gas != NULL) {
 		gasWorkers.push_back(worker); 
-		Broodwar->sendText("added worker to gas list"); 
 	}
 	else {
 		mineralWorkers.push_back(worker); 
-		Broodwar->sendText("added worker to mineral list");
 	}
 }
 
+/*
 void GatheringManager::addGasworker() {
 	//Add unit to gas gathering from mineral gathering
 	gasWorkers.push_back(mineralWorkers.back());
 	mineralWorkers.pop_back();
 	Broodwar->sendText("gas worker was taken from mineral workers"); 
 }
+*/
 
 const BWAPI::Unit* GatheringManager::removeWorker() {
 	//Lose control of a worker
@@ -38,6 +39,26 @@ const BWAPI::Unit* GatheringManager::removeWorker() {
 void GatheringManager::executeOrders() {
 	//Execute own orders. "Main" of this class
 
+
+	//Distribute gas and mineral-workers
+	const BWAPI::Unit* worker;
+	if (gasWorkers.size() > 0 && gasWorkers.size() < gasWorkerLimit && gas != NULL && !(*mineralWorkers.back())->isCarryingMinerals()) {
+		worker = mineralWorkers.back();
+		(*worker)->stop();
+		mineralWorkers.pop_back();
+		gasWorkers.push_back(worker);
+		Broodwar->sendText("added worker to gas list");
+	}
+	else if (mineralWorkers.size() > 0 && gasWorkers.size() > gasWorkerLimit && gas != NULL && !(*gasWorkers.back())->isCarryingGas() ) {
+		worker = gasWorkers.back();
+		(*worker)->stop();
+		gasWorkers.pop_back();
+		mineralWorkers.push_back(worker);
+		Broodwar->sendText("added worker to mineral list");
+	}
+
+
+
 	//Simple look for refinery (handling if the gas is not defined)
 	if (gas == NULL) {
 		for (auto &u : Broodwar->getAllUnits()) {
@@ -45,7 +66,6 @@ void GatheringManager::executeOrders() {
 				if (u->getType() == UnitTypes::Terran_Refinery && (u->isCompleted())) {
 					gas = new Unit();
 					*gas = u;
-					Broodwar->sendText("Gas refinery found and set.");
 				}
 			}
 		}
@@ -87,7 +107,6 @@ void GatheringManager::executeOrders() {
 
 			else if (gas != NULL) {
 				(*u)->rightClick(*gas);
-				Broodwar->sendText("Right clicked gas on unit");	
 			}
 		}
 		else if ((*u)->isCarryingMinerals() ){
@@ -95,9 +114,15 @@ void GatheringManager::executeOrders() {
 		}
 	}	
 
+
+
+
+	
+
+
 	// Update limit to number of gasworkers: 
-	if (Broodwar->self()->supplyUsed() >= 30) {
-		//gasWorkerLimit = 6; 
+	if (Broodwar->self()->gatheredGas() > 800) {
+		gasWorkerLimit = 0; 
 	}
 
 	// Clean up gathering units (if some were destroyed) 
