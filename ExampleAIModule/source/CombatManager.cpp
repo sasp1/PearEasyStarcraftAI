@@ -21,8 +21,8 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 
 void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position pos) {
 	for (auto &u : combatUnits) {
-			(*u)->move(pos);
 			attackNearestEnemy(u);
+			(*u)->move(pos);
 	}
 }
 
