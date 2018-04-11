@@ -26,7 +26,6 @@ void ExecutionManager::executeOrders() {
 
 	//Check if minerals is reserved for buildings, and if then stop producing moving units
 	controlTrainingOfMovingUnits();
-	
 	buildingManager->executeOrders();
 	unitManager->executeOrders();
 }

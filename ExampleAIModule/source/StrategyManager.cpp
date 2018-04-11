@@ -31,7 +31,7 @@ void StrategyManager::calculateStrategy() {
 
 	//Maintain 20 workers
 	if (unitManager->unitWorkers.size() > 20) {
-		buildingManager->setIsDesiredToTrainMarines(false);
+		buildingManager->setIsDesiredToTrainWorkers(false);
 	}
 	else {
 		buildingManager->setIsDesiredToTrainWorkers(true);
