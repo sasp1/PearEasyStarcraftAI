@@ -45,7 +45,6 @@ void StrategyManager::calculateStrategy() {
 
 	//Check if enough voltures for attack
 	if (combatManager->combatUnits.size() >=8) {
-		Broodwar->sendText("VIL ANGRIBE");
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 	}
 	
@@ -57,7 +56,6 @@ void StrategyManager::calculateStrategy() {
 
 		BWAPI::UnitType building = Broodwar->self()->getRace().getSupplyProvider();
 
-			Broodwar->sendText("adding supply depot to priorityQueue");
 			executionManager->addPriorityItem(building);
 			supplyDepotsAreNotUnderConstruction = false;
 	}
