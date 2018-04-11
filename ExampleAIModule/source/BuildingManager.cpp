@@ -5,6 +5,8 @@ using namespace Filter;
 using namespace std;
 
 std::list<const BWAPI::Unit*> buildings;
+int startBuildFrame;
+
 
 
 /**
@@ -20,6 +22,9 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 	//Tilføj bygning til liste over ejede bygninger, hvis den ikke er et supply depot.
 	//Send besked om at bygning er bygget.
 
+	if ((*u)->getType() == UnitTypes::Terran_Command_Center) {
+		commandCenter = u;
+	}
 
 	if ((*u)->getType() == UnitTypes::Terran_Machine_Shop) {
 		Broodwar->sendText("%s built Exp");
