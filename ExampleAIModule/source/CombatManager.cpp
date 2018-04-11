@@ -21,10 +21,11 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 
 void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position pos) {
 	for (auto &u : combatUnits) {
-			(*u)->move(pos);
 			attackNearestEnemy(u);
+			(*u)->move(pos);
 	}
 }
+
 
 void CombatManager::defendBase(){
 	//find min distance to defend base (commandcenter to closest enemy)
