@@ -30,8 +30,8 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 		commandCenter = u;
 	}
 
+
 	if ((*u)->getType() == UnitTypes::Terran_Machine_Shop && expandFactory) {
-		Broodwar->sendText("%s built Exp");
 		desiredResearchs.push_front(TechTypes::Spider_Mines);
 		desiredUpgrades.push_front(UpgradeTypes::Ion_Thrusters);
 		expandFactory = false;

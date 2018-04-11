@@ -16,12 +16,12 @@ bool canAct = true;
 void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit) {
 	/*if ((*unit)->getType() == UnitTypes::Terran_Refinery) {
 		for (int i = 0; i <=2; i++) {
-			gatheringManager->addGasworker();
+			gatheringManager->
+er();
 		}
 	}*/
 
 	if ((*unit)->getType() == UnitTypes::Terran_Refinery) {
-		Broodwar->sendText("Refinery done!");
 		newConstructionIsAvailable = true;
 	}
 }
@@ -89,7 +89,6 @@ void UnitManager::cleanUpUnits(std::list<const BWAPI::Unit*>& unitList) {
 		if (u != NULL && (*u)->getHitPoints() == 0) {
 			unitList.remove(u);
 			u = NULL;
-			Broodwar->sendText("Unit was removed from a manager!");
 		}
 	}
 }
