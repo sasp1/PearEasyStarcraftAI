@@ -50,7 +50,7 @@ void UnitManager::executeOrders() {
 	// onFrame request to perform calculations. The "main" of this class
 	timer++;
 
-	if (timer > 1000) canAct = false;
+	if (timer > 1080) canAct = false;
 	if (timer == 1090) {
 
 		for (auto &u : Broodwar->self()->getUnits()) {

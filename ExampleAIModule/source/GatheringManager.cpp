@@ -97,7 +97,7 @@ void GatheringManager::executeOrders() {
 
 	// Update limit to number of gasworkers: 
 	if (Broodwar->self()->supplyUsed() >= 30) {
-		gasWorkerLimit = 6; 
+		//gasWorkerLimit = 6; 
 	}
 
 	// Clean up gathering units (if some were destroyed) 
