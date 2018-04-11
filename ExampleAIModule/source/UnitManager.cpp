@@ -39,7 +39,7 @@ bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals
 	if (requestIsAccepted) {
 		constructionManager->createBuilding(building, gatheringManager->removeWorker());
 		newConstructionIsAvailable = false;
-		timer = timer - 500;
+		timer = timer - 550;
 		if (timer < 0) timer = 0;
 	}
 
