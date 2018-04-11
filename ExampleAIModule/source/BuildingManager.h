@@ -15,6 +15,7 @@ public:
 	void BuildingManager::setIsDesiredToTrainVultures(bool trainVultures);
 	bool expandFactory = true;
 	std::list<BWAPI::TechType> desiredResearchs;
+	std::list<BWAPI::UpgradeType> desiredUpgrades;
 	bool isDesiredToTrainWorkers = false;
 	bool isDesiredToTrainMarines = false;
 	bool isDesiredToTrainVultures = true;
