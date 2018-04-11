@@ -6,7 +6,7 @@
 using namespace BWAPI;
 using namespace Filter;
 
-std::list<const BWAPI::Unit*> scoutingUnits;
+// std::list<const BWAPI::Unit*> scoutingUnits;
 bool enemyBaseFound = false;
 BWAPI::Position lastEnemyBuildingPosition;
 //The map is 4096x4096 pixels (64^2)

@@ -62,6 +62,24 @@ void UnitManager::executeOrders() {
 	scoutingManager->executeOrders();
 	combatManager->executeOrders();
 	constructionManager->executeOrders();
+
+	// Clean up units for each manager (if they are dead, remove them from lists): 
+	cleanUpUnits(scoutingManager->scoutingUnits); 
+	cleanUpUnits(gatheringManager->mineralWorkers); 
+	cleanUpUnits(gatheringManager->gasWorkers); 
+	cleanUpUnits(combatManager->combatUnits);  
+}
+
+void UnitManager::cleanUpUnits(std::list<const BWAPI::Unit*>& unitList) {
+
+	for (auto &u : unitList) {
+		if (u != NULL && (*u)->getHitPoints() == 0) {
+			unitList.remove(u);
+			u = NULL;
+			Broodwar->sendText("Unit was removed from a manager!"); 	
+		}
+	}
+	
 }
 
 void UnitManager::newWorker(const BWAPI::Unit* worker) {
