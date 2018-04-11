@@ -78,6 +78,8 @@ void BuildingManager::executeOrders() {
 							startedBuild = true;
 						}
 
+						(*b)->buildAddon(UnitTypes::Terran_Machine_Shop);
+							/*
 						startBuildFrame++;
 						int frameDelta = startBuildFrame % 8;
 						
@@ -85,8 +87,8 @@ void BuildingManager::executeOrders() {
 						int y;
 
 						if (frameDelta == 0) {
-							maxX++;
-							maxY++;
+							maxX += 0.02;
+							maxY += 0.02;
 							x = maxX;
 							y = maxY;
 						}
@@ -98,8 +100,8 @@ void BuildingManager::executeOrders() {
 						else if (frameDelta == 6) x = maxX;
 						else if (frameDelta == 7) y = 0;
 
-						if (maxX > 150) maxX = 0;
-						if (maxY > 150) maxY = 0;
+						if (maxX > 20) maxX = 0;
+						if (maxY > 20) maxY = 0;
 
 						TilePosition f = (*b)->getTilePosition();
 						f.y = f.y + y;
@@ -110,6 +112,7 @@ void BuildingManager::executeOrders() {
 						if (targetBuildLocation.isValid()) {
 							(*b)->build(UnitTypes::Terran_Machine_Shop, f);
 						}
+						*/
 					}
 
 					else if (isDesiredToTrainVultures) {

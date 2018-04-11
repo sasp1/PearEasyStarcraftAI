@@ -39,7 +39,7 @@ bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals
 	if (requestIsAccepted) {
 		constructionManager->createBuilding(building, gatheringManager->removeWorker());
 		newConstructionIsAvailable = false;
-		timer = timer - 500;
+		timer = timer - 550;
 		if (timer < 0) timer = 0;
 	}
 
@@ -50,7 +50,7 @@ void UnitManager::executeOrders() {
 	// onFrame request to perform calculations. The "main" of this class
 	timer++;
 
-	if (timer > 1000) canAct = false;
+	if (timer > 1080) canAct = false;
 	if (timer == 1090) {
 
 		for (auto &u : Broodwar->self()->getUnits()) {
