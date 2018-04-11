@@ -85,7 +85,7 @@ void ScoutingManager::executeOrders() {
 
 void ScoutingManager::returnToBase(const BWAPI::Unit* unit) {
 	
-	if ((*unit)->getTargetPosition != (*buildingManager->commandCenter)->getPosition) {
+	if ((*unit)->getTargetPosition() != (*buildingManager->commandCenter)->getPosition()) {
 		(*unit)->move((*buildingManager->commandCenter)->getPosition());
 		Broodwar->sendText("Scouting unit is returning to the base"); 
 	}

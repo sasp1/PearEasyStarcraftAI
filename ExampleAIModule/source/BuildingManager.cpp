@@ -32,7 +32,6 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 
 	if ((*u)->getType() == UnitTypes::Terran_Machine_Shop) {
 		Broodwar->sendText("%s built Exp");
-		expandFactory = false;
 		desiredResearchs.push_front(TechTypes::Spider_Mines);
 	}
 
@@ -69,26 +68,30 @@ void BuildingManager::executeOrders() {
 
 			if ((*b)->getType() == UnitTypes::Terran_Factory) {
 				if ((*b)->isIdle()) {
-					if (expandFactory && !foundFactory) {
-
-						if (!startedBuild) {
-							startBuildFrame = 0;
-							maxX = 0;
-							maxY = 0;
-							startedBuild = true;
-						}
+					if ((*b)->getAddon() == NULL){
 
 						(*b)->buildAddon(UnitTypes::Terran_Machine_Shop);
-							/*
+
+						if ((*b)->isIdle()) {
+
+							if (!startedBuild) {
+								startBuildFrame = 0;
+								maxX = 0;
+								maxY = 0;
+								startedBuild = true;
+							}
+
+
+							
 						startBuildFrame++;
 						int frameDelta = startBuildFrame % 8;
-						
+
 						int x;
 						int y;
 
 						if (frameDelta == 0) {
-							maxX += 0.02;
-							maxY += 0.02;
+							maxX += 0.5;
+							maxY += 0.5;
 							x = maxX;
 							y = maxY;
 						}
@@ -100,8 +103,8 @@ void BuildingManager::executeOrders() {
 						else if (frameDelta == 6) x = maxX;
 						else if (frameDelta == 7) y = 0;
 
-						if (maxX > 20) maxX = 0;
-						if (maxY > 20) maxY = 0;
+						if (maxX > 50) maxX = 0;
+						if (maxY > 50) maxY = 0;
 
 						TilePosition f = (*b)->getTilePosition();
 						f.y = f.y + y;
@@ -112,7 +115,8 @@ void BuildingManager::executeOrders() {
 						if (targetBuildLocation.isValid()) {
 							(*b)->build(UnitTypes::Terran_Machine_Shop, f);
 						}
-						*/
+						
+						}
 					}
 
 					else if (isDesiredToTrainVultures) {
