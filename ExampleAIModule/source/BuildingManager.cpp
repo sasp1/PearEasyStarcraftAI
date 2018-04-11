@@ -9,6 +9,7 @@ int startBuildFrame;
 int maxX = 0;
 int maxY = 0;
 bool startedBuild;
+const BWAPI::Unit* factory;
 
 
 
@@ -27,7 +28,6 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 
 	if ((*u)->getType() == UnitTypes::Terran_Command_Center) {
 		commandCenter = u;
-		Broodwar->sendText("Hejsa %s", u);
 	}
 
 	if ((*u)->getType() == UnitTypes::Terran_Machine_Shop && expandFactory) {
@@ -40,6 +40,7 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 	if ((*u)->getType() != UnitTypes::Terran_Supply_Depot)
 	{
 		buildings.push_back(u);
+	
 	}
 }
 
@@ -130,6 +131,12 @@ void BuildingManager::executeOrders() {
 						(*b)->train(UnitTypes::Terran_Vulture);
 					}
 				}
+
+				if (foundFactory) {
+					(*b)->setRallyPoint((*factory)->getRallyPosition());
+				}
+				else factory = b;
+
 				foundFactory = true;
 			}
 		}
