@@ -10,7 +10,6 @@ using namespace Filter;
 bool enemyBaseFound = false;
 BWAPI::Position lastEnemyBuildingPosition;
 //The map is 4096x4096 pixels (64^2)
-int corner = 0;
 int enemeyMarinesSpotted = 0; 
 BWAPI::Position cornerCoords0= Position(100, 100);
 BWAPI::Position cornerCoords1 = Position(4000, 100);
@@ -22,6 +21,7 @@ ScoutingManager::ScoutingManager(BWAPI::Position startingPosition)
 {
 	lastEnemyBuildingPosition = BWAPI::Position(0, 0); 
 	setStartingCorner(startingPosition);
+	scoutingUnits.clear(); 
 }
 
 ScoutingManager::~ScoutingManager()
@@ -29,9 +29,8 @@ ScoutingManager::~ScoutingManager()
 }
 
 void ScoutingManager::addScout(const BWAPI::Unit* scout) {
-	//Receive control of a new scoutUnit
+	//Receive control of a new scoutUnit 
 	scoutingUnits.push_back(scout);
-	
 }
 
 void ScoutingManager::setStartingCorner(BWAPI::Position pos) {

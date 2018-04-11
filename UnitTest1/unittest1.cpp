@@ -34,16 +34,24 @@ namespace UnitTest1
 		}
 
 		TEST_METHOD(shouldScoutCornerClockwise) {
-			ScoutingManager* manager = new ScoutingManager(); 
+			ScoutingManager* manager = new ScoutingManager(BWAPI::Position(0,0)); 
 			
 			BWAPI::Unit* unit = new BWAPI::Unit();
 			
-			UnitMock* fakeUnit = new UnitMock(); 
-			
-			Assert::AreEqual(0, (int)manager->scoutingUnits.size()); 
+			BWAPI::Unit* fakeUnit = new BWAPI::Unit(new UnitMock());  
 
+			CombatManager* manager2 = new CombatManager(); 
+			int hej = manager2->combatUnits.size(); 
+
+
+
+			Assert::AreEqual(0, hej);
+			manager->addScout(fakeUnit);
+			hej = manager->scoutingUnits.size(); 
+			Assert::AreEqual(1, hej); 
+
+			manager->scoutCornersClockwise(fakeUnit); 
+			Assert::AreEqual(2, manager->corner); 
 		}
-
-
 	};
 }

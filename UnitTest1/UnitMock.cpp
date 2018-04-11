@@ -40,7 +40,7 @@ BWAPI::UnitType UnitMock::getType() const
 
 BWAPI::Position UnitMock::getPosition() const
 {
-	return BWAPI::Position();
+	return BWAPI::Position(1,1);
 }
 
 double UnitMock::getAngle() const

@@ -6,7 +6,7 @@ class ScoutingManager
 	
 public:
 	BWAPI::Position lastEnemyBuildingPosition;
-	
+	int corner = 0;
 	std::list<const BWAPI::Unit*> scoutingUnits;
 	ScoutingManager(BWAPI::Position startingPosition);
 	~ScoutingManager();
