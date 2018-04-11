@@ -46,7 +46,7 @@ void StrategyManager::calculateStrategy() {
 	//Check if enough voltures for attack
 	if (combatManager->combatUnits.size() >=8) {
 		Broodwar->sendText("VIL ANGRIBE");
-
+		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 	}
 	
 	//___________________________Building strategy________________________________
@@ -88,7 +88,7 @@ void StrategyManager::calculateStrategy() {
 	}
 
 	//when
-
+	
 	
 
 }
