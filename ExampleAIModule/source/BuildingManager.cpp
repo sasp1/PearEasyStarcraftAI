@@ -6,6 +6,9 @@ using namespace std;
 
 std::list<const BWAPI::Unit*> buildings;
 int startBuildFrame;
+int maxX = 0;
+int maxY = 0;
+bool startedBuild;
 
 
 
@@ -67,13 +70,46 @@ void BuildingManager::executeOrders() {
 			if ((*b)->getType() == UnitTypes::Terran_Factory) {
 				if ((*b)->isIdle()) {
 					if (expandFactory && !foundFactory) {
-						int x = rand() % 10 - 5;
-						int y = rand() % 10 - 5;
 
-						Broodwar->sendText("%i", x, "%i", y);
+						if (!startedBuild) {
+							startBuildFrame = 0;
+							maxX = 0;
+							maxY = 0;
+							startedBuild = true;
+						}
 
-						TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Machine_Shop, (*b)->getTilePosition() + TilePosition(x, y));
-						(*b)->build(UnitTypes::Terran_Machine_Shop, targetBuildLocation);
+						startBuildFrame++;
+						int frameDelta = startBuildFrame % 8;
+						
+						int x;
+						int y;
+
+						if (frameDelta == 0) {
+							maxX++;
+							maxY++;
+							x = maxX;
+							y = maxY;
+						}
+						else if (frameDelta == 1) x = 0;
+						else if (frameDelta == 2) x = -maxX;
+						else if (frameDelta == 3) y = 0;
+						else if (frameDelta == 4) y = -maxY;
+						else if (frameDelta == 5) x = 0;
+						else if (frameDelta == 6) x = maxX;
+						else if (frameDelta == 7) y = 0;
+
+						if (maxX > 100) maxX = 0;
+						if (maxY > 100) maxY = 0;
+
+						TilePosition f = (*b)->getTilePosition();
+						f.y = f.y + y;
+						f.x = f.x + x;
+
+						TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Machine_Shop, f);
+
+						if (targetBuildLocation.isValid()) {
+							(*b)->build(UnitTypes::Terran_Machine_Shop, f);
+						}
 					}
 
 					else if (isDesiredToTrainVultures) {

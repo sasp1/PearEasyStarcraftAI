@@ -57,11 +57,12 @@ void GatheringManager::executeOrders() {
 	for (auto &u : mineralWorkers)
 	{
 		BWAPI::Unit mine = (*u)->getClosestUnit(IsMineralField);
-		if (u != NULL && (*u)->getHitPoints() == 0) {
+		/*if (u != NULL && (*u)->getHitPoints() == 0) {
 			mineralWorkers.remove(u); 
 			Broodwar->sendText("removed unit from mineral worker list"); 
 		}
-		else if ((*u)->isIdle()) {
+		else*/ 
+		if ((*u)->isIdle()) {
 			if ((*u)->isCarryingGas() || (*u)->isCarryingMinerals())
 				(*u)->returnCargo();
 
@@ -79,7 +80,8 @@ void GatheringManager::executeOrders() {
 		/*if (u != NULL && (*u)->getHitPoints()==0) {
 			gasWorkers.remove(u); 
 			Broodwar->sendText("removed unit from gas worker list");
-		} else*/ if ((*u)->isIdle()) { 
+		} else*/
+		if ((*u)->isIdle()) { 
 			if ((*u)->isCarryingGas() || (*u)->isCarryingMinerals())
 				(*u)->returnCargo();
 
