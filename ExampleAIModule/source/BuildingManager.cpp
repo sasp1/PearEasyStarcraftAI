@@ -30,9 +30,11 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 		Broodwar->sendText("Hejsa %s", u);
 	}
 
-	if ((*u)->getType() == UnitTypes::Terran_Machine_Shop) {
+	if ((*u)->getType() == UnitTypes::Terran_Machine_Shop && expandFactory) {
 		Broodwar->sendText("%s built Exp");
 		desiredResearchs.push_front(TechTypes::Spider_Mines);
+		desiredUpgrades.push_front(UpgradeTypes::Ion_Thrusters);
+		expandFactory = false;
 	}
 
 	if ((*u)->getType() != UnitTypes::Terran_Supply_Depot)
@@ -63,6 +65,11 @@ void BuildingManager::executeOrders() {
 			if (((*b)->getType() == UnitTypes::Terran_Machine_Shop)) {
 				if ((*b)->isIdle() && desiredResearchs.front() == TechTypes::Spider_Mines) {
 					(*b)->research(TechTypes::Spider_Mines);
+					if((*b)->isResearching()) desiredResearchs.pop_front();
+				}
+				else if ((*b)->isIdle() && desiredUpgrades.front() == UpgradeTypes::Ion_Thrusters) {
+						(*b)->upgrade(UpgradeTypes::Ion_Thrusters);
+						if((*b)->isUpgrading())desiredUpgrades.pop_front();
 				}
 			}
 
