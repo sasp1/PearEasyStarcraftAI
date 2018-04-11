@@ -1,9 +1,12 @@
 #pragma once
 #include <BWAPI.h>
+#include "BuildingManager.h"
 class ScoutingManager
 {
+	
 public:
 	BWAPI::Position lastEnemyBuildingPosition;
+	
 	std::list<const BWAPI::Unit*> scoutingUnits;
 	ScoutingManager();
 	~ScoutingManager();
@@ -12,5 +15,7 @@ public:
 	void ScoutingManager::executeOrders();
 	void ScoutingManager::onUnitDiscover(BWAPI::Unit unit);
 	void ScoutingManager::setStartingCorner(BWAPI::Position pos);
+	void ScoutingManager::returnToBase(const BWAPI::Unit* unit); 
+	BuildingManager* buildingManager;
 };
 

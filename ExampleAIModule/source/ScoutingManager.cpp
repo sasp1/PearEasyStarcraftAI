@@ -11,6 +11,7 @@ bool enemyBaseFound = false;
 BWAPI::Position lastEnemyBuildingPosition;
 //The map is 4096x4096 pixels (64^2)
 int corner = 0;
+int enemeyMarinesSpotted = 0; 
 BWAPI::Position cornerCoords0= Position(100, 100);
 BWAPI::Position cornerCoords1 = Position(4000, 100);
 BWAPI::Position cornerCoords2 = Position(4000, 4000);
@@ -69,13 +70,25 @@ void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
 
 void ScoutingManager::executeOrders() {
 
-		for (auto &u : scoutingUnits)
-		{
-			if ((*u)->isIdle()) {
-				scoutCornersClockwise(u);
-				
+	for (auto &u : scoutingUnits)
+	{
+		if ((*u)->isIdle()) {
+			scoutCornersClockwise(u);
+		}	
+
+		if ((*u)->isUnderAttack() && enemyBaseFound) {
+			returnToBase(u); 
 		}
 	}
+}
+
+void ScoutingManager::returnToBase(const BWAPI::Unit* unit) {
+	
+	if ((*unit)->getTargetPosition() != (*buildingManager->commandCenter)->getPosition()) {
+		(*unit)->move((*buildingManager->commandCenter)->getPosition());
+		Broodwar->sendText("Scouting unit is returning to the base");
+	}
+
 }
 
 void ScoutingManager::onUnitDiscover(BWAPI::Unit unit)
