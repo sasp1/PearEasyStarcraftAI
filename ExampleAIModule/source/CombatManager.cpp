@@ -26,6 +26,7 @@ void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position pos) {
 	}
 }
 
+
 void CombatManager::defendBase(){
 	//find min distance to defend base (commandcenter to closest enemy)
 	//if (BWAPI::Unit(buildingManager->commandCenter)->getDistance(BWAPI::Unit(buildingManager->commandCenter)->getClosestUnit(IsEnemy))<1000) {
