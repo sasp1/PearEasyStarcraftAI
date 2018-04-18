@@ -20,7 +20,7 @@ public:
 	void ConstructionManager::buildRefinery(const BWAPI::Unit* worker);
 	const BWAPI::Unit* constructionsWorker; 
 	BuildingManager* buildingManager;
-
+	UnitManager* unitManager; 
 	bool shouldExpandBase;
 	
 };
