@@ -6,11 +6,6 @@
 #include "ScoutingManager.h"
 class UnitManager
 {
-	CombatManager* combatManager;
-	GatheringManager* gatheringManager;
-	ConstructionManager* constructionManager;
-	ScoutingManager* scoutingManager;
-
 
 public:
 	void UnitManager::setManagers(CombatManager* combatManager, GatheringManager* gatheringManager, ConstructionManager* constructionManager, ScoutingManager* scoutingManager);
@@ -23,7 +18,10 @@ public:
 	void UnitManager::cleanUpUnits(std::list<const BWAPI::Unit*>& unitList); 
 	bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals, int reservedGas);
 	bool newConstructionIsAvailable = true;
-
+	CombatManager* combatManager;
+	GatheringManager* gatheringManager;
+	ConstructionManager* constructionManager;
+	ScoutingManager* scoutingManager;
 	std::list<const BWAPI::Unit*> unitWorkers;
 };
 

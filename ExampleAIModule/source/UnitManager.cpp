@@ -48,6 +48,8 @@ bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals
 
 void UnitManager::executeOrders() {
 	// onFrame request to perform calculations. The "main" of this class
+	
+	/*
 	timer++;
 
 	if (timer > 1080) canAct = false;
@@ -70,6 +72,8 @@ void UnitManager::executeOrders() {
 		canAct = true;
 		timer = 0;
 	}
+
+	*/
 
 	gatheringManager->executeOrders();
 	scoutingManager->executeOrders();
