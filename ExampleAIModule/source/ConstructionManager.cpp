@@ -1,5 +1,8 @@
 #include "ConstructionManager.h"
 #include <BWAPI.h>
+#include "TimedUnit.h"
+#include "BuildingManager.h"
+#include "UnitManager.h"
 
 /**
 * @file ConstructionManager.cpp
@@ -11,13 +14,35 @@
 *
 */
 
+std::list<int> startTime;
 
 using namespace BWAPI;
 using namespace Filter;
 
 BWAPI::UnitType orderedBuilding;
+std::list<TimedUnit*> builders;
+
+//void ConstructionManager::setManagers(BuildingManager* b, UnitManager* u) {
+//	buildingManager =b;
+//    //unitManager = u;
+//}
 
 void ConstructionManager::executeOrders() {
+
+	for (auto &b : builders) {
+
+		if (b->unit == NULL) {
+			builders.remove(b);
+			continue;
+			Broodwar->sendText("Null");
+		}
+		if (b->isOverTime(500) && b->isUnitIdle()) {
+			unitManager->newWorker(b->unit);
+			builders.remove(b);
+			Broodwar->sendText("Removed");
+		}
+	}
+
 
 	//Hvis vi har kontrol over en worker, og han ikke laver noget, så sættes han igang med at bygge bygningen specificeret i orderedBuilding
 	if (NULL != (constructionsWorker) && (*constructionsWorker)->isIdle()) {
@@ -32,6 +57,7 @@ void ConstructionManager::executeOrders() {
 		{
 			TilePosition targetBuildLocation = Broodwar->getBuildLocation(orderedBuilding, (*constructionsWorker)->getTilePosition());
 			(*constructionsWorker)->build(orderedBuilding, targetBuildLocation);
+
 		}
 	}
 }
@@ -44,6 +70,10 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 	orderedBuilding = (building);
 	TilePosition targetBuildLocation = Broodwar->getBuildLocation(building, (*worker)->getTilePosition());
 	(*worker)->build(building, targetBuildLocation);
+
+
+	TimedUnit* t = new TimedUnit(worker, Broodwar->getFrameCount());
+	builders.push_back(t);
 
 }
 

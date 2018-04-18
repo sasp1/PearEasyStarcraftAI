@@ -36,6 +36,7 @@ void ExampleAIModule::onStart()
 	// Setting cross-references:
 	strategyManager->scoutingManager = scoutingManager;
 	constructionManager->buildingManager = buildingManager;
+	constructionManager->unitManager = unitManager;
 	scoutingManager->buildingManager = buildingManager; 
 	combatManager->buildingManager = buildingManager;
 

@@ -6,8 +6,7 @@
 class ExecutionManager : public BWAPI::AIModule
 {
 
-	UnitManager* unitManager;
-	BuildingManager* buildingManager;
+	
 
 public:
 	ExecutionManager();
@@ -19,5 +18,7 @@ public:
 	void ExecutionManager::referenceManagers(UnitManager* unitManager, BuildingManager* buildingManager);
 	void ExecutionManager::eventConstructionInitiated(BWAPI::Unit unit);
 	void ExecutionManager::controlTrainingOfMovingUnits();
+	UnitManager* unitManager;
+	BuildingManager* buildingManager;
 };
 

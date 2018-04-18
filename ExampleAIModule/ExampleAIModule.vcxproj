@@ -103,6 +103,7 @@
     <ClCompile Include="Source\GatheringManager.cpp" />
     <ClCompile Include="Source\ScoutingManager.cpp" />
     <ClCompile Include="Source\StrategyManager.cpp" />
+    <ClCompile Include="Source\TimedUnit.cpp" />
     <ClCompile Include="Source\UnitManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +113,7 @@
     <ClInclude Include="Source\ExampleAIModule.h" />
     <ClInclude Include="Source\ExecutionManager.h" />
     <ClInclude Include="Source\GatheringManager.h" />
+    <ClInclude Include="Source\TimedUnit.h" />
     <ClInclude Include="Source\ScoutingManager.h" />
     <ClInclude Include="Source\StrategyManager.h" />
     <ClInclude Include="Source\UnitManager.h" />
