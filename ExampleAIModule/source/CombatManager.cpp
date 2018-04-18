@@ -22,6 +22,7 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 
 
 void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
+
 	//focus attacking units
 	//(*unit)->attack((*unit)->getClosestUnit((IsEnemy && IsAttacking)));
 	//(*unit)->attack((*unit)->getClosestUnit(IsEnemy));
@@ -62,6 +63,8 @@ BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::
 	//Attack a given unit if in range and return whether or not this was possible
 	BWAPI::Unit desiredUnitToAttack = NULL;
 
+	//NEDENSTÅENDE ER UNDERLIGT. Bør det ikke være alle enemies i units range?
+	//Units.getunitsinradius(range, isenemy);
 	for (auto &eu : (Broodwar->enemy()->getUnits().getUnitsInRadius(range))) {
 		if ((eu)->getType() == target) {
 			if ((*unit)->getDistance(desiredUnitToAttack) > (*unit)->getDistance(eu)) {
@@ -70,13 +73,16 @@ BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::
 		}
 	}
 	return desiredUnitToAttack;
+
 }
 
 void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position enemyBasePosition) {
 	attackLocation = enemyBasePosition;
 	shouldAttack = true;
 	for (auto &u : combatUnits) {
+
 		(*u)->move(enemyBasePosition);
+
 	}
 }
 
@@ -107,6 +113,7 @@ void CombatManager::returnAllUnitsToBase() {
 
 
 void CombatManager::executeOrders() {
+
 
 	defendBase(1000);
 

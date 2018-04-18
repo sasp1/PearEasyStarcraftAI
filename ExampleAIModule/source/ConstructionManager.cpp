@@ -60,6 +60,7 @@ void ConstructionManager::executeOrders() {
 
 		}
 	}
+	
 }
 
 void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::Unit* worker) {
@@ -74,6 +75,10 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 
 	TimedUnit* t = new TimedUnit(worker, Broodwar->getFrameCount());
 	builders.push_back(t);
+
+}
+
+void ConstructionManager::expandBase() {
 
 }
 

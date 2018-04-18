@@ -19,6 +19,7 @@ public:
 	bool isDesiredToTrainWorkers = false;
 	bool isDesiredToTrainMarines = false;
 	bool isDesiredToTrainVultures = true;
+	bool isDesiredToTrainWraiths = false; 
 	const BWAPI::Unit* commandCenter;
 
 };

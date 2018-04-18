@@ -3,7 +3,7 @@
 #include "BuildingManager.h"
 
 class UnitManager;
-
+class ScoutingManager; 
 
 class ConstructionManager
 {	
@@ -18,8 +18,13 @@ public:
 	const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing();
 	void ConstructionManager::executeOrders();
 	void ConstructionManager::buildRefinery(const BWAPI::Unit* worker);
+	void ConstructionManager::expandBase(); 
 	const BWAPI::Unit* constructionsWorker; 
 	BuildingManager* buildingManager;
-	UnitManager* unitManager; 
+	UnitManager* unitManager;
+	ScoutingManager* scoutingManager; 
+	bool shouldExpandBase;
+	
+	
 };
 
