@@ -75,10 +75,11 @@ void ScoutingManager::executeOrders() {
 		if ((*u)->isIdle()) {
 			scoutCornersClockwise(u);
 		}	
-
+		/*
 		if ((*u)->isUnderAttack() && enemyBaseFound) {
 			returnToBase(u); 
 		}
+		*/
 	}
 }
 

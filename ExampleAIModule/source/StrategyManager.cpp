@@ -94,7 +94,7 @@ void StrategyManager::calculateStrategyOne() {
 	//Check if enough voltures for attack
 	if (combatManager->combatUnits.size() >= 8) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
-		//strategy = 2;
+		strategy = 2;
 		Broodwar->sendText("PHASE TWO");
 	}
 	
@@ -103,8 +103,40 @@ void StrategyManager::calculateStrategyOne() {
 
 void StrategyManager::calculateStrategyTwo() {
 
+	int unusedSupplies = (Broodwar->self()->supplyTotal()) - Broodwar->self()->supplyUsed();
 
-	Broodwar->sendText("TROLOLOLOLOL");
+	//___________________________Moving units________________________________
+	//Maintain 1 soldier for scouting
+	if (scoutingManager->scoutingUnits.size() > 0) {
+		buildingManager->setIsDesiredToTrainMarines(false);
+	}
+	else {
+		buildingManager->setIsDesiredToTrainMarines(true);
+	}
+
+	//Maintain 20 workers
+	if (unitManager->unitWorkers.size() > 20) {
+		buildingManager->setIsDesiredToTrainWorkers(false);
+	}
+	else {
+		buildingManager->setIsDesiredToTrainWorkers(true);
+	}
+
+	//Spam voltures
+	buildingManager->setIsDesiredToTrainVultures(true);
+
+
+	//___________________________Building strategy________________________________
+
+
+	//Construct supply depots when needed (2 supplies left)
+	if (((unusedSupplies <= 4) || (unusedSupplies <= 20 && factoriesOrdered >= 1)) && supplyDepotsAreNotUnderConstruction) {
+
+		BWAPI::UnitType building = Broodwar->self()->getRace().getSupplyProvider();
+
+		executionManager->addPriorityItem(building);
+		supplyDepotsAreNotUnderConstruction = false;
+	}
 
 
 }
