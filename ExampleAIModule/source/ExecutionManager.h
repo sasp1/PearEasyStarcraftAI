@@ -5,7 +5,6 @@
 
 class ExecutionManager : public BWAPI::AIModule
 {
-
 	UnitManager* unitManager;
 	BuildingManager* buildingManager;
 

@@ -97,4 +97,10 @@ void ScoutingManager::onUnitDiscover(BWAPI::Unit unit)
 		enemyBaseFound = true;
 		lastEnemyBuildingPosition = unit->getPosition();
 	}
+
+	 if (!secondaryMineralFieldFound && unit->getType() == UnitTypes::Resource_Mineral_Field && (*buildingManager->commandCenter)->getDistance(unit) > 300) {
+		 secondaryMineralFieldFound = true; 
+		 secondaryMineralFieldPosition = unit->getPosition(); 
+		 Broodwar->sendText("Found secondary mineralField"); 
+	 }
 }

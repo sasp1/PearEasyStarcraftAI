@@ -34,6 +34,7 @@ void ConstructionManager::executeOrders() {
 			(*constructionsWorker)->build(orderedBuilding, targetBuildLocation);
 		}
 	}
+	
 }
 
 void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::Unit* worker) {

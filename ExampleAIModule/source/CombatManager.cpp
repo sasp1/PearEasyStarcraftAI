@@ -22,22 +22,29 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 }
 
 void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
-	(*unit)->attack((*unit)->getClosestUnit((IsEnemy && IsAttacking)));
-	(*unit)->attack((*unit)->getClosestUnit(IsEnemy));
+	/*(*unit)->attack((*unit)->getClosestUnit((IsEnemy && IsAttacking)));
+	(*unit)->attack((*unit)->getClosestUnit(IsEnemy));*/
 }
 
 void CombatManager::attackEnemy(const BWAPI::Unit* unit, const BWAPI::Unit target) {
 	(*unit)->attack(target);
 }
 
-
 bool CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::UnitType target, int range) {
-	for (auto &eu : (Broodwar->enemy()->getUnits())) {
-		if (eu->getType() == target && (*unit)->getDistance(eu) < range) {
-			(*unit)->attack(eu,true);
-			return true;
+	for (auto &e : (*unit)->getUnitsInRadius(range, IsEnemy)) {
+		if (e->getType() == UnitTypes::Terran_Marine) {
+			Broodwar->sendText("Is now attacking Marine"); 
+			e->attack(*unit); 
+			return true; 
 		}
 	}
+	//for (auto &eu : (Broodwar->enemy()->getUnits())) {
+	//	if (eu->getType() == target && (*unit)->getDistance(eu) < range) {
+	//		(*unit)->attack(eu);
+	//		Broodwar->sendText("Attacking marine"); 
+	//		return true;
+	//	}
+	//}
 	return false;
 }
 
@@ -47,9 +54,7 @@ void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position pos) {
 	attackLoc = pos;
 	attack = true;
 	for (auto &u : combatUnits) {
-		attackEnemyIfInRange(u, UnitTypes::Terran_Marine, 10);
-		attackNearestEnemy(u);
-		(*u)->move(pos);
+		(*u)->move(pos, true);
 	}
 }
 
@@ -67,13 +72,11 @@ void CombatManager::defendBase(){
 void CombatManager::executeOrders() {
 
 	defendBase();
-
-	for (auto &u : combatUnits) {
-		if (attack) {
-			if (!attackEnemyIfInRange(u, UnitTypes::Terran_Marine, 10)) {
-
+	if (attack) {
+		for (auto &u : combatUnits) {
+			
+			if (!attackEnemyIfInRange(u, UnitTypes::Terran_Marine, 100) ) { // && !attackEnemyIfInRange(u,UnitTypes::Terran_SCV, 50)
 				attackNearestEnemy(u);
-
 			}
 		}
 	}

@@ -11,8 +11,6 @@ int maxY = 0;
 bool startedBuild;
 const BWAPI::Unit* factory;
 
-
-
 /**
 * @file
 * @author  Sebastian Arcos Specht <sebastian.a.specht@gmail.com>
@@ -139,6 +137,10 @@ void BuildingManager::executeOrders() {
 
 				foundFactory = true;
 			}
+
+			/*if ((*b)->getType() == UnitTypes::Terran_Starport && isDesiredToTrainWraiths && (*b)->isIdle) {
+				(*b)->train(UnitTypes::Terran_Wraith);
+			}*/
 		}
 	}
 }

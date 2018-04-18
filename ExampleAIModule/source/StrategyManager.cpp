@@ -7,7 +7,10 @@ bool supplyDepotsAreNotUnderConstruction = true;
 bool desireBuildingBarracks = true;
 int refineriesOrdered = 0;
 int factoriesOrdered = 0;
+int starportsOrdered = 0; 
+int basesOrdered = 0; 
 int strategy = 1;
+int numberOfWorkersLimit = 20;
 
 void StrategyManager::calculateOrders() {
 
@@ -39,7 +42,7 @@ void StrategyManager::calculateStrategyOne() {
 	}
 
 	//Maintain 20 workers
-	if (unitManager->unitWorkers.size() > 20) {
+	if (unitManager->unitWorkers.size() > numberOfWorkersLimit) {
 		buildingManager->setIsDesiredToTrainWorkers(false);
 	}
 	else {
@@ -89,22 +92,36 @@ void StrategyManager::calculateStrategyOne() {
 
 
 
+
+	/*if (Broodwar->self()->supplyUsed() >= 35 && starportsOrdered == 0) {
+		Broodwar->sendText("adding starport to priorityQueue"); 
+		BWAPI::UnitType building = UnitTypes::Terran_Starport; 
+		executionManager->addPriorityItem(building); 
+		starportsOrdered++; 
+	}*/
 	//___________________________Attacking strategy________________________________
 
 	//Check if enough voltures for attack
 	if (combatManager->combatUnits.size() >= 8) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
-		//strategy = 2;
+		strategy = 2;
 		Broodwar->sendText("PHASE TWO");
+		numberOfWorkersLimit = 40;
 	}
-	
 }
 
 
 void StrategyManager::calculateStrategyTwo() {
 
+	//Order three factories
+	//if (unitManager->unitWorkers.size() >= 25 && factoriesOrdered < 3) {
+	//	Broodwar->sendText("adding factory to priorityQueue");
+	//	BWAPI::UnitType building = UnitTypes::Terran_Factory;
+	//	executionManager->addPriorityItem(building);
+	//	factoriesOrdered++;
+	//}
 
-	Broodwar->sendText("TROLOLOLOLOL");
+	//Broodwar->sendText("TROLOLOLOLOL");
 
 
 }
