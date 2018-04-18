@@ -87,16 +87,13 @@ void StrategyManager::calculateStrategyOne() {
 		factoriesOrdered++;
 	}
 
-
-
-	//___________________________Attacking strategy________________________________
-
 	//Check if enough voltures for attack
 	if (combatManager->combatUnits.size() >= 8) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 		strategy = 2;
 		Broodwar->sendText("PHASE TWO");
 	}
+
 	
 }
 
@@ -138,6 +135,15 @@ void StrategyManager::calculateStrategyTwo() {
 		supplyDepotsAreNotUnderConstruction = false;
 	}
 
+	
+	//___________________________Attacking strategy________________________________
+
+	//Check if enough voltures for attack
+	/*if (combatManager->combatUnits.size() >= 8) {
+		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
+		strategy = 2;
+		Broodwar->sendText("PHASE TWO");
+	}*/
 
 }
 

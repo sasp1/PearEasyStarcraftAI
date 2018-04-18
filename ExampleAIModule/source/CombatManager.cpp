@@ -28,33 +28,22 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 
 	BWAPI::Unit desiredUnitToAttack = NULL;
 
-	for (auto &eu : (Broodwar->enemy()->getUnits().getUnitsInRadius(300))) {
-		if ((eu)->getType() == UnitTypes::Terran_Marine) {
-			if ((*unit)->getDistance(desiredUnitToAttack) > (*unit)->getDistance(eu)) {
-				desiredUnitToAttack = eu;
-			}
-		}
+	desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Siege_Mode, 300);
+
+	if (desiredUnitToAttack == NULL) {
+		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Tank_Mode, 300);
+	}
+	
+	if (desiredUnitToAttack == NULL) {
+		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Marine, 300);
 	}
 
 	if (desiredUnitToAttack == NULL) {
-		for (auto &eu : (Broodwar->enemy()->getUnits().getUnitsInRadius(300))) {
-			if ((eu)->getType() == UnitTypes::Terran_Medic) {
-				if ((*unit)->getDistance(desiredUnitToAttack) > (*unit)->getDistance(eu)) {
-					desiredUnitToAttack = eu;
-				}
-			}
-		}
+		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Medic, 300);
 	}
 
-
 	if (desiredUnitToAttack == NULL) {
-		for (auto &eu : (Broodwar->enemy()->getUnits().getUnitsInRadius(300))) {
-			if ((eu)->getType() == UnitTypes::Terran_SCV) {
-				if ((*unit)->getDistance(desiredUnitToAttack) > (*unit)->getDistance(eu)) {
-					desiredUnitToAttack = eu;
-				}
-			}
-		}
+		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_SCV, 300);
 	}
 
 	if (desiredUnitToAttack == NULL) {
@@ -68,16 +57,19 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 	
 }
 
-
-bool CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::UnitType target, int range) {
+//
+BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::UnitType target, int range) {
 	//Attack a given unit if in range and return whether or not this was possible
-	for (auto &eu : (Broodwar->enemy()->getUnits())) {
-		if (eu->getType() == target && (*unit)->getDistance(eu) < range) {
-			(*unit)->attack(eu,true);
-			return true;
+	BWAPI::Unit desiredUnitToAttack = NULL;
+
+	for (auto &eu : (Broodwar->enemy()->getUnits().getUnitsInRadius(range))) {
+		if ((eu)->getType() == target) {
+			if ((*unit)->getDistance(desiredUnitToAttack) > (*unit)->getDistance(eu)) {
+				desiredUnitToAttack = eu;
+			}
 		}
 	}
-	return false;
+	return desiredUnitToAttack;
 }
 
 void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position enemyBasePosition) {
@@ -102,6 +94,12 @@ void CombatManager::defendBase(int range){
 				attackNearestEnemy(u);
 			}
 		}
+	}
+}
+
+void CombatManager::returnAllUnitsToBase() {
+	for (auto &u : combatUnits) {
+		(*u)->move((*buildingManager->commandCenter)->getPosition());
 	}
 }
 
