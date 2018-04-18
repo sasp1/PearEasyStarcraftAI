@@ -11,8 +11,10 @@ int starportsOrdered = 0;
 int basesOrdered = 0; 
 int strategy = 1;
 int numberOfWorkersLimit = 20;
+int supplyUsed = 0; 
 
 void StrategyManager::calculateOrders() {
+	supplyUsed = Broodwar->self()->supplyUsed() / 2;
 
 	//Set executionManager orders
 	if (strategy == 1) {
@@ -32,7 +34,8 @@ void StrategyManager::calculateOrders() {
 void StrategyManager::calculateStrategyOne() {
 	//Build strategy 1 
 	int unusedSupplies = (Broodwar->self()->supplyTotal()) - Broodwar->self()->supplyUsed();
-
+	
+	
 	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
 	if (scoutingManager->scoutingUnits.size() > 0) {
@@ -158,6 +161,11 @@ void StrategyManager::calculateStrategyTwo() {
 		supplyDepotsAreNotUnderConstruction = false;
 	}
 
+	if (supplyUsed >= 30) {
+		constructionManager->shouldExpandBase = true; 
+	}
+
+	
 
 }
 

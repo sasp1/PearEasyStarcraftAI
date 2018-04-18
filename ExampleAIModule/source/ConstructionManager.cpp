@@ -78,6 +78,10 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 
 }
 
+void ConstructionManager::expandBase() {
+
+}
+
 void ConstructionManager::buildRefinery(const BWAPI::Unit* worker) {
 
 	BWAPI::Unit* gasLocation = new Unit();

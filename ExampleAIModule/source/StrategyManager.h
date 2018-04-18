@@ -8,8 +8,10 @@ class StrategyManager
 	UnitManager* unitManager;
 	BuildingManager* buildingManager;
 	CombatManager* combatManager;
+	 
 
 public:
+	ConstructionManager* constructionManager;
 	ScoutingManager* scoutingManager;
 	StrategyManager();
 	~StrategyManager();
