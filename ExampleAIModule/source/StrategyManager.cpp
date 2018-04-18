@@ -9,7 +9,6 @@ int refineriesOrdered = 0;
 int factoriesOrdered = 0;
 int strategy = 1;
 
-
 void StrategyManager::calculateOrders() {
 
 	//Set executionManager orders
@@ -95,7 +94,7 @@ void StrategyManager::calculateStrategyOne() {
 	//Check if enough voltures for attack
 	if (combatManager->combatUnits.size() >= 8) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
-		strategy = 2;
+		//strategy = 2;
 		Broodwar->sendText("PHASE TWO");
 	}
 	

@@ -3,6 +3,11 @@
 using namespace BWAPI;
 using namespace Filter;
 
+
+bool attack = false;
+BWAPI::Position attackLoc;
+
+
 CombatManager::CombatManager() {
 	std::list<const BWAPI::Unit*> combatUnits;
 }
@@ -26,18 +31,21 @@ void CombatManager::attackEnemy(const BWAPI::Unit* unit, const BWAPI::Unit targe
 }
 
 
-void CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::UnitType target, int range) {
+bool CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::UnitType target, int range) {
 	for (auto &eu : (Broodwar->enemy()->getUnits())) {
 		if (eu->getType() == target && (*unit)->getDistance(eu) < range) {
-			(*unit)->attack(eu);
+			(*unit)->attack(eu,true);
+			return true;
 		}
 	}
+	return false;
 }
 
 void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position pos) {
 	//const BWAPI::Unit* combatLeader = combatUnits.back();
 	//const BWAPI::Unit nearestEnemy = (*combatLeader)->getClosestUnit(IsEnemy);
-	
+	attackLoc = pos;
+	attack = true;
 	for (auto &u : combatUnits) {
 		attackEnemyIfInRange(u, UnitTypes::Terran_Marine, 10);
 		attackNearestEnemy(u);
@@ -60,6 +68,15 @@ void CombatManager::executeOrders() {
 
 	defendBase();
 
+	for (auto &u : combatUnits) {
+		if (attack) {
+			if (!attackEnemyIfInRange(u, UnitTypes::Terran_Marine, 10)) {
+
+				attackNearestEnemy(u);
+
+			}
+		}
+	}
 }
 
 

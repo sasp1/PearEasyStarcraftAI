@@ -87,9 +87,9 @@ void ExampleAIModule::onFrame()
 	}
 }
 
-void ExampleAIModule::onUnitComplete(BWAPI::Unit* u)
+void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 {//When a unit build is complete
-	//BWAPI::Unit* u = new Unit(unit);
+	BWAPI::Unit* u = new Unit(unit);
 
 	//Make sure we are ingame 
 	// makes sure unit is ally unit
