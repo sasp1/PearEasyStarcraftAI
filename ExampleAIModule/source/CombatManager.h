@@ -12,10 +12,12 @@ public:
 
 	void CombatManager::addCombatUnit(const BWAPI::Unit* unit);
 	void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit);
-	void CombatManager::attackEnemy(const BWAPI::Unit* unit, const BWAPI::Unit target);
+	
 	bool CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::UnitType target, int range);
+	
 	void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position pos);
-	void CombatManager::defendBase();
+	void CombatManager::defendBase(int range);
+
 
 	CombatManager();
 	~CombatManager();
