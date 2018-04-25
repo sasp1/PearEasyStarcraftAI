@@ -1,11 +1,9 @@
 #include "CombatManager.h"
 #include <BWAPI.h>
 /**
-* @author Asger Græsholt <s154099@dstudent.dtu.dk>
-*
-* The combat manager controls units in war - how they fight, who they
-* prioritize to kill and how they do it. Furthermore it controls how
-* a battle is initiated
+* @file CombatManager.cpp
+* @brief The manager who controls the army and how it fights
+* @author  Thomas Dahl Heshe <s164399@student.dtu.dk>
 */
 using namespace BWAPI;
 using namespace Filter;
@@ -37,7 +35,12 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 
 	BWAPI::Unit desiredUnitToAttack = NULL;
 
+
 	desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Siege_Mode, 300);
+
+	if (desiredUnitToAttack == NULL) {
+		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Vulture, 300);
+	}
 
 	if (desiredUnitToAttack == NULL) {
 		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Tank_Mode, 300);
