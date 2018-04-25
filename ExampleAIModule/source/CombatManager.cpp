@@ -77,12 +77,12 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::UnitType target, int range) {
 	BWAPI::Unit desiredUnitToAttack = NULL;
 
-	//NEDENSTÅENDE ER UNDERLIGT. Bør det ikke være alle enemies i units range?
-	//Units.getunitsinradius(range, isenemy);
-	for (auto &eu : (Broodwar->enemy()->getUnits().getUnitsInRadius(range))) {
+
+	for (auto &eu : (*unit)->getUnitsInRadius(range, IsEnemy)) {
 		if ((eu)->getType() == target) {
 			if ((*unit)->getDistance(desiredUnitToAttack) > (*unit)->getDistance(eu)) {
 				desiredUnitToAttack = eu;
+
 			}
 		}
 	}
