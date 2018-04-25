@@ -1,5 +1,12 @@
 #include "CombatManager.h"
 #include <BWAPI.h>
+/**
+* @author Asger Græsholt <s154099@dstudent.dtu.dk>
+*
+* The combat manager controls units in war - how they fight, who they
+* prioritize to kill and how they do it. Furthermore it controls how
+* a battle is initiated
+*/
 using namespace BWAPI;
 using namespace Filter;
 
@@ -20,12 +27,13 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 	combatUnits.push_back(unit);
 }
 
-
+/**
+* A method for selecting a prioritized enemy to attack. Uses attackEnemyIfInRange()
+* @author Asger Græsholt <s154099@dstudent.dtu.dk>
+* @param unit a BWAPI unit who is to attack a nearby enemy, if any
+* @see attackEnemyIfInRange()
+*/
 void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
-
-	//focus attacking units
-	//(*unit)->attack((*unit)->getClosestUnit((IsEnemy && IsAttacking)));
-	//(*unit)->attack((*unit)->getClosestUnit(IsEnemy));
 
 	BWAPI::Unit desiredUnitToAttack = NULL;
 
@@ -58,9 +66,15 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 	
 }
 
-//
+/**
+* Attack with a unit at a given enemy type (target) if in range. Method returns an enemy of the specified type within range if found. NULL otherwise
+* @author Asger Græsholt <s154099@dstudent.dtu.dk>
+* @param unit
+* @param target the target desired to attack if within a specified range
+* @param range describes the maximum range we wish to attack an enemy within
+* @see attackNearestEnemy()
+*/
 BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::UnitType target, int range) {
-	//Attack a given unit if in range and return whether or not this was possible
 	BWAPI::Unit desiredUnitToAttack = NULL;
 
 	//NEDENSTÅENDE ER UNDERLIGT. Bør det ikke være alle enemies i units range?
@@ -86,11 +100,13 @@ void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position enemyBaseP
 	}
 }
 
+
 /**
+* method makes all units deffend the base if they are within "range" from the commandCenter
 * @author Asger Græsholt <s154099@dstudent.dtu.dk>
-*
-* Defend with all units (in range) if an enemy unit gets in a given range of the base  
+* @param range integer specifing a range from the base
 */
+
 void CombatManager::defendBase(int range){
 	//find min distance to defend base (commandcenter to closest enemy)
 	if (BWAPI::Unit(*buildingManager->commandCenter)->getDistance(BWAPI::Unit(*buildingManager->commandCenter)->getClosestUnit(IsEnemy))<range) {
@@ -111,7 +127,12 @@ void CombatManager::returnAllUnitsToBase() {
 
 
 
-
+/**
+* main method of every class. Makes the combatmanager execute orders/relevant computations in every frame. 
+* @see attackNearestEnemy()
+* @see Defendbase()
+* @author Asger Græsholt <s154099@dstudent.dtu.dk>
+*/
 void CombatManager::executeOrders() {
 
 
