@@ -81,9 +81,9 @@ BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::
 	BWAPI::Unit desiredUnitToAttack = NULL;
 
 
-	for (auto &eu : (*unit)->getUnitsInRadius(range, IsEnemy)) {
-		if ((eu)->getType() == target) {
-			if ((*unit)->getDistance(desiredUnitToAttack) > (*unit)->getDistance(eu)) {
+	for (auto &eu : (*unit)->getUnitsInRadius(range)) {
+		if ((eu)->getType() == target && (eu)->getPlayer()->isEnemy(Broodwar->self())) {
+			if ((*unit)->getDistance(desiredUnitToAttack) > (*unit)->getDistance(eu) ) {
 				desiredUnitToAttack = eu;
 
 			}
