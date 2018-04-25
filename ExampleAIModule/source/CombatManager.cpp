@@ -2,7 +2,7 @@
 #include <BWAPI.h>
 /**
 * @file CombatManager.cpp
-* @brief The manager who controls the army and how it fights
+* @brief Controls the army, how it initiate combat and how units attack in combat.
 * @author  Thomas Dahl Heshe <s164399@student.dtu.dk>
 */
 using namespace BWAPI;
