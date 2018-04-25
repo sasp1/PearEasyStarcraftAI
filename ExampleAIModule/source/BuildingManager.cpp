@@ -14,11 +14,6 @@ const BWAPI::Unit* factory;
 /**
 * @file
 * @author  Sebastian Arcos Specht <sebastian.a.specht@gmail.com>
-* @version 1.0
-*
-* @section DESCRIPTION
-*
-* The time class represents a moment of time.
 */
 void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 	//Tilføj bygning til liste over ejede bygninger, hvis den ikke er et supply depot.

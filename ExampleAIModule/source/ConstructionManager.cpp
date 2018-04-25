@@ -9,8 +9,6 @@
 * @brief The manager who make the construction of a desired building.
 *
 * @author  Thomas Dahl Heshe <s164399@gstudent.dtu.dk>
-
-* @date 21/03/2018
 *
 */
 
