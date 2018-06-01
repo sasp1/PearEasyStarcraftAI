@@ -33,58 +33,61 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 */
 void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 
-	BWAPI::Unit desiredUnitToAttack = NULL;
+	if (! (stayOutOfRange(unit, 70))) {
 
-	//TERRAN V PROTOSS________________________________________________
-	desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Zealot, 300);
+		BWAPI::Unit desiredUnitToAttack = NULL;
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Dragoon, 300);
-	}
+		//TERRAN V PROTOSS________________________________________________
+		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Zealot, 300);
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Probe, 300);
-	}
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Dragoon, 300);
+		}
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Photon_Cannon, 300);
-	}
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Probe, 300);
+		}
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Photon_Cannon, 300);
+		}
 
 
 
-	//TERRAN V TERRAN________________________________________________
+		//TERRAN V TERRAN________________________________________________
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Siege_Mode, 300);
-	}
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Siege_Mode, 300);
+		}
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Vulture, 300);
-	}
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Vulture, 300);
+		}
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Tank_Mode, 300);
-	}
-	
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Marine, 300);
-	}
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Tank_Mode, 300);
+		}
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Medic, 300);
-	}
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Marine, 300);
+		}
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_SCV, 300);
-	}
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Medic, 300);
+		}
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = (*unit)->getClosestUnit(IsEnemy);
-	}
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_SCV, 300);
+		}
 
-	if (desiredUnitToAttack != NULL) {
-		Broodwar->sendText("%s", desiredUnitToAttack->getType().c_str());
-		(*unit)->attack(desiredUnitToAttack);
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = (*unit)->getClosestUnit(IsEnemy);
+		}
+
+		if (desiredUnitToAttack != NULL) {
+			Broodwar->sendText("%s", desiredUnitToAttack->getType().c_str());
+			(*unit)->attack(desiredUnitToAttack);
+		}
 	}
 	
 }
@@ -181,9 +184,9 @@ void CombatManager::executeOrders() {
 	for (auto &u : combatUnits) {
 		if (shouldAttack) {
 			//if (!attackEnemyIfInRange(u, UnitTypes::Terran_Marine, 10)) {
-			if (!stayOutOfRange(u, 70)){
-				attackNearestEnemy(u);
-			}
+			
+			attackNearestEnemy(u);
+			
 			// }
 
 			if ((*u)->isIdle()) {
