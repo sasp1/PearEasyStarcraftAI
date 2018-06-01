@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include "BuildingManager.h"
+#include "Vulture.h"
 class CombatManager
 {
 public:
@@ -9,6 +10,7 @@ public:
 
 	
 	std::list<const BWAPI::Unit*> combatUnits;
+	std::list<const Vulture*> vultures; 
 
 	void CombatManager::addCombatUnit(const BWAPI::Unit* unit);
 	void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit);

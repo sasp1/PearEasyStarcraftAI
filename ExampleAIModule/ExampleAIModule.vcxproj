@@ -105,6 +105,7 @@
     <ClCompile Include="Source\StrategyManager.cpp" />
     <ClCompile Include="Source\TimedUnit.cpp" />
     <ClCompile Include="Source\UnitManager.cpp" />
+    <ClCompile Include="Source\Vulture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\BuildingManager.h" />
@@ -117,6 +118,7 @@
     <ClInclude Include="Source\ScoutingManager.h" />
     <ClInclude Include="Source\StrategyManager.h" />
     <ClInclude Include="Source\UnitManager.h" />
+    <ClInclude Include="Source\Vulture.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Debug\ExampleAIModule.Build.CppClean.log" />
