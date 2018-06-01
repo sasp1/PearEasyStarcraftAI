@@ -42,7 +42,7 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 */
 void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 
-	if (! (stayOutOfRange(unit, 70))) {
+	if (! (stayOutOfRange(unit, 100))) {
 
 		BWAPI::Unit desiredUnitToAttack = NULL;
 
@@ -130,8 +130,8 @@ BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::
 bool CombatManager::stayOutOfRange(const BWAPI::Unit * unit, int range){
 	bool enemiesInRange = false;
 	for (auto &eu : (*unit)->getUnitsInRadius(range)) {
-		bool enemyIsRanged = (eu->isInWeaponRange(*unit)) && (eu->getDistance(*unit) > 20);
-		if (!enemyIsRanged && !(eu->getType().isBuilding()) && (eu)->getPlayer()->isEnemy(Broodwar->self())) {
+		//bool enemyIsRanged = (eu->isInWeaponRange(*unit)) && (eu->getDistance(*unit) > 20); !enemyIsRanged && !(eu->getType().isBuilding()) &&
+		if ( (eu)->getPlayer()->isEnemy(Broodwar->self())) {
 			enemiesInRange = true;
 			BWAPI::Position movePosition = BWAPI::Unit(*buildingManager->commandCenter)->getPosition();
 			(*unit)->move(movePosition);
@@ -211,7 +211,7 @@ void CombatManager::executeOrders() {
 		if (shouldAttack) {
 			attackNearestEnemy(u->unit); 
 			
-			//u->putDownMineIfOutsideOfBase(); 
+			u->putDownMineIfOutsideOfBase(); 
 
 			if ((*u->unit)->isIdle()) {
 				(*u->unit)->move(attackLocation); 

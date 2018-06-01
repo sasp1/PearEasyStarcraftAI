@@ -93,7 +93,6 @@ void StrategyManager::executeTwoFactory() {
 
 	//Continue pressure with 2 extra factories STRATEGY
 	if (!desireBuildingBarracks && factoriesOrdered == 2 && Broodwar->enemy()->getRace() == Races::Protoss) {
-		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 		strategy = 2;
 		Broodwar->sendText("TWO EXTRA FACTORIES EXPANDING");
 	
@@ -153,8 +152,9 @@ void StrategyManager::executeExpandWithTwoFactories() {
 
 	//___________________________Attacking strategy________________________________
 	
-	if (combatManager->combatUnits.size() >= 2 && scoutingManager->enemyBaseFound) {
+	if ((combatManager->combatUnits.size() + combatManager->vultures.size()) >= 4 && scoutingManager->enemyBaseFound) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
+		
 	}
 
 }
