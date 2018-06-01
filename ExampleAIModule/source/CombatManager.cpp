@@ -163,7 +163,6 @@ void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position enemyBaseP
 void CombatManager::defendBase(int range){
 	//find min distance to defend base (commandcenter to closest enemy)
 	if (BWAPI::Unit(*buildingManager->commandCenter)->getDistance(BWAPI::Unit(*buildingManager->commandCenter)->getClosestUnit(IsEnemy))<range) {
-		Broodwar->sendText("DEFEND");
 		for (auto &u : combatUnits) {
 			if (BWAPI::Unit(*buildingManager->commandCenter)->getDistance(*u)<range) {
 				attackNearestEnemy(u);
