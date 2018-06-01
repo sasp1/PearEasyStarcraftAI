@@ -39,9 +39,9 @@ void StrategyManager::calculateStrategyOne() {
 	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
 	if (scoutingManager->scoutingUnits.size() > 0) {
-		buildingManager->setIsDesiredToTrainMarines(false); 
+		buildingManager->barrackBuild = NULL; 
 	} else {
-		buildingManager->setIsDesiredToTrainMarines(true);
+		buildingManager->barrackBuild = UnitTypes::Terran_Marine;
 	}
 
 	//Maintain 20 workers
@@ -53,7 +53,7 @@ void StrategyManager::calculateStrategyOne() {
 	}
 
 	//Spam voltures
-	buildingManager->setIsDesiredToTrainVultures(true);
+	buildingManager->factoryBuild = UnitTypes::Terran_Vulture;
 	
 	
 	//___________________________Building strategy________________________________
@@ -133,10 +133,10 @@ void StrategyManager::calculateStrategyTwo() {
 	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
 	if (scoutingManager->scoutingUnits.size() > 0) {
-		buildingManager->setIsDesiredToTrainMarines(false);
+		buildingManager->barrackBuild = NULL;
 	}
 	else {
-		buildingManager->setIsDesiredToTrainMarines(true);
+		buildingManager->barrackBuild = UnitTypes::Terran_Marine;
 	}
 
 	//Maintain 20 workers
@@ -148,7 +148,7 @@ void StrategyManager::calculateStrategyTwo() {
 	}
 
 	//Spam voltures
-	buildingManager->setIsDesiredToTrainVultures(true);
+	buildingManager->factoryBuild = UnitTypes::Terran_Vulture;;
 
 
 	//___________________________Building strategy________________________________

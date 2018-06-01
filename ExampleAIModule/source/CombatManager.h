@@ -17,7 +17,7 @@ public:
 	
 	BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::UnitType target, int range);
 
-	bool stayOutOfRange(const BWAPI::Unit* unit, BWAPI::UnitType target, int range);
+	bool stayOutOfRange(const BWAPI::Unit* unit, int range);
 	
 	void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position pos);
 	void CombatManager::defendBase(int range);

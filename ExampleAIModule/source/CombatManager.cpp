@@ -42,38 +42,61 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 */
 void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 
-	BWAPI::Unit desiredUnitToAttack = NULL;
+	if (! (stayOutOfRange(unit, 70))) {
+
+		BWAPI::Unit desiredUnitToAttack = NULL;
+
+		//TERRAN V PROTOSS________________________________________________
+		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Zealot, 300);
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Dragoon, 300);
+		}
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Probe, 300);
+		}
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Photon_Cannon, 300);
+		}
 
 
-	desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Siege_Mode, 300);
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Vulture, 300);
-	}
+		//TERRAN V TERRAN________________________________________________
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Tank_Mode, 300);
-	}
-	
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Marine, 300);
-	}
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Siege_Mode, 300);
+		}
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Medic, 300);
-	}
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Vulture, 300);
+		}
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_SCV, 300);
-	}
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Tank_Mode, 300);
+		}
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = (*unit)->getClosestUnit(IsEnemy);
-	}
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Marine, 300);
+		}
 
-	if (desiredUnitToAttack != NULL) {
-		Broodwar->sendText("%s", desiredUnitToAttack->getType().c_str());
-		(*unit)->attack(desiredUnitToAttack);
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Medic, 300);
+		}
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_SCV, 300);
+		}
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = (*unit)->getClosestUnit(IsEnemy);
+		}
+
+		if (desiredUnitToAttack != NULL) {
+			Broodwar->sendText("%s", desiredUnitToAttack->getType().c_str());
+			(*unit)->attack(desiredUnitToAttack);
+		}
 	}
 	
 }
@@ -86,6 +109,8 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 * @param range describes the maximum range we wish to attack an enemy within
 * @see attackNearestEnemy()
 */
+
+
 BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::UnitType target, int range) {
 	BWAPI::Unit desiredUnitToAttack = NULL;
 
@@ -102,12 +127,12 @@ BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::
 
 }
 
-bool CombatManager::stayOutOfRange(const BWAPI::Unit * unit, BWAPI::UnitType target, int range){
+bool CombatManager::stayOutOfRange(const BWAPI::Unit * unit, int range){
 	bool enemiesInRange = false;
 	for (auto &eu : (*unit)->getUnitsInRadius(range)) {		
-		if ((eu)->getType() == target && (eu)->getPlayer()->isEnemy(Broodwar->self())) {
+		if ( (eu)->getPlayer()->isEnemy(Broodwar->self())) {
 			enemiesInRange = true;
-			BWAPI::Position movePosition = ((*unit)->getPosition())-(eu->getPosition());
+			BWAPI::Position movePosition = BWAPI::Unit(*buildingManager->commandCenter)->getPosition();
 			(*unit)->move(movePosition);
 			}
 
@@ -168,9 +193,9 @@ void CombatManager::executeOrders() {
 	for (auto &u : combatUnits) {
 		if (shouldAttack) {
 			//if (!attackEnemyIfInRange(u, UnitTypes::Terran_Marine, 10)) {
-			if (!stayOutOfRange(u, UnitTypes::Protoss_Zealot, 150)){
-				attackNearestEnemy(u);
-			}
+			
+			attackNearestEnemy(u);
+			
 			// }
 
 			if ((*u)->isIdle()) {
