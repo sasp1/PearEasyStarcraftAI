@@ -29,10 +29,9 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 	}
 
 	//Adds researchs upon machine shop build.
-	if ((*u)->getType() == UnitTypes::Terran_Machine_Shop && expandFactory) {
+	if ((*u)->getType() == UnitTypes::Terran_Machine_Shop  && (*u)->isIdle()) {
 		desiredResearchs.push_front(TechTypes::Spider_Mines);
 		desiredUpgrades.push_front(UpgradeTypes::Ion_Thrusters);
-		expandFactory = false;
 	}
 
 	//Adds building, if not supply depot, to owned list.
@@ -60,7 +59,10 @@ void BuildingManager::executeOrders() {
 			}
 			//Barrack orders
 			if ((*b)->getType() == UnitTypes::Terran_Barracks) {
-				if (barrackBuild != NULL && (*b)->isIdle()) {
+
+
+				if ((*b)->isIdle() && barrackBuild != UnitTypes::None ) {
+					
 					(*b)->train(barrackBuild);
 				}
 			}
@@ -157,8 +159,9 @@ BWAPI::TilePosition BuildingManager::spiralSearch() {
 
 BuildingManager::BuildingManager()
 {
-	factoryBuild = NULL;
+	factoryBuild = UnitTypes::None;;
 	barrackBuild = UnitTypes::Terran_Marine;;
+
 }
 
 BuildingManager::~BuildingManager()
