@@ -10,8 +10,8 @@ public:
 	void BuildingManager::executeOrders();
 	void BuildingManager::setIsDesiredToTrainWorkers(bool buildWorkers);
 	BWAPI::TilePosition BuildingManager::spiralSearch();
-	bool expandFactory = true;
 	std::list<BWAPI::TechType> desiredResearchs;
+	std::list<BWAPI::UnitType> desiredExpansion;
 	std::list<BWAPI::UpgradeType> desiredUpgrades;
 	bool isDesiredToTrainWorkers = false;
 	const BWAPI::Unit* commandCenter;

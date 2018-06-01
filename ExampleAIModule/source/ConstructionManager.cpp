@@ -79,7 +79,7 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 
 	//Passing of extensions to buildingManager
 	if (building == UnitTypes::Terran_Machine_Shop) {
-		buildingManager->expandFactory = true;
+		
 	}
 	else orderedBuilding = (building);
 }

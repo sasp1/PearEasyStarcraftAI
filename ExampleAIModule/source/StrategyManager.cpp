@@ -38,11 +38,13 @@ void StrategyManager::calculateStrategyOne() {
 	
 	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
+	
 	if (scoutingManager->scoutingUnits.size() > 0) {
-		buildingManager->barrackBuild = NULL; 
+		buildingManager->barrackBuild = UnitTypes::None;
 	} else {
 		buildingManager->barrackBuild = UnitTypes::Terran_Marine;
 	}
+	
 
 	//Maintain 20 workers
 	if (unitManager->unitWorkers.size() > numberOfWorkersLimit) {
@@ -133,7 +135,7 @@ void StrategyManager::calculateStrategyTwo() {
 	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
 	if (scoutingManager->scoutingUnits.size() > 0) {
-		buildingManager->barrackBuild = NULL;
+		buildingManager->barrackBuild = UnitTypes::None;
 	}
 	else {
 		buildingManager->barrackBuild = UnitTypes::Terran_Marine;
