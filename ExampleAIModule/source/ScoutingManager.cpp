@@ -15,6 +15,7 @@ BWAPI::Position cornerCoords0= Position(100, 100);
 BWAPI::Position cornerCoords1 = Position(4000, 100);
 BWAPI::Position cornerCoords2 = Position(4000, 4000);
 BWAPI::Position cornerCoords3 = Position(100, 4000);
+int scoutedCorners = 0; 
 
 
 ScoutingManager::ScoutingManager(BWAPI::Position startingPosition)
@@ -52,6 +53,23 @@ void ScoutingManager::setStartingCorner(BWAPI::Position pos) {
 void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
 	//Scout clockwise each corner of the map
 	
+	scoutedCorners++; 
+	if (scoutedCorners == 3 && enemyBaseFound == false) {
+		Broodwar->sendText("Scouted 3 corners but still didn't find enemy"); 
+		enemyBaseFound = true;
+		if (corner == 0) {
+			lastEnemyBuildingPosition = cornerCoords0; 
+		} else if (corner == 1) {
+			lastEnemyBuildingPosition = cornerCoords1;
+		}
+		else if (corner == 2) {
+			lastEnemyBuildingPosition = cornerCoords2;
+		}
+		else {
+			lastEnemyBuildingPosition = cornerCoords3;
+		}
+	}
+
 	if (corner == 0) {
 		(*scout)->move(cornerCoords0);
 	}
