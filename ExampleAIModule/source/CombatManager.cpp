@@ -25,8 +25,7 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 	if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Vulture) {
 		BWAPI::Position pos = (*buildingManager->commandCenter)->getPosition();
 		Vulture* vulture = new Vulture(unit, pos); 
-		vultures.push_back(vulture); 
-		Broodwar->sendText("Added vulture to list"); 
+		vultures.push_back(vulture);
 	}
 	else {
 		combatUnits.push_back(unit);
