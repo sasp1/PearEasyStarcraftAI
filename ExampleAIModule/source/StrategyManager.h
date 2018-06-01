@@ -17,8 +17,8 @@ public:
 	~StrategyManager();
 	void StrategyManager::calculateOrders();
 	void StrategyManager::referenceManagers(ExecutionManager* executionManager, UnitManager* unitManager, BuildingManager* buildingManager, CombatManager* combatManager);
-	void StrategyManager::calculateStrategyOne();
-	void StrategyManager::calculateStrategyTwo();
+	void StrategyManager::executeTwoFactory();
+	void StrategyManager::executeExpandWithTwoFactories();
 	void StrategyManager::unitComplete(const BWAPI::Unit* unit);
 };
 

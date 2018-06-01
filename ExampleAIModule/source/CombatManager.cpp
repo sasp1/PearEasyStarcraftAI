@@ -121,7 +121,7 @@ BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::
 bool CombatManager::stayOutOfRange(const BWAPI::Unit * unit, int range){
 	bool enemiesInRange = false;
 	for (auto &eu : (*unit)->getUnitsInRadius(range)) {		
-		if ( (eu)->getPlayer()->isEnemy(Broodwar->self())) {
+		if (!(eu->getType().isBuilding()) && (eu)->getPlayer()->isEnemy(Broodwar->self())) {
 			enemiesInRange = true;
 			BWAPI::Position movePosition = BWAPI::Unit(*buildingManager->commandCenter)->getPosition();
 			(*unit)->move(movePosition);
