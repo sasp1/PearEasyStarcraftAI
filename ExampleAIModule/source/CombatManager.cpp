@@ -94,7 +94,7 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 			desiredUnitToAttack = (*unit)->getClosestUnit(IsEnemy);
 		}
 
-		if (desiredUnitToAttack != NULL) {
+		if (desiredUnitToAttack != NULL && desiredUnitToAttack->getType() != UnitTypes::Protoss_Dark_Templar) {
 			Broodwar->sendText("%s", desiredUnitToAttack->getType().c_str());
 			(*unit)->attack(desiredUnitToAttack);
 		}
