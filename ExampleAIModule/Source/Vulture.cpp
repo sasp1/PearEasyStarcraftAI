@@ -19,10 +19,10 @@ void Vulture::putDownMineIfOutsideOfBase() {
 		time = Broodwar->getFrameCount();
 
 		BWAPI::Position position = (*unit)->getPosition() + Position(1, 1);
-		Broodwar->sendText("%d", (int)basePos.getDistance((*unit)->getPosition()));
+
 		if (basePos.getDistance((*unit)->getPosition()) > 800.0) {
 			(*unit)->useTech(BWAPI::TechTypes::Spider_Mines, position);
-			Broodwar->sendText("Tried to put down spider mine");
+
 		}
 	}
 }
