@@ -25,8 +25,6 @@ void StrategyManager::calculateOrders() {
 	}
 
 
-
-
 	executionManager->executeOrders();
 
 }
@@ -106,13 +104,6 @@ void StrategyManager::executeTwoFactory() {
 
 void StrategyManager::executeExpandWithTwoFactories() {
 
-	//Order three factories
-	//if (unitManager->unitWorkers.size() >= 25 && factoriesOrdered < 3) {
-	//	Broodwar->sendText("adding factory to priorityQueue");
-	//	BWAPI::UnitType building = UnitTypes::Terran_Factory;
-	//	executionManager->addPriorityItem(building);
-	//	factoriesOrdered++;
-	//}
 
 	int unusedSupplies = (Broodwar->self()->supplyTotal()) - Broodwar->self()->supplyUsed();
 
@@ -161,10 +152,11 @@ void StrategyManager::executeExpandWithTwoFactories() {
 		factoriesOrdered++;
 	}
 
-	if (factoriesOrdered >= 4) {
-
+	if (factoriesOrdered >= 4 && Broodwar->self()->minerals > 300) {
 		buildingManager->barrackBuild = UnitTypes::Terran_Marine;
-		
+	}
+	else {
+		buildingManager->barrackBuild = UnitTypes::None;
 	}
 	
 	
