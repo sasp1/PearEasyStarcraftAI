@@ -93,6 +93,21 @@ BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::
 
 }
 
+bool CombatManager::stayOutOfRange(const BWAPI::Unit * unit, BWAPI::UnitType target, int range){
+	bool enemiesInRange = false;
+	for (auto &eu : (*unit)->getUnitsInRadius(range)) {		
+		if ((eu)->getType() == target && (eu)->getPlayer()->isEnemy(Broodwar->self())) {
+			enemiesInRange = true;
+			BWAPI::Position movePosition = ((*unit)->getPosition())-(eu->getPosition());
+			(*unit)->move(movePosition);
+			}
+
+		}
+	return enemiesInRange;
+	}
+
+
+
 void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position enemyBasePosition) {
 	attackLocation = enemyBasePosition;
 	shouldAttack = true;
@@ -144,8 +159,9 @@ void CombatManager::executeOrders() {
 	for (auto &u : combatUnits) {
 		if (shouldAttack) {
 			//if (!attackEnemyIfInRange(u, UnitTypes::Terran_Marine, 10)) {
-
+			if (!stayOutOfRange(u, UnitTypes::Protoss_Zealot, 150)){
 				attackNearestEnemy(u);
+			}
 			// }
 
 			if ((*u)->isIdle()) {
