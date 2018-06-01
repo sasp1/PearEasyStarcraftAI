@@ -142,16 +142,18 @@ void StrategyManager::executeExpandWithTwoFactories() {
 	}
 
 	//Order two factories
+	/*
 	if (Broodwar->self()->minerals() >= 1000 && factoriesOrdered < 4) {
 		Broodwar->sendText("adding factory to priorityQueue");
 		BWAPI::UnitType building = UnitTypes::Terran_Factory;
 		executionManager->addPriorityItem(building);
 		factoriesOrdered++;
 	}
+	*/
 
 	//___________________________Attacking strategy________________________________
 	
-	if (combatManager->combatUnits.size() >= 2) {
+	if (combatManager->combatUnits.size() >= 2 && scoutingManager->enemyBaseFound) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 	}
 
