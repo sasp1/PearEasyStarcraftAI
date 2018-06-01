@@ -152,7 +152,7 @@ void StrategyManager::executeExpandWithTwoFactories() {
 		factoriesOrdered++;
 	}
 
-	if (factoriesOrdered >= 4 && Broodwar->self()->minerals > 300) {
+	if (factoriesOrdered >= 4 && Broodwar->self()->minerals() > 300) {
 		buildingManager->barrackBuild = UnitTypes::Terran_Marine;
 	}
 	else {

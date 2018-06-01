@@ -130,8 +130,9 @@ BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::
 
 bool CombatManager::stayOutOfRange(const BWAPI::Unit * unit, int range){
 	bool enemiesInRange = false;
-	for (auto &eu : (*unit)->getUnitsInRadius(range)) {		
-		if (!(eu->getType().isBuilding()) && (eu)->getPlayer()->isEnemy(Broodwar->self())) {
+	for (auto &eu : (*unit)->getUnitsInRadius(range)) {
+		bool enemyIsRanged = (eu->isInWeaponRange(*unit)) && (eu->getDistance(*unit) > 20);
+		if (!enemyIsRanged && !(eu->getType().isBuilding()) && (eu)->getPlayer()->isEnemy(Broodwar->self())) {
 			enemiesInRange = true;
 			BWAPI::Position movePosition = BWAPI::Unit(*buildingManager->commandCenter)->getPosition();
 			(*unit)->move(movePosition);
