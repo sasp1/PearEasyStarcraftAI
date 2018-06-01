@@ -109,11 +109,12 @@ void StrategyManager::executeExpandWithTwoFactories() {
 
 	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
-	if (scoutingManager->scoutingUnits.size() > 0) {
-		buildingManager->barrackBuild = UnitTypes::None;
+
+	if (factoriesOrdered >= 4 && Broodwar->self()->minerals() > 300 || (scoutingManager->scoutingUnits.size() < 1)) {
+			buildingManager->barrackBuild = UnitTypes::Terran_Marine;
 	}
 	else {
-		buildingManager->barrackBuild = UnitTypes::Terran_Marine;
+		buildingManager->barrackBuild = UnitTypes::None;
 	}
 
 	//Maintain 20 workers
@@ -140,27 +141,19 @@ void StrategyManager::executeExpandWithTwoFactories() {
 		supplyDepotsAreNotUnderConstruction = false;
 	}
 
-	if (combatManager->combatUnits.size() >= 2) {
-		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
-	}
-
 	//Order two factories
-	if (Broodwar->self()->minerals() >= 500 && factoriesOrdered < 4) {
+	if (Broodwar->self()->minerals() >= 1000 && factoriesOrdered < 4) {
 		Broodwar->sendText("adding factory to priorityQueue");
 		BWAPI::UnitType building = UnitTypes::Terran_Factory;
 		executionManager->addPriorityItem(building);
 		factoriesOrdered++;
 	}
 
-	if (factoriesOrdered >= 4 && Broodwar->self()->minerals() > 300) {
-		buildingManager->barrackBuild = UnitTypes::Terran_Marine;
+	//___________________________Attacking strategy________________________________
+	
+	if (combatManager->combatUnits.size() >= 2) {
+		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 	}
-	else {
-		buildingManager->barrackBuild = UnitTypes::None;
-	}
-	
-	
-	
 
 }
 
