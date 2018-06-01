@@ -106,7 +106,7 @@ void StrategyManager::calculateStrategyOne() {
 	//___________________________Attacking strategy________________________________
 
 	//Check if enough voltures for attack
-	if (combatManager->combatUnits.size() >= 8) {
+	if (combatManager->vultures.size() >= 8) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 		strategy = 2;
 		Broodwar->sendText("PHASE TWO");
