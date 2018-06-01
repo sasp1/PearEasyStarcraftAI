@@ -8,6 +8,7 @@ public:
 	BWAPI::Position lastEnemyBuildingPosition;
 	BWAPI::Position secondaryMineralFieldPosition; 
 	bool secondaryMineralFieldFound; 
+	bool enemyBaseFound = false;
 	int corner = 0;
 	std::list<const BWAPI::Unit*> scoutingUnits;
 	ScoutingManager(BWAPI::Position startingPosition);

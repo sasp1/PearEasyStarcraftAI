@@ -206,17 +206,19 @@ void CombatManager::executeOrders() {
 		}
 	}
 
+	
 	for (auto &u : vultures) {
 		if (shouldAttack) {
 			attackNearestEnemy(u->unit); 
 			
-			u->putDownMineIfOutsideOfBase(); 
+			//u->putDownMineIfOutsideOfBase(); 
 
 			if ((*u->unit)->isIdle()) {
 				(*u->unit)->move(attackLocation); 
 			}
 		}
 	}
+	
 }
 
 

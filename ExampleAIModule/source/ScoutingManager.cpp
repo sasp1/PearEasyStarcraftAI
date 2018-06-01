@@ -7,7 +7,7 @@ using namespace BWAPI;
 using namespace Filter;
 
 // std::list<const BWAPI::Unit*> scoutingUnits;
-bool enemyBaseFound = false;
+
 BWAPI::Position lastEnemyBuildingPosition;
 //The map is 4096x4096 pixels (64^2)
 int enemeyMarinesSpotted = 0; 
@@ -115,6 +115,7 @@ void ScoutingManager::onUnitDiscover(BWAPI::Unit unit)
 		Broodwar->sendText("FJENDE!");
 		enemyBaseFound = true;
 		lastEnemyBuildingPosition = unit->getPosition();
+
 	}
 
 	 if (!secondaryMineralFieldFound && unit->getType() == UnitTypes::Resource_Mineral_Field && (*buildingManager->commandCenter)->getDistance(unit) > 350) {
