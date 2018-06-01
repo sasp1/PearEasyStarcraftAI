@@ -26,6 +26,7 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 		BWAPI::Position pos = (*buildingManager->commandCenter)->getPosition();
 		Vulture* vulture = new Vulture(unit, pos); 
 		vultures.push_back(vulture); 
+		Broodwar->sendText("Added vulture to list"); 
 	}
 	else {
 		combatUnits.push_back(unit);
@@ -197,9 +198,22 @@ void CombatManager::executeOrders() {
 			attackNearestEnemy(u);
 			
 			// }
+			
 
 			if ((*u)->isIdle()) {
 				(*u)->move(attackLocation);
+			}
+		}
+	}
+
+	for (auto &u : vultures) {
+		if (shouldAttack) {
+			attackNearestEnemy(u->unit); 
+			
+			u->putDownMineIfOutsideOfBase(); 
+
+			if ((*u->unit)->isIdle()) {
+				(*u->unit)->move(attackLocation); 
 			}
 		}
 	}

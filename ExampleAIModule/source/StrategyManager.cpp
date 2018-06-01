@@ -93,18 +93,6 @@ void StrategyManager::executeTwoFactory() {
 	}
 
 
-	//___________________________Attacking strategy________________________________
-
-	//Check if enough voltures for attack
-	/*
-	if (combatManager->combatUnits.size() >= 8) {
-		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
-		strategy = 2;
-		Broodwar->sendText("PHASE TWO");
-		numberOfWorkersLimit = 40;
-	}
-	*/
-
 	//Continue pressure with 2 extra factories STRATEGY
 	if (!desireBuildingBarracks && factoriesOrdered == 2 && Broodwar->enemy()->getRace() == Races::Protoss) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
