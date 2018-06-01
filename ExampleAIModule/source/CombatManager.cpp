@@ -42,7 +42,7 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 */
 void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 
-	if (! (stayOutOfRange(unit, 100))) {
+	if (! (stayOutOfRange(unit, 80))) {
 
 		BWAPI::Unit desiredUnitToAttack = NULL;
 
@@ -54,12 +54,13 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 		}
 
 		if (desiredUnitToAttack == NULL) {
-			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Probe, 300);
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Photon_Cannon, 1000);
 		}
 
 		if (desiredUnitToAttack == NULL) {
-			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Photon_Cannon, 300);
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Probe, 300);
 		}
+
 
 
 
@@ -211,7 +212,7 @@ void CombatManager::executeOrders() {
 		if (shouldAttack) {
 			attackNearestEnemy(u->unit); 
 			
-			u->putDownMineIfOutsideOfBase(); 
+			//u->putDownMineIfOutsideOfBase(); 
 
 			if ((*u->unit)->isIdle()) {
 				(*u->unit)->move(attackLocation); 
