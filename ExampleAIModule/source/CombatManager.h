@@ -25,6 +25,7 @@ public:
 	void CombatManager::defendBase(int range);
 
 	void CombatManager::returnAllUnitsToBase();
+	bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit * unit, const BWAPI::Unit* enemyUnit);
 
 	CombatManager();
 	~CombatManager();
