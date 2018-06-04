@@ -102,6 +102,7 @@
     <ClCompile Include="Source\ExampleAIModule.cpp" />
     <ClCompile Include="Source\ExecutionManager.cpp" />
     <ClCompile Include="Source\GatheringManager.cpp" />
+    <ClCompile Include="Source\MapData.cpp" />
     <ClCompile Include="Source\ScoutingManager.cpp" />
     <ClCompile Include="Source\Building.cpp" />
     <ClCompile Include="Source\StrategyManager.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="Source\ExampleAIModule.h" />
     <ClInclude Include="Source\ExecutionManager.h" />
     <ClInclude Include="Source\GatheringManager.h" />
+    <ClInclude Include="Source\MapData.h" />
     <ClInclude Include="Source\Building.h" />
     <ClInclude Include="Source\TimedUnit.h" />
     <ClInclude Include="Source\ScoutingManager.h" />
