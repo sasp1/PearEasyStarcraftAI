@@ -221,11 +221,8 @@ void CombatManager::executeOrders() {
 
 	for (auto &u : combatUnits) {
 		if (shouldAttack) {
-			//if (!attackEnemyIfInRange(u, UnitTypes::Terran_Marine, 10)) {
-			
+		
 			attackNearestEnemy(u);
-			
-			// }
 			
 
 			if ((*u)->isIdle()) {
