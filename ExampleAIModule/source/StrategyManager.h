@@ -20,5 +20,7 @@ public:
 	void StrategyManager::executeTwoFactory();
 	void StrategyManager::executeExpandWithOneFactory();
 	void StrategyManager::unitComplete(const BWAPI::Unit* unit);
+	bool StrategyManager::EnemyHasAStructureMakingTanksRequired();
+
 };
 
