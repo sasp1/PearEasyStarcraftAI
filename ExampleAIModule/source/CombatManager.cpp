@@ -136,7 +136,7 @@ bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit* unit, const BWAPI:
 	int enemyWeaponRange = (*unit)->getType().groundWeapon().maxRange(); 
 	int distanceToEnemy= (*unit)->getPosition().getDistance((*enemyUnit)->getPosition()); 
 	
-	return distanceToEnemy < enemyWeaponRange + 100; 
+	return (distanceToEnemy < enemyWeaponRange + 100); 
 
 }
 
