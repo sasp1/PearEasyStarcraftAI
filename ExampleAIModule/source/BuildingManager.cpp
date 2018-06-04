@@ -85,7 +85,7 @@ void BuildingManager::executeOrders() {
 					b->getUnit()->upgrade(UpgradeTypes::Ion_Thrusters);
 					if (b->getUnit()->isUpgrading())desiredUpgrades.pop_front();
 				}
-				else if (desiredUpgrades.front() == TechTypes::Tank_Siege_Mode) {
+				else if (desiredResearchs.front() == TechTypes::Tank_Siege_Mode) {
 					b->getUnit()->research(TechTypes::Tank_Siege_Mode);
 					if (b->getUnit()->isUpgrading())desiredResearchs.pop_front();
 				}
