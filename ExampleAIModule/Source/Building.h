@@ -5,7 +5,6 @@ class Building
 {
 public:
 	Building(const BWAPI::Unit* u);
-	~Building();
 	const BWAPI::Unit* unit;
 	bool Building::isUnitIdle();
 	BWAPI::UnitType Building::getType();

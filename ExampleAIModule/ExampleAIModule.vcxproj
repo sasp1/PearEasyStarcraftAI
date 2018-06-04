@@ -94,6 +94,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\SiegeTank.cpp" />
     <ClCompile Include="Source\BuildingManager.cpp" />
     <ClCompile Include="Source\CombatManager.cpp" />
     <ClCompile Include="Source\ConstructionManager.cpp" />
@@ -109,6 +110,7 @@
     <ClCompile Include="Source\Vulture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\SiegeTank.h" />
     <ClInclude Include="Source\BuildingManager.h" />
     <ClInclude Include="Source\CombatManager.h" />
     <ClInclude Include="Source\ConstructionManager.h" />
