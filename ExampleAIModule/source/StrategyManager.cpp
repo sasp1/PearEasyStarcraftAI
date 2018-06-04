@@ -5,6 +5,7 @@ using namespace Filter;
 
 bool supplyDepotsAreNotUnderConstruction = true;
 bool desireBuildingBarracks = true;
+bool hasResearchedSiegeMode = false;
 int refineriesOrdered = 0;
 int factoriesOrdered = 0;
 int starportsOrdered = 0; 
@@ -155,6 +156,13 @@ void StrategyManager::executeExpandWithOneFactory() {
 		factoriesOrdered++;
 	}
 	
+	if (!hasResearchedSiegeMode && EnemyHasAStructureMakingTanksRequired()) {
+		Broodwar->sendText("adding SiegeMode to priorityQueue!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		BWAPI::UnitType building = TechTypes::Tank_Siege_Mode;
+		executionManager->addPriorityItem(building);
+		hasResearchedSiegeMode = true;
+	}
+
 
 	//___________________________Attacking strategy________________________________
 	
