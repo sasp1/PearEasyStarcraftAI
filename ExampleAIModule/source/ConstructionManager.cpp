@@ -33,7 +33,6 @@ void ConstructionManager::executeOrders() {
 		if (b->unit == NULL) {
 			builders.remove(b);
 			continue;
-			Broodwar->sendText("Null unit: code 20");
 		}
 		if (b->isOverTime(500) && b->isUnitIdle()) {
 			unitManager->newWorker(b->unit);

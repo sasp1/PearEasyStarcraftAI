@@ -1,11 +1,10 @@
 #include "BuildingManager.h"
 #include <BWAPI.h>
-#include "Building.h"
 using namespace BWAPI;
 using namespace Filter;
 using namespace std;
 
-std::list<Building*> buildings;
+
 int startBuildFrame;
 int maxX = 0;
 int maxY = 0;
@@ -25,28 +24,32 @@ bool addedMachineTech = false;
 */
 void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 
-	//Adds command center as separate variable
-	if ((*u)->getType() == UnitTypes::Terran_Command_Center) {
-		commandCenter = u;
-	}
+
 
 	//Adds building, if not supply depot, to owned list.
 	if ((*u)->getType() != UnitTypes::Terran_Supply_Depot)
 	{
 		Building* b = new Building(u);
-		buildings.push_back(b);
 
-		//If factory, adds request machine shop addon for first two factories.
-		if ((*u)->getType() == UnitTypes::Terran_Factory) {
-			factories++;
-			b->buildAddon = factories < 3;
+		//Adds command center as separate variable
+		if ((*u)->getType() == UnitTypes::Terran_Command_Center) {
+			commandCenters.push_back(b);
 		}
-		//If machine shop, add researchs for first one.
-		if ((*u)->getType() == UnitTypes::Terran_Machine_Shop) {
-			if (!addedMachineTech) {
-				desiredResearchs.push_front(TechTypes::Spider_Mines);
-				desiredUpgrades.push_front(UpgradeTypes::Ion_Thrusters);
-				addedMachineTech = true;
+		else {
+			buildings.push_back(b);
+
+			//If factory, adds request machine shop addon for first two factories.
+			if ((*u)->getType() == UnitTypes::Terran_Factory) {
+				factories++;
+				b->buildAddon = factories < 3;
+			}
+			//If machine shop, add researchs for first one.
+			if ((*u)->getType() == UnitTypes::Terran_Machine_Shop) {
+				if (!addedMachineTech) {
+					desiredResearchs.push_front(TechTypes::Spider_Mines);
+					desiredUpgrades.push_front(UpgradeTypes::Ion_Thrusters);
+					addedMachineTech = true;
+				}
 			}
 		}
 	}
@@ -58,16 +61,20 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 */
 void BuildingManager::executeOrders() {
 
+	for (auto &b : commandCenters) {
+		//Command center orders
+		if (isDesiredToTrainWorkers && b->isUnitIdle()) {
+			b->getUnit()->train(UnitTypes::Terran_SCV);
+			
+		}
+	}
+
 	for (auto &b : buildings) {
 
 		if (!b->isUnitValid()) {
 			buildings.remove(b);
 		}
 		else if (b->isUnitIdle()) {
-			//Command center orders
-			if (b->getType() == UnitTypes::Terran_Command_Center && isDesiredToTrainWorkers) {
-				b->getUnit()->train(UnitTypes::Terran_SCV);
-			}
 			//Barrack orders
 			if (b->getType() == UnitTypes::Terran_Barracks) {
 				if (barrackBuild != UnitTypes::None) {

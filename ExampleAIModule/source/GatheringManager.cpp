@@ -1,12 +1,15 @@
 #include "GatheringManager.h"
 #include <BWAPI.h>
+
+
+
 using namespace BWAPI;
 using namespace Filter;
 
-//std::list<const BWAPI::Unit*> mineralWorkers;
-//std::list<const BWAPI::Unit*> gasWorkers;
+
 BWAPI::Unit* gas = NULL;
 int gasWorkerLimit = 2; 
+
 
 
 void GatheringManager::addWorker(const BWAPI::Unit* worker) {
@@ -20,14 +23,10 @@ void GatheringManager::addWorker(const BWAPI::Unit* worker) {
 	}
 }
 
-/*
-void GatheringManager::addGasworker() {
-	//Add unit to gas gathering from mineral gathering
-	gasWorkers.push_back(mineralWorkers.back());
-	mineralWorkers.pop_back();
-	Broodwar->sendText("gas worker was taken from mineral workers"); 
+void GatheringManager::splitWorkers(int centers) {
+
 }
-*/
+
 
 const BWAPI::Unit* GatheringManager::removeWorker() {
 	//Lose control of a worker
@@ -37,9 +36,6 @@ const BWAPI::Unit* GatheringManager::removeWorker() {
 }
 
 void GatheringManager::executeOrders() {
-	//Execute own orders. "Main" of this class
-
-
 	//Distribute gas and mineral-workers
 	const BWAPI::Unit* worker;
 	if (gasWorkers.size() > 0 && gasWorkers.size() < gasWorkerLimit && gas != NULL && !(*mineralWorkers.back())->isCarryingMinerals()) {
@@ -57,8 +53,6 @@ void GatheringManager::executeOrders() {
 		Broodwar->sendText("added worker to mineral list");
 	}
 
-
-
 	//Simple look for refinery (handling if the gas is not defined)
 	if (gas == NULL) {
 		for (auto &u : Broodwar->getAllUnits()) {
@@ -70,8 +64,6 @@ void GatheringManager::executeOrders() {
 			}
 		}
 	}
-
-
 
 	//Make mineral gatherers work
 	for (auto &u : mineralWorkers)
@@ -114,12 +106,6 @@ void GatheringManager::executeOrders() {
 		}
 	}	
 
-
-
-
-	
-
-
 	// Update limit to number of gasworkers: 
 	if (Broodwar->self()->gatheredGas() > 800) {
 		gasWorkerLimit = 0; 
@@ -128,8 +114,6 @@ void GatheringManager::executeOrders() {
 	// Clean up gathering units (if some were destroyed) 
 
 }
-
-
 
 //Initial class setup
 GatheringManager::GatheringManager()

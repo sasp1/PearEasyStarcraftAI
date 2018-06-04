@@ -10,4 +10,7 @@ public:
 	const BWAPI::Unit* unit;
 	int time;
 	bool TimedUnit::isUnitIdle();
+	bool TimedUnit::isUnitValid();
+	BWAPI::Unit* center;
+	int workState = 0;
 };

@@ -1,5 +1,7 @@
 #pragma once
 #include <BWAPI.h>
+class BuildingManager;
+
 class GatheringManager
 {
 public:
@@ -11,5 +13,8 @@ public:
 	void GatheringManager::executeOrders();
 	const BWAPI::Unit* GatheringManager::removeWorker();
 	void GatheringManager::addGasworker();
+	void GatheringManager::splitWorkers(int centers);
+	BuildingManager* buildingManager;
+	
 };
 
