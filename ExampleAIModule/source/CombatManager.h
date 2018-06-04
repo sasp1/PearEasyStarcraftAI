@@ -2,6 +2,7 @@
 #include <BWAPI.h>
 #include "BuildingManager.h"
 #include "Vulture.h"
+#include "SiegeTank.h"
 class CombatManager
 {
 public:
@@ -11,6 +12,7 @@ public:
 	
 	std::list<const BWAPI::Unit*> combatUnits;
 	std::list<Vulture*> vultures; 
+	std::list<SiegeTank*> tanks;
 
 	void CombatManager::addCombatUnit(const BWAPI::Unit* unit);
 	void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit);
