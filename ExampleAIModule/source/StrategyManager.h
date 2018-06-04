@@ -18,7 +18,9 @@ public:
 	void StrategyManager::calculateOrders();
 	void StrategyManager::referenceManagers(ExecutionManager* executionManager, UnitManager* unitManager, BuildingManager* buildingManager, CombatManager* combatManager);
 	void StrategyManager::executeTwoFactory();
-	void StrategyManager::executeExpandWithTwoFactories();
+	void StrategyManager::executeExpandWithOneFactory();
 	void StrategyManager::unitComplete(const BWAPI::Unit* unit);
+	bool StrategyManager::EnemyHasAStructureMakingTanksRequired();
+
 };
 

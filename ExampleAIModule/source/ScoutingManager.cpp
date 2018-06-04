@@ -115,7 +115,7 @@ void ScoutingManager::returnToBase(const BWAPI::Unit* unit) {
 void ScoutingManager::onUnitDiscover(BWAPI::Unit unit)
 {
 	 if ((BWAPI::Broodwar->self()->isEnemy(unit->getPlayer()) && (unit->getType().isBuilding()))){
-		Broodwar->sendText("FJENDE!");
+		//Broodwar->sendText("Enemy contruction found!");
 		enemyBaseFound = true;
 		lastEnemyBuildingPosition = unit->getPosition();
 
