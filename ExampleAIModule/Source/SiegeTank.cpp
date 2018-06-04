@@ -2,7 +2,7 @@
 using namespace BWAPI;
 using namespace Filter;
 
-SiegeTank::SiegeTank(const BWAPI::Unit* u)
+SiegeTank::SiegeTank(const BWAPI::Unit* u) : CustomUnit(u)
 {
 	tank = u;
 }
@@ -19,10 +19,12 @@ BWAPI::Unit SiegeTank::getUnit() {
 	return *tank;
 }
 
-bool SiegeTank::isUnitValid() {
-	return tank != NULL;
-}
 
 bool SiegeTank::isSiege() {
 	return BWAPI::UnitTypes::Terran_Siege_Tank_Siege_Mode == (*tank)->getType();
+}
+
+bool SiegeTank::isValid()
+{
+	return tank != NULL;
 }

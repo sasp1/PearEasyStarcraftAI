@@ -12,7 +12,7 @@ public:
 	
 	std::list<const BWAPI::Unit*> combatUnits;
 	std::list<CustomUnit*> vultures; 
-	std::list<SiegeTank*> tanks;
+	std::list<CustomUnit*> tanks;
 
 	void CombatManager::addCombatUnit(const BWAPI::Unit* unit);
 	void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit);

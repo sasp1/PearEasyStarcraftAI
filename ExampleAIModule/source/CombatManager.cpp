@@ -136,7 +136,7 @@ bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit* unit, const BWAPI:
 	int enemyWeaponRange = (*unit)->getType().groundWeapon().maxRange(); 
 	int distanceToEnemy= (*unit)->getPosition().getDistance((*enemyUnit)->getPosition()); 
 	
-	return distanceToEnemy < enemyWeaponRange + 100; 
+	return (distanceToEnemy < enemyWeaponRange + 100); 
 
 }
 
@@ -149,15 +149,11 @@ bool CombatManager::stayOutOfRange(const BWAPI::Unit * unit, int range){
 		centerOfMass = centerOfMass + ((*eu).getPosition() - (*unit)->getPosition()); 
 
 		//bool enemyIsRanged = (eu->isInWeaponRange(*unit)) && (eu->getDistance(*unit) > 20); !enemyIsRanged && !(eu->getType().isBuilding()) &&
-		if ((eu)->getPlayer()->isEnemy(Broodwar->self()) && isInEnemyCriticalRange(&eu, unit)) {
-			enemiesInRange = true; 
-			// enemyPos = (*eu).getPosition();
-			//Broodwar->sendText("enemy was in range critical range");
+		if ((eu)->getPlayer()->isEnemy(Broodwar->self()) && isInEnemyCriticalRange(&eu, unit) && eu->getType() == UnitTypes::Protoss_Zealot) {
+			
+			enemiesInRange = true;
 			centerOfMass = centerOfMass + ((*eu).getPosition() - (*unit)->getPosition()); // Lægges til igen grundet dobbelt vægt
 
-			/*BWAPI::Position movePosition = BWAPI::Unit(*buildingManager->commandCenter)->getPosition();
-			(*unit)->move(movePosition);
-			}*/
 		}
 	}
 
