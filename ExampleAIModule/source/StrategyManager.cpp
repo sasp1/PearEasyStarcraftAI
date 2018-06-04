@@ -10,7 +10,7 @@ int factoriesOrdered = 0;
 int starportsOrdered = 0; 
 int basesOrdered = 0; 
 int strategy = 1;
-int numberOfWorkersLimit = 30;
+int numberOfWorkersLimit = 22;
 int supplyUsed = 0; 
 
 void StrategyManager::calculateOrders() {
@@ -21,7 +21,7 @@ void StrategyManager::calculateOrders() {
 		executeTwoFactory();
 	}
 	else if (strategy == 2) {
-		executeExpandWithTwoFactories();
+		executeExpandWithOneFactory();
 	}
 
 
@@ -57,7 +57,7 @@ void StrategyManager::executeTwoFactory() {
 
 
 	//Construct supply depots when needed (2 supplies left)
-	if (  ((unusedSupplies <= 4) || (unusedSupplies <=20 && factoriesOrdered>=1))   && supplyDepotsAreNotUnderConstruction) {
+	if (  unusedSupplies <= 4 && supplyDepotsAreNotUnderConstruction) {
 
 		BWAPI::UnitType building = Broodwar->self()->getRace().getSupplyProvider();
 
@@ -76,7 +76,7 @@ void StrategyManager::executeTwoFactory() {
 
 	//Order a refinery
 	if (Broodwar->self()->supplyUsed() >= 22 && refineriesOrdered == 0) {
-		Broodwar->sendText("adding refinerty to priorityQueue");
+		Broodwar->sendText("adding refinery to priorityQueue");
 		BWAPI::UnitType building = UnitTypes::Terran_Refinery;
 		executionManager->addPriorityItem(building);
 		refineriesOrdered++;
@@ -91,17 +91,17 @@ void StrategyManager::executeTwoFactory() {
 	}
 
 
-	//Continue pressure with 2 extra factories STRATEGY
+	//Continue pressure with an extra factory STRATEGY
 	if (!desireBuildingBarracks && factoriesOrdered == 2 && Broodwar->enemy()->getRace() == Races::Protoss) {
 		strategy = 2;
-		Broodwar->sendText("TWO EXTRA FACTORIES EXPANDING");
+		Broodwar->sendText("Executing strategy: expandWithOneFactory");
 	
 	}
 
 }
 
 
-void StrategyManager::executeExpandWithTwoFactories() {
+void StrategyManager::executeExpandWithOneFactory() {
 
 
 	int unusedSupplies = (Broodwar->self()->supplyTotal()) - Broodwar->self()->supplyUsed();
@@ -109,18 +109,18 @@ void StrategyManager::executeExpandWithTwoFactories() {
 	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
 
-	if (factoriesOrdered >= 4 && Broodwar->self()->minerals() > 300 || (scoutingManager->scoutingUnits.size() < 1)) {
+	if (factoriesOrdered >=3  && Broodwar->self()->minerals() > 500 || (scoutingManager->scoutingUnits.size() < 1)) {
 			buildingManager->barrackBuild = UnitTypes::Terran_Marine;
 	}
 	else {
 		buildingManager->barrackBuild = UnitTypes::None;
 	}
 
-	//Maintain 20 workers
+	//Maintain workers
 	if (unitManager->unitWorkers.size() > numberOfWorkersLimit) {
 		buildingManager->setIsDesiredToTrainWorkers(false);
 	}
-	else {
+	else { 
 		buildingManager->setIsDesiredToTrainWorkers(true);
 	}
 
@@ -131,28 +131,27 @@ void StrategyManager::executeExpandWithTwoFactories() {
 	//___________________________Building strategy________________________________
 
 
-	//Construct supply depots when needed (2 supplies left)
-	if (((unusedSupplies <= 4) || (unusedSupplies <= 20 && factoriesOrdered >= 1)) && supplyDepotsAreNotUnderConstruction) {
+	//Construct supply depots when needed (11 supplies left)
+	if ((unusedSupplies <= 22)  && supplyDepotsAreNotUnderConstruction) {
 
 		BWAPI::UnitType building = Broodwar->self()->getRace().getSupplyProvider();
-
 		executionManager->addPriorityItem(building);
 		supplyDepotsAreNotUnderConstruction = false;
 	}
 
-	//Order two factories
-	/*
-	if (Broodwar->self()->minerals() >= 1000 && factoriesOrdered < 4) {
+	//Maintain 3 factories  AND EXPAND BASE!!!!!!
+	
+	if (Broodwar->self()->supplyUsed() >= 72 && factoriesOrdered < 3) {
 		Broodwar->sendText("adding factory to priorityQueue");
 		BWAPI::UnitType building = UnitTypes::Terran_Factory;
 		executionManager->addPriorityItem(building);
 		factoriesOrdered++;
 	}
-	*/
+	
 
 	//___________________________Attacking strategy________________________________
 	
-	if ((combatManager->combatUnits.size() + combatManager->vultures.size()) >= 4 && scoutingManager->enemyBaseFound) {
+	if ((combatManager->combatUnits.size() + combatManager->vultures.size()) >= 2 && scoutingManager->enemyBaseFound) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 		
 	}

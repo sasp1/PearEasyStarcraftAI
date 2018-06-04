@@ -6,7 +6,7 @@ using namespace Filter;
 //std::list<const BWAPI::Unit*> mineralWorkers;
 //std::list<const BWAPI::Unit*> gasWorkers;
 BWAPI::Unit* gas = NULL;
-int gasWorkerLimit = 3; 
+int gasWorkerLimit = 2; 
 
 
 void GatheringManager::addWorker(const BWAPI::Unit* worker) {

@@ -38,7 +38,6 @@ void ConstructionManager::executeOrders() {
 		if (b->isOverTime(500) && b->isUnitIdle()) {
 			unitManager->newWorker(b->unit);
 			builders.remove(b);
-			Broodwar->sendText("Removed");
 		}
 	}
 
@@ -111,7 +110,6 @@ void ConstructionManager::buildRefinery(const BWAPI::Unit* worker) {
 
 	//If geyser is found, construct at location
 	if (distance != 10000) {
-		Broodwar->sendText("Refinery found");
 		BWAPI::Position pos = (*gasLocation)->getPosition();
 		TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Refinery, (*gasLocation)->getTilePosition());
 		(*worker)->build(UnitTypes::Terran_Refinery, targetBuildLocation);
