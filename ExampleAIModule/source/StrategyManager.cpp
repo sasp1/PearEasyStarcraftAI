@@ -156,10 +156,11 @@ void StrategyManager::executeExpandWithOneFactory() {
 		factoriesOrdered++;
 	}
 	
+	// Desire Siege Mode for tanks
 	if (!hasResearchedSiegeMode && EnemyHasAStructureMakingTanksRequired()) {
 		Broodwar->sendText("adding SiegeMode to priorityQueue!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-		BWAPI::UnitType building = TechTypes::Tank_Siege_Mode;
-		executionManager->addPriorityItem(building);
+		BWAPI::TechType research = TechTypes::Tank_Siege_Mode;
+		buildingManager->desiredResearchs.push_back(research);
 		hasResearchedSiegeMode = true;
 	}
 
