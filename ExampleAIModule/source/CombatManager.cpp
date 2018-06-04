@@ -46,7 +46,7 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 */
 void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 
-	if (!(stayOutOfRange(unit, 80))) {
+	if (!(stayOutOfRange(unit, 120))) {
 
 		BWAPI::Unit desiredUnitToAttack = NULL;
 
