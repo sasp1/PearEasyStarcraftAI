@@ -91,8 +91,8 @@ void StrategyManager::executeTwoFactory() {
 	}
 
 
-	//Continue pressure with an extra factory STRATEGY
-	if (!desireBuildingBarracks && factoriesOrdered == 2 && Broodwar->enemy()->getRace() == Races::Protoss) {
+	//Continue with next strategy with an extra factory STRATEGY // && Broodwar->enemy()->getRace() == Races::Protoss
+	if (!desireBuildingBarracks && factoriesOrdered == 2 ) {
 		strategy = 2;
 		Broodwar->sendText("Executing strategy: expandWithOneFactory");
 	
@@ -124,8 +124,15 @@ void StrategyManager::executeExpandWithOneFactory() {
 		buildingManager->setIsDesiredToTrainWorkers(true);
 	}
 
-	//Spam voltures
-	buildingManager->factoryBuild = UnitTypes::Terran_Vulture;;
+	//Spam voltures when no towers are discovered
+	if (EnemyHasAStructureMakingTanksRequired()) {
+		buildingManager->factoryBuild = UnitTypes::Terran_Siege_Tank_Tank_Mode;
+		Broodwar->sendText("ENEMY HAS CANNON");
+	}
+	else {
+		buildingManager->factoryBuild = UnitTypes::Terran_Vulture;
+	}
+	
 
 
 	//___________________________Building strategy________________________________
@@ -151,12 +158,25 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 	//___________________________Attacking strategy________________________________
 	
-	if ((combatManager->combatUnits.size() + combatManager->vultures.size()) >= 2 && scoutingManager->enemyBaseFound) {
+	if ((combatManager->combatUnits.size() + combatManager->vultures.size()) >= 2 && scoutingManager->enemyBaseFound && Broodwar->enemy()->getRace() == Races::Protoss) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 		
 	}
+	else if (combatManager->combatUnits.size() + combatManager->vultures.size() >= 8 && Broodwar->enemy()->getRace() == Races::Terran) {
+		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
+	}
 
 }
+
+bool StrategyManager::EnemyHasAStructureMakingTanksRequired() {
+	for (auto &eu : Broodwar->enemy()->getUnits()) {
+		if ((*eu).getType() == UnitTypes::Protoss_Photon_Cannon) {
+			return true;
+		}
+	}
+	return false;
+}
+
 
 void StrategyManager::unitComplete(const BWAPI::Unit* unit) {
 
