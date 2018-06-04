@@ -3,7 +3,7 @@ using namespace BWAPI;
 using namespace Filter;
 
 int counter = 0; 
-Vulture::Vulture(const BWAPI::Unit* u,  BWAPI::Position basePosition) {
+Vulture::Vulture(const BWAPI::Unit* u,  BWAPI::Position basePosition) : CustomUnit::CustomUnit(u){
 	if ((*u)->getType() == UnitTypes::Terran_Vulture) {
 		unit = u;
 		time = Broodwar->getFrameCount();
@@ -39,4 +39,9 @@ void Vulture::putDownMineIfOutsideOfBase() {
 
 bool Vulture::isUnitIdle() {
 	return (*unit)->isIdle();
+}
+
+bool Vulture::isValid()
+{
+	return false;
 }

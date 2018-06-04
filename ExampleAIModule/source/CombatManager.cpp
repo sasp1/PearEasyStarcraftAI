@@ -150,7 +150,7 @@ bool CombatManager::stayOutOfRange(const BWAPI::Unit * unit, int range){
 		if ((eu)->getPlayer()->isEnemy(Broodwar->self()) && isInEnemyCriticalRange(&eu, unit)) {
 			enemiesInRange = true; 
 			// enemyPos = (*eu).getPosition();
-			Broodwar->sendText("enemy was in range critical range");
+			//Broodwar->sendText("enemy was in range critical range");
 			centerOfMass = centerOfMass + ((*eu).getPosition() - (*unit)->getPosition()); // Lægges til igen grundet dobbelt vægt
 
 			/*BWAPI::Position movePosition = BWAPI::Unit(*buildingManager->commandCenter)->getPosition();
@@ -160,7 +160,7 @@ bool CombatManager::stayOutOfRange(const BWAPI::Unit * unit, int range){
 	}
 
 	if (enemiesInRange) {
-		Broodwar->sendText("Center of mass was: %d, %d", centerOfMass.x, centerOfMass.y);
+		//Broodwar->sendText("Center of mass was: %d, %d", centerOfMass.x, centerOfMass.y);
 		BWAPI::Position movePosition = (*unit)->getPosition() - centerOfMass; 
 		(*unit)->move(movePosition); 
 	}
