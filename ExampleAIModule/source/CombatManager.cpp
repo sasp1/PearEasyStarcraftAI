@@ -30,9 +30,9 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 		SiegeTank* st = new SiegeTank(unit);
 		tanks.push_back(st);
 	}
-	else {
-		combatUnits.push_back(unit);
-	}
+	
+	combatUnits.push_back(unit);
+	
 }
 
 /**
@@ -202,6 +202,9 @@ void CombatManager::executeOrders() {
 			
 
 			if ((*u)->isIdle()) {
+				if ((*u)->getType() == UnitTypes::Terran_Siege_Tank_Tank_Mode) {
+					Broodwar->sendText("TANK");
+				}
 				(*u)->move(attackLocation);
 			}
 		}
