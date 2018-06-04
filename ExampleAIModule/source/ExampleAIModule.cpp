@@ -108,6 +108,9 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 		else if ((*u)->getType() == UnitTypes::Terran_Vulture)
 			(*unitManager).addUnit(u);
 
+		else if ((*u)->getType() == UnitTypes::Terran_Siege_Tank_Tank_Mode)
+			(*unitManager).addUnit(u);
+
 		else if ((*u)->getType().isBuilding()) {
 			buildingManager->buildingCreated(u);
 			strategyManager->unitComplete(u);

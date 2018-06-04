@@ -29,10 +29,12 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 		Vulture* vulture = new Vulture(unit, pos); 
 		vultures.push_back(vulture);
 	}
-	else {
-		combatUnits.push_back(unit);
+	else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Siege_Tank_Tank_Mode) {
+		SiegeTank* st = new SiegeTank(unit);
+		tanks.push_back(st);
 	}
 	
+	combatUnits.push_back(unit);
 	
 }
 
@@ -97,7 +99,7 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 		}
 
 		if (desiredUnitToAttack != NULL && desiredUnitToAttack->getType() != UnitTypes::Protoss_Dark_Templar) {
-			Broodwar->sendText("%s", desiredUnitToAttack->getType().c_str());
+			//Broodwar->sendText("%s", desiredUnitToAttack->getType().c_str());
 			(*unit)->attack(desiredUnitToAttack);
 		}
 	}
@@ -219,11 +221,8 @@ void CombatManager::executeOrders() {
 
 	for (auto &u : combatUnits) {
 		if (shouldAttack) {
-			//if (!attackEnemyIfInRange(u, UnitTypes::Terran_Marine, 10)) {
-			
+		
 			attackNearestEnemy(u);
-			
-			// }
 			
 
 			if ((*u)->isIdle()) {

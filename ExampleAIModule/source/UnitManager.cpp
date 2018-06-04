@@ -85,6 +85,7 @@ void UnitManager::executeOrders() {
 	cleanUpUnits(gatheringManager->mineralWorkers);
 	cleanUpUnits(gatheringManager->gasWorkers);
 	cleanUpUnits(combatManager->combatUnits);
+
 	cleanUpUnits(combatManager->vultures); 
 }
 
@@ -104,8 +105,7 @@ void UnitManager::cleanUpUnits(std::list<CustomUnit*>& unitList) {
 		
 		if (u->unit != NULL && (*u->unit)->getHitPoints() == 0) {
 			unitList.remove(u);
-			 u->unit = NULL;
-			
+			 u->unit = NULL;			
 		}
 	}
 }
