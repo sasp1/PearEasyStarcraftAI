@@ -8,7 +8,6 @@
 using namespace BWAPI;
 using namespace Filter;
 
-
 bool shouldAttack = false;
 BWAPI::Position attackLocation;
 
@@ -27,11 +26,13 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 		Vulture* vulture = new Vulture(unit, pos); 
 		vultures.push_back(vulture);
 	}
+	else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Siege_Tank_Tank_Mode) {
+		SiegeTank* st = new SiegeTank(unit);
+		tanks.push_back(st);
+	}
 	else {
 		combatUnits.push_back(unit);
 	}
-	
-	
 }
 
 /**
