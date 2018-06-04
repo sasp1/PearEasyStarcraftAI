@@ -125,7 +125,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 	}
 
 	//Spam voltures when no towers are discovered
-	if (EnemyHasAStructureMakingTanksRequired()) {
+	if (EnemyHasAStructureMakingTanksRequired()) { // OR NumberOfTanks >=2
 		buildingManager->factoryBuild = UnitTypes::Terran_Siege_Tank_Tank_Mode;
 		Broodwar->sendText("ENEMY HAS CANNON");
 	}
