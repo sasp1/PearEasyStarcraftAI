@@ -1,15 +1,17 @@
 #include "BuildingManager.h"
 #include <BWAPI.h>
+#include "Building.h"
 using namespace BWAPI;
 using namespace Filter;
 using namespace std;
 
-std::list<const BWAPI::Unit*> buildings;
+std::list<Building*> buildings;
 int startBuildFrame;
 int maxX = 0;
 int maxY = 0;
 bool startedBuild;
-const BWAPI::Unit* factory;
+int factories = 0;
+bool addedMachineTech = false;
 
 /**
 * @file
@@ -28,16 +30,25 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 		commandCenter = u;
 	}
 
-	//Adds researchs upon machine shop build.
-	if ((*u)->getType() == UnitTypes::Terran_Machine_Shop  && (*u)->isIdle()) {
-		desiredResearchs.push_front(TechTypes::Spider_Mines);
-		desiredUpgrades.push_front(UpgradeTypes::Ion_Thrusters);
-	}
-
 	//Adds building, if not supply depot, to owned list.
 	if ((*u)->getType() != UnitTypes::Terran_Supply_Depot)
 	{
-		buildings.push_back(u);
+		Building* b = new Building(u);
+		buildings.push_back(b);
+
+		//If factory, adds request machine shop addon for first two factories.
+		if ((*u)->getType() == UnitTypes::Terran_Factory) {
+			factories++;
+			b->buildAddon = factories < 3;
+		}
+		//If machine shop, add researchs for first one.
+		if ((*u)->getType() == UnitTypes::Terran_Machine_Shop) {
+			if (!addedMachineTech) {
+				desiredResearchs.push_front(TechTypes::Spider_Mines);
+				desiredUpgrades.push_front(UpgradeTypes::Ion_Thrusters);
+				addedMachineTech = true;
+			}
+		}
 	}
 }
 
@@ -47,66 +58,63 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 */
 void BuildingManager::executeOrders() {
 
-	bool foundFactory = false;
 	for (auto &b : buildings) {
 
-		if (*b != NULL) {
+		if (!b->isUnitValid()) {
+			buildings.remove(b);
+		}
+		else if (b->isUnitIdle()) {
 			//Command center orders
-			if ((*b)->getType() == UnitTypes::Terran_Command_Center && isDesiredToTrainWorkers) {
-				if ((*b)->isIdle()) {
-					(*b)->train(UnitTypes::Terran_SCV);
-				}
+			if (b->getType() == UnitTypes::Terran_Command_Center && isDesiredToTrainWorkers) {
+				b->getUnit()->train(UnitTypes::Terran_SCV);
 			}
 			//Barrack orders
-			if ((*b)->getType() == UnitTypes::Terran_Barracks) {
-
-
-				if ((*b)->isIdle() && barrackBuild != UnitTypes::None ) {
-					
-					(*b)->train(barrackBuild);
+			if (b->getType() == UnitTypes::Terran_Barracks) {
+				if (barrackBuild != UnitTypes::None) {
+					b->getUnit()->train(barrackBuild);
 				}
 			}
 
 			//Machine shop orders
-			if (((*b)->getType() == UnitTypes::Terran_Machine_Shop)) {
-				if ((*b)->isIdle() && desiredResearchs.front() == TechTypes::Spider_Mines) {
-					(*b)->research(TechTypes::Spider_Mines);
-					if ((*b)->isResearching()) desiredResearchs.pop_front();
+			if ((b->getType() == UnitTypes::Terran_Machine_Shop)) {
+				if (desiredResearchs.front() == TechTypes::Spider_Mines) {
+					b->getUnit()->research(TechTypes::Spider_Mines);
+					if (b->getUnit()->isResearching()) desiredResearchs.pop_front();
 				}
-				else if ((*b)->isIdle() && desiredUpgrades.front() == UpgradeTypes::Ion_Thrusters) {
-					(*b)->upgrade(UpgradeTypes::Ion_Thrusters);
-					if ((*b)->isUpgrading())desiredUpgrades.pop_front();
+				else if (desiredUpgrades.front() == UpgradeTypes::Ion_Thrusters) {
+					b->getUnit()->upgrade(UpgradeTypes::Ion_Thrusters);
+					if (b->getUnit()->isUpgrading())desiredUpgrades.pop_front();
+				}
+				else if (desiredUpgrades.front() == TechTypes::Tank_Siege_Mode) {
+					b->getUnit()->research(TechTypes::Tank_Siege_Mode);
+					if (b->getUnit()->isUpgrading())desiredResearchs.pop_front();
 				}
 			}
+
 			//Factory orders
-			if ((*b)->getType() == UnitTypes::Terran_Factory) {
-				if ((*b)->isIdle()) {
+			if (b->getType() == UnitTypes::Terran_Factory) {
+				//Handle machiine shop build
+				if (b->getUnit()->getAddon() == NULL && b->buildAddon) {
 
-					//Handle machiine shop build
-					if ((*b)->getAddon() == NULL) {
+					//Build if possible at location, else initiate spiral search
+					if (b->getUnit()->buildAddon(UnitTypes::Terran_Machine_Shop)) {
+					}
+					else if (b->isUnitIdle()) {
+						TilePosition loc = b->getUnit()->getTilePosition() + spiralSearch();
+						TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Machine_Shop, loc);
 
-						//Build if possible at location, else initiate spiral search
-						(*b)->buildAddon(UnitTypes::Terran_Machine_Shop);
-
-						if ((*b)->isIdle()) {
-							TilePosition loc = (*b)->getTilePosition() + spiralSearch();
-							TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Machine_Shop, loc);
-
-							if (targetBuildLocation.isValid()) {
-								(*b)->build(UnitTypes::Terran_Machine_Shop, targetBuildLocation);
-							}
+						if (targetBuildLocation.isValid()) {
+							b->getUnit()->build(UnitTypes::Terran_Machine_Shop, targetBuildLocation);
 						}
 					}
-				
-					//Handle unit production
-					else if (factoryBuild != NULL) {
-						(*b)->train(factoryBuild);
-					}
 				}
-				foundFactory = true;
+
+				//Handle unit production
+				else if (factoryBuild != NULL) {
+					b->getUnit()->train(factoryBuild);
+				}
 			}
 		}
-	
 	}
 }
 

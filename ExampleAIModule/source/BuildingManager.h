@@ -17,5 +17,6 @@ public:
 	const BWAPI::Unit* commandCenter;
 	BWAPI::UnitType factoryBuild;
 	BWAPI::UnitType barrackBuild;
+	int totalMachineShops = 0;
 
 };
