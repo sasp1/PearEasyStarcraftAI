@@ -16,7 +16,6 @@ BWAPI::Position enemyPos;
 
 
 CombatManager::CombatManager() {
-	std::list<const BWAPI::Unit*> combatUnits;
 }
 
 CombatManager::~CombatManager() {
@@ -26,12 +25,15 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 	//Receive control of a new combatUnit
 	if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Vulture) {
 		BWAPI::Position pos = (*buildingManager->commandCenter)->getPosition();
-		Vulture* vulture = new Vulture(unit, pos); 
+		CustomUnit* vulture = new Vulture(unit, pos); 
 		vultures.push_back(vulture);
-	}
-	else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Siege_Tank_Tank_Mode) {
-		SiegeTank* st = new SiegeTank(unit);
+	} else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Siege_Tank_Tank_Mode) {
+		CustomUnit* st = new SiegeTank(unit);
 		tanks.push_back(st);
+	}
+	else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Marine) {
+		CustomUnit* marine = new Marine(unit); 
+		marines.push_back(marine); 
 	}
 	
 	combatUnits.push_back(unit);
@@ -187,6 +189,7 @@ void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position enemyBaseP
 
 void CombatManager::defendBase(int range){
 	//find min distance to defend base (commandcenter to closest enemy)
+	
 	if (BWAPI::Unit(*buildingManager->commandCenter)->getDistance(BWAPI::Unit(*buildingManager->commandCenter)->getClosestUnit(IsEnemy))<range) {
 		for (auto &u : combatUnits) {
 			if (BWAPI::Unit(*buildingManager->commandCenter)->getDistance(*u)<range) {

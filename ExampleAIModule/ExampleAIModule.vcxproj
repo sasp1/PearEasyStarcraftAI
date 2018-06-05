@@ -95,6 +95,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\CustomUnit.cpp" />
+    <ClCompile Include="Source\Marine.cpp" />
     <ClCompile Include="Source\SiegeTank.cpp" />
     <ClCompile Include="Source\BuildingManager.cpp" />
     <ClCompile Include="Source\CombatManager.cpp" />
@@ -113,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CustomUnit.h" />
+    <ClInclude Include="Source\Marine.h" />
     <ClInclude Include="Source\SiegeTank.h" />
     <ClInclude Include="Source\BuildingManager.h" />
     <ClInclude Include="Source\CombatManager.h" />
