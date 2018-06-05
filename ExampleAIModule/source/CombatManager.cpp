@@ -160,6 +160,22 @@ bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit* unit, const BWAPI:
 bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * unit, int range){
 	bool enemiesInCriticalRange = false;
 
+	//First check if unit are within critical range of a cannonn
+	for (auto &eu : (*unit)->getUnitsInRadius(UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() + UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange()/5)) {
+		
+		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && (*eu).getType() == UnitTypes::Protoss_Photon_Cannon) {
+
+			BWAPI::Position movePosition = (*unit)->getPosition() - (((*eu).getPosition() - (*unit)->getPosition()));
+			(*unit)->move(movePosition);
+
+			return true;
+		}
+	}
+
+
+	//otherwise juke as normal
+
+
 	BWAPI::Position centerOfMass = Position(0, 0); 
 	for (auto &eu : (*unit)->getUnitsInRadius(range)) {
 
