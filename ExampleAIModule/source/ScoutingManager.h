@@ -13,6 +13,7 @@ public:
 	BWAPI::Position startingChokePosition;
 	BWAPI::Position attackBasePosition;
 	BWAPI::Position enemyChokePosition;
+	BWAPI::Position expandBasePosition;
 	bool secondaryMineralFieldFound; 
 	bool enemyBaseFound = false;
 	int corner = 0;
