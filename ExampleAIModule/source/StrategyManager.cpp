@@ -167,11 +167,11 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 	//___________________________Attacking strategy________________________________
 	
-	if ((combatManager->combatUnits.size() + combatManager->vultures.size()) >= 2 && scoutingManager->enemyBaseFound && Broodwar->enemy()->getRace() == Races::Protoss) {
+	if (combatManager->getAllCombatUnits().size() >= 2 && scoutingManager->enemyBaseFound && Broodwar->enemy()->getRace() == Races::Protoss) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 		
 	}
-	else if (combatManager->combatUnits.size() + combatManager->vultures.size() >= 8 && Broodwar->enemy()->getRace() == Races::Terran) {
+	else if (combatManager->vultures.size() >= 8 && Broodwar->enemy()->getRace() == Races::Terran) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 	}
 

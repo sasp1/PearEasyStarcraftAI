@@ -84,9 +84,10 @@ void UnitManager::executeOrders() {
 	cleanUpUnits(scoutingManager->scoutingUnits);
 	cleanUpUnits(gatheringManager->mineralWorkers);
 	cleanUpUnits(gatheringManager->gasWorkers);
-	cleanUpUnits(combatManager->combatUnits);
 	cleanUpUnits(combatManager->vultures); 
 	cleanUpUnits(combatManager->tanks);
+	cleanUpUnits(combatManager->marines);
+
 }
 
 void UnitManager::cleanUpUnits(std::list<const BWAPI::Unit*>& unitList) {

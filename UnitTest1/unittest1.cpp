@@ -41,8 +41,8 @@ namespace UnitTest1
 			BWAPI::Unit* fakeUnit = new BWAPI::Unit(new UnitMock());  
 
 			CombatManager* manager2 = new CombatManager(); 
-			int hej = manager2->combatUnits.size(); 
-
+			//int hej = manager2->combatUnits.size(); 
+			int hej = 2;
 
 
 			Assert::AreEqual(0, hej);
