@@ -16,7 +16,6 @@ BWAPI::Position enemyPos;
 
 
 CombatManager::CombatManager() {
-	std::list<const BWAPI::Unit*> combatUnits;
 }
 
 CombatManager::~CombatManager() {
@@ -26,14 +25,37 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 	//Receive control of a new combatUnit
 	if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Vulture) {
 		BWAPI::Position pos = (*buildingManager->commandCenter)->getPosition();
-		Vulture* vulture = new Vulture(unit, pos); 
+		CustomUnit* vulture = new Vulture(unit, pos); 
 		vultures.push_back(vulture);
-	}
-	else {
-		combatUnits.push_back(unit);
+
+	} else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Siege_Tank_Tank_Mode) {
+		CustomUnit* st = new SiegeTank(unit);
+		tanks.push_back(st);
+	} else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Marine) {
+		CustomUnit* marine = new Marine(unit); 
+		marines.push_back(marine); 
 	}
 	
+	//combatUnits.push_back(unit);
+}
+
+std::list<CustomUnit*> CombatManager::getAllCombatUnits() {
 	
+	std::list<CustomUnit*> combatunits; 
+
+	for (auto &u : vultures) {
+		combatunits.push_back(u);
+	}
+
+	for (auto &u : marines) {
+		combatunits.push_back(u);
+	}
+
+	for (auto &u : tanks) {
+		combatunits.push_back(u);
+	}
+
+	return combatunits;
 }
 
 /**
@@ -43,8 +65,6 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 * @see attackEnemyIfInRange()
 */
 void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
-
-	if (!(stayOutOfRange(unit, 80))) {
 
 		BWAPI::Unit desiredUnitToAttack = NULL;
 
@@ -97,10 +117,9 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 		}
 
 		if (desiredUnitToAttack != NULL && desiredUnitToAttack->getType() != UnitTypes::Protoss_Dark_Templar) {
-			Broodwar->sendText("%s", desiredUnitToAttack->getType().c_str());
+			//Broodwar->sendText("%s", desiredUnitToAttack->getType().c_str());
 			(*unit)->attack(desiredUnitToAttack);
 		}
-	}
 	
 }
 
@@ -134,12 +153,12 @@ bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit* unit, const BWAPI:
 	int enemyWeaponRange = (*unit)->getType().groundWeapon().maxRange(); 
 	int distanceToEnemy= (*unit)->getPosition().getDistance((*enemyUnit)->getPosition()); 
 	
-	return distanceToEnemy < enemyWeaponRange + 100; 
+	return (distanceToEnemy < enemyWeaponRange + 100); 
 
 }
 
-bool CombatManager::stayOutOfRange(const BWAPI::Unit * unit, int range){
-	bool enemiesInRange = false;
+bool CombatManager::stayingOutOfRangeFromEnemy(const BWAPI::Unit * unit, int range){
+	bool enemiesInCriticalRange = false;
 
 	BWAPI::Position centerOfMass = Position(0, 0); 
 	for (auto &eu : (*unit)->getUnitsInRadius(range)) {
@@ -147,37 +166,33 @@ bool CombatManager::stayOutOfRange(const BWAPI::Unit * unit, int range){
 		centerOfMass = centerOfMass + ((*eu).getPosition() - (*unit)->getPosition()); 
 
 		//bool enemyIsRanged = (eu->isInWeaponRange(*unit)) && (eu->getDistance(*unit) > 20); !enemyIsRanged && !(eu->getType().isBuilding()) &&
-		if ((eu)->getPlayer()->isEnemy(Broodwar->self()) && isInEnemyCriticalRange(&eu, unit)) {
-			enemiesInRange = true; 
-			// enemyPos = (*eu).getPosition();
-			Broodwar->sendText("enemy was in range critical range");
+		if ((eu)->getPlayer()->isEnemy(Broodwar->self()) && isInEnemyCriticalRange(&eu, unit) && eu->getType() == UnitTypes::Protoss_Zealot) {
+			
+			enemiesInCriticalRange = true;
 			centerOfMass = centerOfMass + ((*eu).getPosition() - (*unit)->getPosition()); // Lægges til igen grundet dobbelt vægt
 
-			/*BWAPI::Position movePosition = BWAPI::Unit(*buildingManager->commandCenter)->getPosition();
-			(*unit)->move(movePosition);
-			}*/
 		}
 	}
 
-	if (enemiesInRange) {
-		Broodwar->sendText("Center of mass was: %d, %d", centerOfMass.x, centerOfMass.y);
+	if (enemiesInCriticalRange) {
+		//Broodwar->sendText("Center of mass was: %d, %d", centerOfMass.x, centerOfMass.y);
 		BWAPI::Position movePosition = (*unit)->getPosition() - centerOfMass; 
 		(*unit)->move(movePosition); 
 	}
 
-	return enemiesInRange;
+	return enemiesInCriticalRange;
 
-	}
+}
 
 
 void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position enemyBasePosition) {
 	attackLocation = enemyBasePosition;
 	shouldAttack = true;
-	for (auto &u : combatUnits) {
+	//for (auto &u : getAllCombatUnits()) {
 
-		(*u)->move(enemyBasePosition);
+		//(*u->unit)->move(enemyBasePosition);
 
-	}
+	//}
 }
 
 
@@ -187,20 +202,24 @@ void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position enemyBaseP
 * @param range integer specifing a range from the base
 */
 
-void CombatManager::defendBase(int range){
+bool CombatManager::defendingBase(int range, const BWAPI::Unit * unit){
 	//find min distance to defend base (commandcenter to closest enemy)
+	
+	bool defendingBase = false; 
+
 	if (BWAPI::Unit(*buildingManager->commandCenter)->getDistance(BWAPI::Unit(*buildingManager->commandCenter)->getClosestUnit(IsEnemy))<range) {
-		for (auto &u : combatUnits) {
-			if (BWAPI::Unit(*buildingManager->commandCenter)->getDistance(*u)<range) {
-				attackNearestEnemy(u);
+			//Only units near base protects base
+			if (BWAPI::Unit(*buildingManager->commandCenter)->getDistance(*unit)<range) {
+				attackNearestEnemy(unit);
+				defendingBase = true;
 			}
 		}
-	}
+	return defendingBase;
 }
 
 void CombatManager::returnAllUnitsToBase() {
-	for (auto &u : combatUnits) {
-		(*u)->move((*buildingManager->commandCenter)->getPosition());
+	for (auto &u : getAllCombatUnits()) {
+		(*u->unit)->move((*buildingManager->commandCenter)->getPosition());
 	}
 }
 
@@ -215,35 +234,45 @@ void CombatManager::returnAllUnitsToBase() {
 void CombatManager::executeOrders() {
 
 
-	defendBase(1000);
+	//defendingBase(1000);
 
-	for (auto &u : combatUnits) {
-		if (shouldAttack) {
-			//if (!attackEnemyIfInRange(u, UnitTypes::Terran_Marine, 10)) {
-			
-			attackNearestEnemy(u);
-			
-			// }
-			
-
-			if ((*u)->isIdle()) {
-				(*u)->move(attackLocation);
-			}
-		}
-	}
-
-	
 	for (auto &u : vultures) {
-		if (shouldAttack) {
-			attackNearestEnemy(u->unit); 
-			
-			//u->putDownMineIfOutsideOfBase(); 
 
-			if ((*u->unit)->isIdle()) {
-				(*u->unit)->move(attackLocation); 
+		if (!stayingOutOfRangeFromEnemy(u->unit, 120)){
+
+			if (!defendingBase(1000, u->unit) && shouldAttack) {
+
+				attackNearestEnemy(u->unit);
+
+				//u->putDownMineIfOutsideOfBase(); 
 			}
 		}
 	}
+
+	for (auto &u : tanks) {
+		if (!defendingBase(1000, u->unit) && shouldAttack) {
+
+			attackNearestEnemy(u->unit);
+
+		}
+	}
+
+	for (auto &u : marines) {
+		if (!defendingBase(1000, u->unit) && shouldAttack) {
+
+			attackNearestEnemy(u->unit);
+
+		}
+	}
+
+	for (auto &u : getAllCombatUnits()) {
+		if ((*u->unit)->isIdle() && shouldAttack ) {
+			(*u->unit)->move(attackLocation);
+		}
+	}
+
+
+
 	
 }
 

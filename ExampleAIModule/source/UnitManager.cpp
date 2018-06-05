@@ -82,8 +82,10 @@ void UnitManager::executeOrders() {
 
 	// Clean up units for each manager (if they are dead, remove them from lists): 
 	cleanUpUnits(scoutingManager->scoutingUnits);
-	cleanUpUnits(gatheringManager->workers);
-	cleanUpUnits(combatManager->combatUnits);
+	cleanUpUnits(combatManager->vultures); 
+	cleanUpUnits(combatManager->tanks);
+	cleanUpUnits(combatManager->marines);
+
 }
 
 void UnitManager::cleanUpUnits(std::list<const BWAPI::Unit*>& unitList) {
@@ -92,6 +94,17 @@ void UnitManager::cleanUpUnits(std::list<const BWAPI::Unit*>& unitList) {
 		if (u != NULL && (*u)->getHitPoints() == 0) {
 			unitList.remove(u);
 			u = NULL;
+		}
+	}
+}
+
+void UnitManager::cleanUpUnits(std::list<CustomUnit*>& unitList) {
+
+	for (auto &u : unitList) {	
+		
+		if (u->unit != NULL && (*u->unit)->getHitPoints() == 0) {
+			unitList.remove(u);
+			 u->unit = NULL;			
 		}
 	}
 }

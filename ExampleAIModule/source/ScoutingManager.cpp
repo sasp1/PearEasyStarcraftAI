@@ -18,9 +18,15 @@ BWAPI::Position cornerCoords3 = Position(100, 4000);
 int scoutedCorners = 0; 
 
 
-ScoutingManager::ScoutingManager(BWAPI::Position startingPosition)
+ScoutingManager::ScoutingManager(BWAPI::Position startingPosition, MapData* mapData)
 {
+	this->mapData = mapData; 
+	secondaryMineralFieldPosition = BWAPI::Position(0, 0);
+	defendBasePosition = BWAPI::Position(0, 0);
+	attackBasePosition = BWAPI::Position(0, 0);
+	enemyChokePosition = BWAPI::Position(0, 0);
 	lastEnemyBuildingPosition = BWAPI::Position(0, 0); 
+	startingChokePosition = BWAPI::Position(0, 0); 
 	setStartingCorner(startingPosition);
 	scoutingUnits.clear(); 
 }
@@ -37,16 +43,46 @@ void ScoutingManager::addScout(const BWAPI::Unit* scout) {
 void ScoutingManager::setStartingCorner(BWAPI::Position pos) {
 	
 	if (pos.getDistance(cornerCoords0) < 1000) {
-		corner = 1; 
+		corner = 1;
+		defendBasePosition = (*mapData).northwestDefend;
+		startingChokePosition = (*mapData).northwestChokePointMid;
 	}
 	else if (pos.getDistance(cornerCoords1) < 1000) {
-		corner = 2; 
+		corner = 2;
+		defendBasePosition = (*mapData).northeastDefend;
+		startingChokePosition = (*mapData).northeastChokePointMid;
 	}
 	else if (pos.getDistance(cornerCoords2) < 1000) {
 		corner = 3; 
+		defendBasePosition = (*mapData).southeastDefend;
+		startingChokePosition = (*mapData).southeastChokePointMid;
 	}
 	else {
 		corner = 0;
+		defendBasePosition = (*mapData).southwestDefend;
+		startingChokePosition = (*mapData).southwestChokePointMid;
+	}
+}
+
+void ScoutingManager::setEnemyCorner(BWAPI::Position pos) {
+	if (pos.getDistance(cornerCoords0) < 1000) {
+		attackBasePosition = (*mapData).northwestDefend;
+		enemyChokePosition = (*mapData).northwestChokePointMid;
+	}
+	else if (pos.getDistance(cornerCoords1) < 1000) {
+		corner = 2;
+		attackBasePosition = (*mapData).northeastDefend;
+		enemyChokePosition = (*mapData).northeastChokePointMid;
+	}
+	else if (pos.getDistance(cornerCoords2) < 1000) {
+		corner = 3;
+		attackBasePosition = (*mapData).southeastDefend;
+		enemyChokePosition = (*mapData).southeastChokePointMid;
+	}
+	else {
+		corner = 0;
+		attackBasePosition = (*mapData).southwestDefend;
+		enemyChokePosition = (*mapData).southwestChokePointMid;
 	}
 }
 
@@ -68,6 +104,7 @@ void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
 		else {
 			lastEnemyBuildingPosition = cornerCoords3;
 		}
+		setEnemyCorner(lastEnemyBuildingPosition);
 	}
 
 	if (corner == 0) {
@@ -118,7 +155,7 @@ void ScoutingManager::onUnitDiscover(BWAPI::Unit unit)
 		//Broodwar->sendText("Enemy contruction found!");
 		enemyBaseFound = true;
 		lastEnemyBuildingPosition = unit->getPosition();
-
+		setEnemyCorner(lastEnemyBuildingPosition);
 	}
 
 	 if (!secondaryMineralFieldFound && unit->getType() == UnitTypes::Resource_Mineral_Field && (*buildingManager->commandCenter)->getDistance(unit) > 350) {

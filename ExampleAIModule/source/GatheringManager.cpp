@@ -109,13 +109,18 @@ void GatheringManager::executeOrders() {
 		else
 			if (w->workState == 0) mineralWorkers++;
 			else if (w->workState == 1) gasWorkers++;
-		w->collect();
+			w->collect();
 	}
-	
+
 	// Update limit to number of gasworkers: 
-	if (Broodwar->self()->gatheredGas() > 800) {
-		gasWorkerLimit = 0; 
+	if (Broodwar->self()->gas() > Broodwar->self()->minerals() + 500) {
+		gasWorkerLimit = 0;
 	}
+	else {
+		gasWorkerLimit = 2;
+	}
+
+	// Clean up gathering units (if some were destroyed) 
 }
 
 //Initial class setup

@@ -3,6 +3,8 @@
 #include "BuildingManager.h"
 #include "Vulture.h"
 #include "SiegeTank.h"
+#include "Marine.h"
+
 class CombatManager
 {
 public:
@@ -10,22 +12,24 @@ public:
 
 
 	
-	std::list<const BWAPI::Unit*> combatUnits;
-	std::list<Vulture*> vultures; 
-	std::list<SiegeTank*> tanks;
+	//std::list<const BWAPI::Unit*> combatUnits;
+	std::list<CustomUnit*> vultures; 
+	std::list<CustomUnit*> tanks;
+	std::list<CustomUnit*> marines; 
 
 	void CombatManager::addCombatUnit(const BWAPI::Unit* unit);
 	void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit);
 	
 	BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::UnitType target, int range);
 
-	bool stayOutOfRange(const BWAPI::Unit* unit, int range);
+	bool stayingOutOfRangeFromEnemy(const BWAPI::Unit* unit, int range);
 	
 	void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position pos);
-	void CombatManager::defendBase(int range);
+	bool CombatManager::defendingBase(int range, const BWAPI::Unit * unit);
 
 	void CombatManager::returnAllUnitsToBase();
 	bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit * unit, const BWAPI::Unit* enemyUnit);
+	std::list<CustomUnit*> CombatManager::getAllCombatUnits();
 
 	CombatManager();
 	~CombatManager();

@@ -3,12 +3,10 @@ using namespace BWAPI;
 using namespace Filter;
 
 int counter = 0; 
-Vulture::Vulture(const BWAPI::Unit* u,  BWAPI::Position basePosition) {
+Vulture::Vulture(const BWAPI::Unit* u,  BWAPI::Position basePosition) : CustomUnit::CustomUnit(u){
 	if ((*u)->getType() == UnitTypes::Terran_Vulture) {
-		unit = u;
 		time = Broodwar->getFrameCount();
 		basePos = basePosition;
-
 	}
 	else {
 		Broodwar->sendText("ERROR! TRIED TO ADD NON-VULTURE UNIT TO VULTURE OBJECT!");

@@ -6,6 +6,7 @@
 #include "CombatManager.h"
 #include "StrategyManager.h"
 #include "ScoutingManager.h"
+#include "MapData.h"
 #include <iostream>
 
 using namespace BWAPI;
@@ -20,6 +21,7 @@ ExecutionManager* executionManager;
 CombatManager* combatManager;
 ScoutingManager* scoutingManager;
 StrategyManager* strategyManager;
+MapData* mapData;
 
 void ExampleAIModule::onStart()
 {
@@ -30,8 +32,10 @@ void ExampleAIModule::onStart()
 	constructionManager = new ConstructionManager();
 	executionManager = new ExecutionManager();
 	combatManager = new CombatManager();
-	scoutingManager = new ScoutingManager(BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation()));
+	mapData = new MapData();
+	scoutingManager = new ScoutingManager(BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation()), mapData);
 	strategyManager = new StrategyManager();
+	 
 
 	// Setting cross-references:
 	strategyManager->scoutingManager = scoutingManager;
@@ -43,6 +47,7 @@ void ExampleAIModule::onStart()
 	combatManager->buildingManager = buildingManager;
 	buildingManager->gatheringManager = gatheringManager;
 	gatheringManager->buildingManager = buildingManager;
+
 
 	//Make managers aware of each other
 	unitManager->setManagers(combatManager, gatheringManager, constructionManager, scoutingManager);
@@ -108,6 +113,9 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 			(*unitManager).addUnit(u);
 
 		else if ((*u)->getType() == UnitTypes::Terran_Vulture)
+			(*unitManager).addUnit(u);
+
+		else if ((*u)->getType() == UnitTypes::Terran_Siege_Tank_Tank_Mode)
 			(*unitManager).addUnit(u);
 
 		else if ((*u)->getType().isBuilding()) {

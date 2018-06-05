@@ -1,7 +1,8 @@
 #pragma once
 #include <BWAPI.h>
+#include "CustomUnit.h"
 
-class Vulture
+class Vulture : public CustomUnit
 {
 public:
 	Vulture(const BWAPI::Unit* u, const BWAPI::Position basePosition);

@@ -5,6 +5,7 @@ using namespace Filter;
 
 bool supplyDepotsAreNotUnderConstruction = true;
 bool desireBuildingBarracks = true;
+bool hasResearchedSiegeMode = false;
 int refineriesOrdered = 0;
 int factoriesOrdered = 0;
 int starportsOrdered = 0; 
@@ -125,7 +126,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 	}
 
 	//Spam voltures when no towers are discovered
-	if (EnemyHasAStructureMakingTanksRequired()) {
+	if (EnemyHasAStructureMakingTanksRequired() && combatManager->tanks.size() <= 4) { // OR NumberOfTanks >=2
 		buildingManager->factoryBuild = UnitTypes::Terran_Siege_Tank_Tank_Mode;
 		Broodwar->sendText("ENEMY HAS CANNON");
 	}
@@ -155,14 +156,22 @@ void StrategyManager::executeExpandWithOneFactory() {
 		factoriesOrdered++;
 	}
 	
+	// Desire Siege Mode for tanks
+	if (!hasResearchedSiegeMode && EnemyHasAStructureMakingTanksRequired()) {
+		Broodwar->sendText("adding SiegeMode to priorityQueue!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		BWAPI::TechType research = TechTypes::Tank_Siege_Mode;
+		buildingManager->desiredResearchs.push_back(research);
+		hasResearchedSiegeMode = true;
+	}
+
 
 	//___________________________Attacking strategy________________________________
 	
-	if ((combatManager->combatUnits.size() + combatManager->vultures.size()) >= 2 && scoutingManager->enemyBaseFound && Broodwar->enemy()->getRace() == Races::Protoss) {
+	if (combatManager->getAllCombatUnits().size() >= 2 && scoutingManager->enemyBaseFound && Broodwar->enemy()->getRace() == Races::Protoss) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 		
 	}
-	else if (combatManager->combatUnits.size() + combatManager->vultures.size() >= 8 && Broodwar->enemy()->getRace() == Races::Terran) {
+	else if (combatManager->vultures.size() >= 8 && Broodwar->enemy()->getRace() == Races::Terran) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 	}
 
