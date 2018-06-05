@@ -38,3 +38,17 @@ void Vulture::putDownMineIfOutsideOfBase() {
 bool Vulture::isUnitIdle() {
 	return (*unit)->isIdle();
 }
+
+void Vulture::layDownDefensiveMine(BWAPI::Position targetPosition)
+{
+	
+		(*unit)->useTech(BWAPI::TechTypes::Spider_Mines, targetPosition + Position(counter, counter)); 
+
+		if (!((*unit)->getSpellCooldown() > 5)) {
+			hasLayedDownDefensiveMine = true; 
+		}
+		if (counter > 40) {
+			counter = 0; 
+		}
+		
+}
