@@ -9,7 +9,3 @@ Marine::Marine(const Unit * u) : CustomUnit(u)
 	}
 }
 
-bool Marine::isValid()
-{
-	return unit != NULL;
-}

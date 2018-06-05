@@ -6,5 +6,5 @@ class Marine : public CustomUnit
 {
 public: 
 	Marine(const BWAPI::Unit* u); 
-	bool isValid();
+	
 };
