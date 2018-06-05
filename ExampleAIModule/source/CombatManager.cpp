@@ -273,7 +273,7 @@ void CombatManager::executeOrders() {
 	for (auto &u : vultures) {
 		Vulture* vulture = dynamic_cast<Vulture*>(u); 
 		if (!vulture->hasLayedDownDefensiveMine && mines.size() < 3 && (*vulture->unit)->getDistance(scoutingManager->startingChokePosition) < 25) {
-			vulture->layDownDefensiveMine(scoutingManager->startingChokePosition + BWAPI::Position(mines.size()*5, mines.size()*5)); 
+			vulture->layDownDefensiveMine(scoutingManager->startingChokePosition + BWAPI::Position(mines.size()*15, mines.size()*15)); 
 			Broodwar->sendText("Number of spidermines: %d", mines.size());			
 		}
 		else {
