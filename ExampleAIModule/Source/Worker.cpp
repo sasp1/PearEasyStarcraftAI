@@ -3,7 +3,7 @@ using namespace BWAPI;
 using namespace Filter;
 
 /*Workstates:
-0: Collecting mineral, 1: Collecting gas, 2: Constructing building.
+0: Collecting mineral, 1: Collecting gas, 2: Moving to building. 3: Is constructing
 */
 
 
@@ -20,6 +20,17 @@ bool Worker::isUnitIdle() {
 
 void Worker::updateCommandCenter(const BWAPI::Unit cc) {
 
+}
+
+void Worker::stop() {
+	(*unit)->stop();
+}
+
+bool Worker::handleBuild() {
+
+	if(buildOrder == BWAPI::UnitTypes::Terran_Command_Center)
+
+	return (workState == 4) && (*unit)->isIdle();
 }
 
 void Worker::collect() {

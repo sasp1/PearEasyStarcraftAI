@@ -78,7 +78,10 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 	}
 }
 
-void ConstructionManager::expandBase() {
+void ConstructionManager::expandBase(BWAPI::Position pos, BWAPI::Unit* worker) {
+
+
+
 
 }
 

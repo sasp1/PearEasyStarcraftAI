@@ -18,7 +18,7 @@ public:
 	const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing();
 	void ConstructionManager::executeOrders();
 	void ConstructionManager::buildRefinery(const BWAPI::Unit* worker);
-	void ConstructionManager::expandBase(); 
+	void ConstructionManager::expandBase(BWAPI::Position pos, BWAPI::Unit* worker);
 	const BWAPI::Unit* constructionsWorker; 
 	BuildingManager* buildingManager;
 	UnitManager* unitManager;

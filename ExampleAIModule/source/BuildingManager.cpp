@@ -33,6 +33,8 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 		//Adds command center as separate variable
 		if ((*u)->getType() == UnitTypes::Terran_Command_Center) {
 			commandCenters.push_back(b);
+			commandCenter = commandCenters.front()->getUnit();
+			gatheringManager->splitWorkers();
 		}
 		else {
 			buildings.push_back(b);

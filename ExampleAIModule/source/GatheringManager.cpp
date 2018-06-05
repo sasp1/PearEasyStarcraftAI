@@ -43,12 +43,14 @@ void GatheringManager::allocateWorker(bool addToGas) {
 			if (w->workState == 0) {
 				w->workState = 1;
 				w->gas = gas;
+				w->stop();
 				alloc = true;
 			}
 		}
 		else if (!addToGas && !alloc) {
 			if (w->workState == 1) {
 				w->workState = 0;
+				w->stop();
 				alloc = true;
 			}
 		}
@@ -69,7 +71,6 @@ void GatheringManager::splitWorkers() {
 		countB++;
 	}
 }
-
 
 const BWAPI::Unit* GatheringManager::removeWorker() {
 	//Lose control of a worker
@@ -126,14 +127,12 @@ void GatheringManager::executeOrders() {
 	}
 
 	// Update limit to number of gasworkers: 
-	if (Broodwar->self()->gas() > Broodwar->self()->minerals() + 500) {
+	if ((Broodwar->self()->gas()) > (Broodwar->self()->minerals() + 500)) {
 		gasWorkerLimit = 0;
 	}
 	else {
-		gasWorkerLimit = 2;
+		gasWorkerLimit = 4;
 	}
-
-	// Clean up gathering units (if some were destroyed) 
 }
 
 //Initial class setup
