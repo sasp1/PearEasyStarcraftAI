@@ -24,9 +24,7 @@ void Worker::updateCommandCenter(const BWAPI::Unit cc) {
 
 void Worker::collect() {
 
-	if (center != NULL) {
-
-		if (workState == 0) {
+		if (workState == 0 && (center != NULL)) {
 			BWAPI::Unit mine = (*center)->getClosestUnit(IsMineralField);
 			if ((*unit)->isIdle()) {
 				if ((*unit)->isCarryingGas() || (*unit)->isCarryingMinerals())
@@ -38,7 +36,7 @@ void Worker::collect() {
 				(*unit)->returnCargo();
 			}
 		}
-		else if (workState == 1) {
+		else if (workState == 1 && gas != NULL)	 {
 			if ((*unit)->isIdle()) {
 				if ((*unit)->isCarryingGas() || (*unit)->isCarryingMinerals())
 					(*unit)->returnCargo();
@@ -50,6 +48,6 @@ void Worker::collect() {
 				(*unit)->returnCargo();
 			}
 		}	
-	}
+
 	else Broodwar->sendText("Idle");
 }

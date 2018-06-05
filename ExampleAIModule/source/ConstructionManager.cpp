@@ -74,13 +74,8 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 		Worker* t = new Worker(worker);
 		t->time = Broodwar->getFrameCount();
 		builders.push_back(t);
+		orderedBuilding = (building);
 	}
-
-	//Passing of extensions to buildingManager
-	if (building == UnitTypes::Terran_Machine_Shop) {
-		
-	}
-	else orderedBuilding = (building);
 }
 
 void ConstructionManager::expandBase() {

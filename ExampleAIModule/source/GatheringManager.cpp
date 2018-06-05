@@ -88,11 +88,11 @@ void GatheringManager::executeOrders() {
 
 	//Distribute gas and mineral-workers
 	const BWAPI::Unit* worker;
-	if (gasWorkers > 0 && gasWorkers < gasWorkerLimit && gas != NULL) {
+	if (gasWorkers < gasWorkerLimit && gas != NULL) {
 		allocateWorker(true);
 		Broodwar->sendText("added worker to gas list");
 	}
-	else if (mineralWorkers > 0 && gasWorkers > gasWorkerLimit && gas != NULL) {
+	else if (gasWorkers > gasWorkerLimit) {
 		allocateWorker(false);
 		Broodwar->sendText("added worker to mineral list");
 	}
