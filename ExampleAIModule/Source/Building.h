@@ -10,6 +10,5 @@ public:
 	BWAPI::UnitType Building::getType();
 	bool buildAddon = true;
 	bool Building::isUnitValid();
-
-	BWAPI::Unit Building::getUnit();
+	const BWAPI::Unit* Building::getUnit();
 };

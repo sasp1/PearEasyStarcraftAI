@@ -82,8 +82,7 @@ void UnitManager::executeOrders() {
 
 	// Clean up units for each manager (if they are dead, remove them from lists): 
 	cleanUpUnits(scoutingManager->scoutingUnits);
-	cleanUpUnits(gatheringManager->mineralWorkers);
-	cleanUpUnits(gatheringManager->gasWorkers);
+	cleanUpUnits(gatheringManager->workers);
 	cleanUpUnits(combatManager->combatUnits);
 }
 

@@ -1,6 +1,6 @@
 #include "ConstructionManager.h"
 #include <BWAPI.h>
-#include "TimedUnit.h"
+#include "Worker.h"
 #include "BuildingManager.h"
 #include "UnitManager.h"
 
@@ -17,7 +17,7 @@ using namespace BWAPI;
 using namespace Filter;
 
 BWAPI::UnitType orderedBuilding; //Type of building to be built next.
-std::list<TimedUnit*> builders; //List of workers in the process of constructing buildings.
+std::list<Worker*> builders; //List of workers in the process of constructing buildings.
 
 /**
 * Returns workers to gatheringManager if construction is complete.
@@ -71,7 +71,8 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 	if (NULL != worker) {
 		constructionsWorker = worker;
 		(*worker)->stop();
-		TimedUnit* t = new TimedUnit(worker, Broodwar->getFrameCount());
+		Worker* t = new Worker(worker);
+		t->time = Broodwar->getFrameCount();
 		builders.push_back(t);
 	}
 

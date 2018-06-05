@@ -1,5 +1,6 @@
 #include "BuildingManager.h"
 #include <BWAPI.h>
+#include "Building.h"
 using namespace BWAPI;
 using namespace Filter;
 using namespace std;
@@ -24,9 +25,7 @@ bool addedMachineTech = false;
 */
 void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 
-
-
-	//Adds building, if not supply depot, to owned list.
+	//Creates building class if not supply depot.
 	if ((*u)->getType() != UnitTypes::Terran_Supply_Depot)
 	{
 		Building* b = new Building(u);
@@ -64,8 +63,8 @@ void BuildingManager::executeOrders() {
 	for (auto &b : commandCenters) {
 		//Command center orders
 		if (isDesiredToTrainWorkers && b->isUnitIdle()) {
-			b->getUnit()->train(UnitTypes::Terran_SCV);
-			
+			const BWAPI::Unit* u = b->getUnit();
+			(*u)->train(UnitTypes::Terran_SCV);
 		}
 	}
 
@@ -75,50 +74,52 @@ void BuildingManager::executeOrders() {
 			buildings.remove(b);
 		}
 		else if (b->isUnitIdle()) {
+			const BWAPI::Unit* u = b->getUnit();
+			
 			//Barrack orders
 			if (b->getType() == UnitTypes::Terran_Barracks) {
 				if (barrackBuild != UnitTypes::None) {
-					b->getUnit()->train(barrackBuild);
+					(*u)->train(barrackBuild);
 				}
 			}
 
 			//Machine shop orders
 			if ((b->getType() == UnitTypes::Terran_Machine_Shop)) {
 				if (desiredResearchs.front() == TechTypes::Spider_Mines) {
-					b->getUnit()->research(TechTypes::Spider_Mines);
-					if (b->getUnit()->isResearching()) desiredResearchs.pop_front();
+					(*u)->research(TechTypes::Spider_Mines);
+					if ((*u)->isResearching()) desiredResearchs.pop_front();
 				}
 				else if (desiredUpgrades.front() == UpgradeTypes::Ion_Thrusters) {
-					b->getUnit()->upgrade(UpgradeTypes::Ion_Thrusters);
-					if (b->getUnit()->isUpgrading())desiredUpgrades.pop_front();
+					(*u)->upgrade(UpgradeTypes::Ion_Thrusters);
+					if ((*u)->isUpgrading())desiredUpgrades.pop_front();
 				}
 				else if (desiredResearchs.front() == TechTypes::Tank_Siege_Mode) {
-					b->getUnit()->research(TechTypes::Tank_Siege_Mode);
-					if (b->getUnit()->isUpgrading())desiredResearchs.pop_front();
+					(*u)->research(TechTypes::Tank_Siege_Mode);
+					if ((*u)->isUpgrading())desiredResearchs.pop_front();
 				}
 			}
 
 			//Factory orders
 			if (b->getType() == UnitTypes::Terran_Factory) {
 				//Handle machiine shop build
-				if (b->getUnit()->getAddon() == NULL && b->buildAddon) {
+				if ((*u)->getAddon() == NULL && b->buildAddon) {
 
 					//Build if possible at location, else initiate spiral search
-					if (b->getUnit()->buildAddon(UnitTypes::Terran_Machine_Shop)) {
+					if ((*u)->buildAddon(UnitTypes::Terran_Machine_Shop)) {
 					}
 					else if (b->isUnitIdle()) {
-						TilePosition loc = b->getUnit()->getTilePosition() + spiralSearch();
+						TilePosition loc = (*u)->getTilePosition() + spiralSearch();
 						TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Machine_Shop, loc);
 
 						if (targetBuildLocation.isValid()) {
-							b->getUnit()->build(UnitTypes::Terran_Machine_Shop, targetBuildLocation);
+							(*u)->build(UnitTypes::Terran_Machine_Shop, targetBuildLocation);
 						}
 					}
 				}
 
 				//Handle unit production
 				else if (factoryBuild != NULL) {
-					b->getUnit()->train(factoryBuild);
+					(*u)->train(factoryBuild);
 				}
 			}
 		}
