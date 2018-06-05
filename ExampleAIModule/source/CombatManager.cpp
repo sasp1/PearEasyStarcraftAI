@@ -188,11 +188,11 @@ bool CombatManager::stayingOutOfRangeFromEnemy(const BWAPI::Unit * unit, int ran
 void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position enemyBasePosition) {
 	attackLocation = enemyBasePosition;
 	shouldAttack = true;
-	for (auto &u : getAllCombatUnits()) {
+	//for (auto &u : getAllCombatUnits()) {
 
-		(*u->unit)->move(enemyBasePosition);
+		//(*u->unit)->move(enemyBasePosition);
 
-	}
+	//}
 }
 
 
@@ -266,7 +266,7 @@ void CombatManager::executeOrders() {
 	}
 
 	for (auto &u : getAllCombatUnits()) {
-		if ((*u->unit)->isIdle() && shouldAttack) {
+		if ((*u->unit)->isIdle() && shouldAttack ) {
 			(*u->unit)->move(attackLocation);
 		}
 	}
