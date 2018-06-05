@@ -280,13 +280,6 @@ void CombatManager::executeOrders() {
 				}
 			}
 		}
-		
-		if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
-			if (!tankCanMakeSiegeModeAttackOnStructure(u->unit)){
-				if ((*u->unit)->isSieged()) { (*u->unit)->unsiege(); }
-				attackNearestEnemy(u->unit);
-			}
-		}
 	}
 
 	for (auto &u : marines) {
