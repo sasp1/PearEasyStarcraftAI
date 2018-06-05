@@ -109,7 +109,7 @@
     <ClCompile Include="Source\ScoutingManager.cpp" />
     <ClCompile Include="Source\Building.cpp" />
     <ClCompile Include="Source\StrategyManager.cpp" />
-    <ClCompile Include="Source\TimedUnit.cpp" />
+    <ClCompile Include="Source\Worker.cpp" />
     <ClCompile Include="Source\UnitManager.cpp" />
     <ClCompile Include="Source\Vulture.cpp" />
   </ItemGroup>
@@ -126,7 +126,7 @@
     <ClInclude Include="Source\GatheringManager.h" />
     <ClInclude Include="Source\MapData.h" />
     <ClInclude Include="Source\Building.h" />
-    <ClInclude Include="Source\TimedUnit.h" />
+    <ClInclude Include="Source\Worker.h" />
     <ClInclude Include="Source\ScoutingManager.h" />
     <ClInclude Include="Source\StrategyManager.h" />
     <ClInclude Include="Source\UnitManager.h" />

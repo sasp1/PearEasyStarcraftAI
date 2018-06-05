@@ -14,8 +14,8 @@ bool Building::isUnitIdle() {
 	return (*unit)->isIdle();
 }
 
-BWAPI::Unit Building::getUnit() {
-	return *unit;
+const BWAPI::Unit* Building::getUnit() {
+	return unit;
 }
 
 bool Building::isUnitValid() {

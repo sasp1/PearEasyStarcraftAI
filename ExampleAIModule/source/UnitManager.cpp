@@ -14,12 +14,6 @@ bool canAct = true;
 
 
 void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit) {
-	/*if ((*unit)->getType() == UnitTypes::Terran_Refinery) {
-		for (int i = 0; i <=2; i++) {
-			gatheringManager->
-er();
-		}
-	}*/
 
 	if ((*unit)->getType() == UnitTypes::Terran_Refinery) {
 		newConstructionIsAvailable = true;
@@ -48,32 +42,6 @@ bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals
 
 void UnitManager::executeOrders() {
 	// onFrame request to perform calculations. The "main" of this class
-	
-	/*
-	timer++;
-
-	if (timer > 1080) canAct = false;
-	if (timer == 1090) {
-
-		for (auto &u : Broodwar->self()->getUnits()) {
-			if (u != NULL) {
-				if (u->isIdle() && u->getType().isWorker()) {
-
-					const BWAPI::Unit* unit = new BWAPI::Unit();
-					unit = (&u);
-
-					newWorker(unit);
-
-				}
-			}
-		}
-	}
-	if (timer > 1100) {
-		canAct = true;
-		timer = 0;
-	}
-
-	*/
 
 	gatheringManager->executeOrders();
 	scoutingManager->executeOrders();
@@ -82,8 +50,6 @@ void UnitManager::executeOrders() {
 
 	// Clean up units for each manager (if they are dead, remove them from lists): 
 	cleanUpUnits(scoutingManager->scoutingUnits);
-	cleanUpUnits(gatheringManager->mineralWorkers);
-	cleanUpUnits(gatheringManager->gasWorkers);
 	cleanUpUnits(combatManager->vultures); 
 	cleanUpUnits(combatManager->tanks);
 	cleanUpUnits(combatManager->marines);
@@ -114,7 +80,6 @@ void UnitManager::cleanUpUnits(std::list<CustomUnit*>& unitList) {
 
 void UnitManager::newWorker(const BWAPI::Unit* worker) {
 	//When a new worker is created in game
-	unitWorkers.push_front(worker);
 	gatheringManager->addWorker(worker);
 }
 

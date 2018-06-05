@@ -48,7 +48,9 @@ void StrategyManager::executeTwoFactory() {
 	
 
 	//Maintain 20 workers
-	if (unitManager->unitWorkers._Mysize() > numberOfWorkersLimit) {
+
+	if (gatheringManager->workers.size() > numberOfWorkersLimit) {
+
 		buildingManager->setIsDesiredToTrainWorkers(false);
 	}
 	else {
@@ -120,7 +122,9 @@ void StrategyManager::executeExpandWithOneFactory() {
 	}
 
 	//Maintain workers
-	if (unitManager->unitWorkers._Mysize() > numberOfWorkersLimit) {
+
+	if (gatheringManager->workers.size() > numberOfWorkersLimit) {
+
 		buildingManager->setIsDesiredToTrainWorkers(false);
 	}
 	else { 

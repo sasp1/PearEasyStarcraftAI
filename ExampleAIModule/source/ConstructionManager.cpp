@@ -1,6 +1,6 @@
 #include "ConstructionManager.h"
 #include <BWAPI.h>
-#include "TimedUnit.h"
+#include "Worker.h"
 #include "BuildingManager.h"
 #include "UnitManager.h"
 
@@ -17,7 +17,7 @@ using namespace BWAPI;
 using namespace Filter;
 
 BWAPI::UnitType orderedBuilding; //Type of building to be built next.
-std::list<TimedUnit*> builders; //List of workers in the process of constructing buildings.
+std::list<Worker*> builders; //List of workers in the process of constructing buildings.
 
 /**
 * Returns workers to gatheringManager if construction is complete.
@@ -33,7 +33,6 @@ void ConstructionManager::executeOrders() {
 		if (b->unit == NULL) {
 			builders.remove(b);
 			continue;
-			Broodwar->sendText("Null unit: code 20");
 		}
 		if (b->isOverTime(500) && b->isUnitIdle()) {
 			unitManager->newWorker(b->unit);
@@ -72,18 +71,17 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 	if (NULL != worker) {
 		constructionsWorker = worker;
 		(*worker)->stop();
-		TimedUnit* t = new TimedUnit(worker, Broodwar->getFrameCount());
+		Worker* t = new Worker(worker);
+		t->time = Broodwar->getFrameCount();
 		builders.push_back(t);
+		orderedBuilding = (building);
 	}
-
-	//Passing of extensions to buildingManager
-	if (building == UnitTypes::Terran_Machine_Shop) {
-		
-	}
-	else orderedBuilding = (building);
 }
 
-void ConstructionManager::expandBase() {
+void ConstructionManager::expandBase(BWAPI::Position pos, BWAPI::Unit* worker) {
+
+
+
 
 }
 

@@ -23,7 +23,8 @@ CombatManager::~CombatManager() {
 void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 	//Receive control of a new combatUnit
 	if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Vulture) {
-		BWAPI::Position pos = (*buildingManager->commandCenter)->getPosition();
+		Building* b = buildingManager->commandCenters.front();
+		BWAPI::Position pos = (*b->unit)->getPosition();
 		CustomUnit* vulture = new Vulture(unit, pos); 
 		vultures.push_back(vulture);
 

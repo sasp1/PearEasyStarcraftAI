@@ -1,5 +1,7 @@
 #pragma once
 #include <BWAPI.h>
+#include "GatheringManager.h"
+#include "Building.h"
 #include "ScoutingManager.h"
 
 class BuildingManager
@@ -20,6 +22,9 @@ public:
 	BWAPI::UnitType factoryBuild;
 	BWAPI::UnitType barrackBuild;
 	int totalMachineShops = 0;
+	std::list<Building*> buildings;
+	std::list<Building*> commandCenters;
+	GatheringManager* gatheringManager;
 
 	ScoutingManager* scoutingManager;
 };
