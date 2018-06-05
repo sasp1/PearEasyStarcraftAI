@@ -2,9 +2,11 @@
 using namespace BWAPI;
 using namespace Filter;
 
-SiegeTank::SiegeTank(const BWAPI::Unit* u)
+SiegeTank::SiegeTank(const BWAPI::Unit* u) : CustomUnit(u)
 {
-	tank = u;
+	if ((*u)->getType() != UnitTypes::Terran_Siege_Tank_Tank_Mode) {
+		Broodwar->sendText("ERROR, tried to assign non-siege-tank unit to siege-tank object!!!");
+	}
 }
 
 SiegeTank::~SiegeTank()
@@ -12,17 +14,19 @@ SiegeTank::~SiegeTank()
 }
 
 bool SiegeTank::isUnitIdle() {
-	return (*tank)->isIdle();
+	return (*unit)->isIdle();
 }
 
 BWAPI::Unit SiegeTank::getUnit() {
-	return *tank;
+	return *unit;
 }
 
-bool SiegeTank::isUnitValid() {
-	return tank != NULL;
-}
 
 bool SiegeTank::isSiege() {
-	return BWAPI::UnitTypes::Terran_Siege_Tank_Siege_Mode == (*tank)->getType();
+	return BWAPI::UnitTypes::Terran_Siege_Tank_Siege_Mode == (*unit)->getType();
+}
+
+bool SiegeTank::isValid()
+{
+	return unit != NULL;
 }
