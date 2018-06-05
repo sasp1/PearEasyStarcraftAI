@@ -2,6 +2,7 @@
 #include <BWAPI.h>
 #include <math.h>
 #include <algorithm>
+#include "BuildingManager.h"
 
 using namespace BWAPI;
 using namespace Filter;

@@ -22,10 +22,10 @@ public:
 	
 	BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::UnitType target, int range);
 
-	bool stayingOutOfRangeFromEnemy(const BWAPI::Unit* unit, int range);
+	bool shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit* unit, int range);
 	
 	void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position pos);
-	bool CombatManager::defendingBase(int range, const BWAPI::Unit * unit);
+	bool CombatManager::shouldDefendBase(int range, const BWAPI::Unit * unit);
 
 	void CombatManager::returnAllUnitsToBase();
 	bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit * unit, const BWAPI::Unit* enemyUnit);

@@ -2,6 +2,8 @@
 #include <BWAPI.h>
 #include "GatheringManager.h"
 #include "Building.h"
+#include "ScoutingManager.h"
+
 class BuildingManager
 {
 
@@ -24,4 +26,5 @@ public:
 	std::list<Building*> commandCenters;
 	GatheringManager* gatheringManager;
 
+	ScoutingManager* scoutingManager;
 };

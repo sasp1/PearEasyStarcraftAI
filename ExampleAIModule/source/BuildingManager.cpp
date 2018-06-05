@@ -30,9 +30,16 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 	{
 		Building* b = new Building(u);
 
+
 		//Adds command center as separate variable
 		if ((*u)->getType() == UnitTypes::Terran_Command_Center) {
 			commandCenters.push_back(b);
+
+		//If factory, adds request machine shop addon for first two factories.
+		if ((*u)->getType() == UnitTypes::Terran_Factory) {
+			factories++;
+			b->buildAddon = factories < 3;
+			b->getUnit()->setRallyPoint((*scoutingManager).defendBasePosition);
 		}
 		else {
 			buildings.push_back(b);

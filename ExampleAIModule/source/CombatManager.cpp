@@ -157,7 +157,7 @@ bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit* unit, const BWAPI:
 
 }
 
-bool CombatManager::stayingOutOfRangeFromEnemy(const BWAPI::Unit * unit, int range){
+bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * unit, int range){
 	bool enemiesInCriticalRange = false;
 
 	BWAPI::Position centerOfMass = Position(0, 0); 
@@ -202,7 +202,7 @@ void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position enemyBaseP
 * @param range integer specifing a range from the base
 */
 
-bool CombatManager::defendingBase(int range, const BWAPI::Unit * unit){
+bool CombatManager::shouldDefendBase(int range, const BWAPI::Unit * unit){
 	//find min distance to defend base (commandcenter to closest enemy)
 	
 	bool defendingBase = false; 
@@ -224,6 +224,19 @@ void CombatManager::returnAllUnitsToBase() {
 }
 
 
+bool tankCanMakeSiegeModeAttackOnStructure(const BWAPI::Unit * unit) {
+	for (auto &eu : (*unit)->getUnitsInRadius(UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange(), IsEnemy)) {
+		if ( eu->getType().isBuilding() && (*unit)->getDistance(eu) > (UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange()) / 2) {
+			if (!(*unit)->isSieged()) {
+				(*unit)->siege();
+				Broodwar->sendText("SIEGING");
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
 
 /**
 * main method of every class. Makes the combatmanager execute orders/relevant computations in every frame. 
@@ -238,9 +251,9 @@ void CombatManager::executeOrders() {
 
 	for (auto &u : vultures) {
 
-		if (!stayingOutOfRangeFromEnemy(u->unit, 120)){
+		if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)){
 
-			if (!defendingBase(1000, u->unit) && shouldAttack) {
+			if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
 
 				attackNearestEnemy(u->unit);
 
@@ -250,15 +263,27 @@ void CombatManager::executeOrders() {
 	}
 
 	for (auto &u : tanks) {
-		if (!defendingBase(1000, u->unit) && shouldAttack) {
+		//Siege mode attack 1. prio
+		if (!tankCanMakeSiegeModeAttackOnStructure(u->unit)) {
 
-			attackNearestEnemy(u->unit);
+			//If siege attack not possible => unsiege!
+			if ((*u->unit)->isSieged()) { (*u->unit)->unsiege(); }
 
+			//If the tank is not moving away from an enemy in critical range
+			if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
+
+				//If the tank should not defend and we are attacking
+				if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
+
+					attackNearestEnemy(u->unit);
+
+				}
+			}
 		}
 	}
 
 	for (auto &u : marines) {
-		if (!defendingBase(1000, u->unit) && shouldAttack) {
+		if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
 
 			attackNearestEnemy(u->unit);
 
