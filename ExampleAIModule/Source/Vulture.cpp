@@ -38,8 +38,3 @@ void Vulture::putDownMineIfOutsideOfBase() {
 bool Vulture::isUnitIdle() {
 	return (*unit)->isIdle();
 }
-
-bool Vulture::isValid()
-{
-	return false;
-}

@@ -4,7 +4,7 @@
 class CustomUnit 
 {
 public: 
-	virtual bool isValid() = 0; 
+	virtual bool isValid(); 
 	CustomUnit(const BWAPI::Unit* u); 
 	const BWAPI::Unit* unit; 
 };

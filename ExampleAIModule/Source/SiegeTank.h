@@ -10,5 +10,4 @@ public:
 	bool SiegeTank::isUnitIdle();
 	BWAPI::Unit SiegeTank::getUnit();
 	bool SiegeTank::isSiege();
-	bool isValid();
 };

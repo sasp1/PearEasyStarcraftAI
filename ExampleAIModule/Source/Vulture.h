@@ -12,5 +12,4 @@ public:
 	BWAPI::Position basePos;
 	int time;
 	bool Vulture::isUnitIdle();
-	bool isValid(); 
 };
