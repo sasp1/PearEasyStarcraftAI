@@ -47,6 +47,7 @@ void ExampleAIModule::onStart()
 	combatManager->buildingManager = buildingManager;
 	buildingManager->gatheringManager = gatheringManager;
 	gatheringManager->buildingManager = buildingManager;
+	strategyManager->gatheringManager = gatheringManager;
 
 
 	//Make managers aware of each other

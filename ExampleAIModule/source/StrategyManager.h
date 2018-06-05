@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include "ExecutionManager.h"
+#include "GatheringManager.h"
 
 class StrategyManager
 {
@@ -21,6 +22,7 @@ public:
 	void StrategyManager::executeExpandWithOneFactory();
 	void StrategyManager::unitComplete(const BWAPI::Unit* unit);
 	bool StrategyManager::EnemyHasAStructureMakingTanksRequired();
+	GatheringManager* gatheringManager;
 
 };
 

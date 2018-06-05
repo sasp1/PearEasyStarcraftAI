@@ -22,7 +22,6 @@ public:
 	GatheringManager* gatheringManager;
 	ConstructionManager* constructionManager;
 	ScoutingManager* scoutingManager;
-	std::list<const BWAPI::Unit*> unitWorkers;
 	void UnitManager::cleanUpUnits(std::list<CustomUnit*>& unitList); 
 };
 

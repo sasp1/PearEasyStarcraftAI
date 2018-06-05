@@ -40,24 +40,33 @@ void GatheringManager::allocateWorker(bool addToGas) {
 	for (auto &w : workers) {
 
 		if (addToGas && !alloc) {
-			if (w->workState == 0)
+			if (w->workState == 0) {
 				w->workState = 1;
-			w->gas = gas;
-			alloc = true;
+				w->gas = gas;
+				alloc = true;
+			}
 		}
 		else if (!addToGas && !alloc) {
-			if (w->workState == 1)
+			if (w->workState == 1) {
 				w->workState = 0;
-			alloc = true;
+				alloc = true;
+			}
 		}
 	}
 }
 
 void GatheringManager::splitWorkers() {
-
+	int countA = 0;
+	int countB = 0;
+	int totalCommand = buildingManager->commandCenters.size();
 	for (auto &m : buildingManager->commandCenters) {
 		for (auto &u : workers) {
+			if (countA % totalCommand == countB) {
+				u->center = m->getUnit();
+			}
+				countA++;
 		}
+		countB++;
 	}
 }
 
@@ -66,13 +75,17 @@ const BWAPI::Unit* GatheringManager::removeWorker() {
 	//Lose control of a worker
 
 	Worker* w = workers.back();
-
-	const BWAPI::Unit* u = w->unit;
+	Worker* newW = new Worker(w->unit);
 	workers.pop_back();
-	return u;
+	return newW->unit;
 }
 
 void GatheringManager::executeOrders() {
+
+	if (Broodwar->getFrameCount() == 20) {
+		splitWorkers();
+	}
+
 	//Distribute gas and mineral-workers
 	const BWAPI::Unit* worker;
 	if (gasWorkers > 0 && gasWorkers < gasWorkerLimit && gas != NULL) {
@@ -103,7 +116,7 @@ void GatheringManager::executeOrders() {
 	//Make workers collect respective rescource
 	for (auto &w : workers) {
 
-		if (!w->isUnitValid()) {
+		if (!w->isValid()) {
 			workers.remove(w);
 		}
 		else
