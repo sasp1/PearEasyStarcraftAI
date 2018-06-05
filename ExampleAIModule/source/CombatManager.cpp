@@ -160,8 +160,24 @@ bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit* unit, const BWAPI:
 
 }
 
-bool CombatManager::stayingOutOfRangeFromEnemy(const BWAPI::Unit * unit, int range){
+bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * unit, int range){
 	bool enemiesInCriticalRange = false;
+
+	//First check if unit are within critical range of a cannonn
+	for (auto &eu : (*unit)->getUnitsInRadius(UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() + UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange()/5)) {
+		
+		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && (*eu).getType() == UnitTypes::Protoss_Photon_Cannon) {
+
+			BWAPI::Position movePosition = (*unit)->getPosition() - (((*eu).getPosition() - (*unit)->getPosition()));
+			(*unit)->move(movePosition);
+
+			return true;
+		}
+	}
+
+
+	//otherwise juke as normal
+
 
 	BWAPI::Position centerOfMass = Position(0, 0); 
 	for (auto &eu : (*unit)->getUnitsInRadius(range)) {
@@ -205,7 +221,7 @@ void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position enemyBaseP
 * @param range integer specifing a range from the base
 */
 
-bool CombatManager::defendingBase(int range, const BWAPI::Unit * unit){
+bool CombatManager::shouldDefendBase(int range, const BWAPI::Unit * unit){
 	//find min distance to defend base (commandcenter to closest enemy)
 	
 	bool defendingBase = false; 
@@ -227,6 +243,19 @@ void CombatManager::returnAllUnitsToBase() {
 }
 
 
+bool tankCanMakeSiegeModeAttackOnStructure(const BWAPI::Unit * unit) {
+	for (auto &eu : (*unit)->getUnitsInRadius(UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange(), IsEnemy)) {
+		if ( eu->getType().isBuilding() && (*unit)->getDistance(eu) > (UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange()) / 2) {
+			if (!(*unit)->isSieged()) {
+				(*unit)->siege();
+				Broodwar->sendText("SIEGING");
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
 
 /**
 * main method of every class. Makes the combatmanager execute orders/relevant computations in every frame. 
@@ -243,13 +272,14 @@ void CombatManager::executeOrders() {
 		Vulture* vulture = dynamic_cast<Vulture*>(u); 
 		if (!vulture->hasLayedDownDefensiveMine && mines.size() < 3 && (*vulture->unit)->getDistance(scoutingManager->startingChokePosition) < 25) {
 			vulture->layDownDefensiveMine(scoutingManager->startingChokePosition + BWAPI::Position(mines.size()*5, mines.size()*5)); 
-			vulture->isOcupied = true; 
+			Broodwar->sendText("Number of spidermines: %d", mines.size());			
 		}
 		else {
-			vulture->isOcupied = false; 
-			if (!stayingOutOfRangeFromEnemy(u->unit, 120)) {
 
-				if (!defendingBase(1000, u->unit) && shouldAttack) {
+			if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)){
+
+						if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
+
 
 					attackNearestEnemy(u->unit);
 
@@ -260,15 +290,27 @@ void CombatManager::executeOrders() {
 	}
 
 	for (auto &u : tanks) {
-		if (!defendingBase(1000, u->unit) && shouldAttack) {
+		//Siege mode attack 1. prio
+		if (!tankCanMakeSiegeModeAttackOnStructure(u->unit)) {
 
-			attackNearestEnemy(u->unit);
+			//If siege attack not possible => unsiege!
+			if ((*u->unit)->isSieged()) { (*u->unit)->unsiege(); }
 
+			//If the tank is not moving away from an enemy in critical range
+			if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
+
+				//If the tank should not defend and we are attacking
+				if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
+
+					attackNearestEnemy(u->unit);
+
+				}
+			}
 		}
 	}
 
 	for (auto &u : marines) {
-		if (!defendingBase(1000, u->unit) && shouldAttack) {
+		if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
 
 			attackNearestEnemy(u->unit);
 

@@ -41,14 +41,14 @@ bool Vulture::isUnitIdle() {
 
 void Vulture::layDownDefensiveMine(BWAPI::Position targetPosition)
 {
-		if ((*unit)->canUseTech(TechTypes::Spider_Mines, targetPosition)) {
-			hasLayedDownDefensiveMine = (*unit)->useTech(BWAPI::TechTypes::Spider_Mines, targetPosition);;
-			if (hasLayedDownDefensiveMine && (*unit)->getSpellCooldown() > 0) {
-				Broodwar->sendText("Has now used mine");
-				isOcupied = false; 
-			}
-				
+	
+		(*unit)->useTech(BWAPI::TechTypes::Spider_Mines, targetPosition + Position(counter, counter)); 
 
+		if (!((*unit)->getSpellCooldown() > 5)) {
+			hasLayedDownDefensiveMine = true; 
+		}
+		if (counter > 40) {
+			counter = 0; 
 		}
 		
 }

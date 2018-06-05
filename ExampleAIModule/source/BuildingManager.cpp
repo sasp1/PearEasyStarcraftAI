@@ -40,6 +40,7 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 		if ((*u)->getType() == UnitTypes::Terran_Factory) {
 			factories++;
 			b->buildAddon = factories < 3;
+			b->getUnit()->setRallyPoint((*scoutingManager).defendBasePosition);
 		}
 		//If machine shop, add researchs for first one.
 		if ((*u)->getType() == UnitTypes::Terran_Machine_Shop) {

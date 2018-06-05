@@ -13,9 +13,11 @@ int basesOrdered = 0;
 int strategy = 1;
 int numberOfWorkersLimit = 22;
 int supplyUsed = 0; 
+bool tanksAreDesiredToBuild;
 
 void StrategyManager::calculateOrders() {
 	supplyUsed = Broodwar->self()->supplyUsed() / 2;
+	tanksAreDesiredToBuild = false;
 
 	//Set executionManager orders
 	if (strategy == 1) {
@@ -125,10 +127,11 @@ void StrategyManager::executeExpandWithOneFactory() {
 		buildingManager->setIsDesiredToTrainWorkers(true);
 	}
 
-	//Spam voltures when no towers are discovered
-	if (EnemyHasAStructureMakingTanksRequired() && combatManager->tanks.size() <= 4) { // OR NumberOfTanks >=2
+	//Spam voltures when no cannons are discovered
+	if ((tanksAreDesiredToBuild || EnemyHasAStructureMakingTanksRequired()) && combatManager->tanks.size() <= 4) { // OR NumberOfTanks >=2
+		tanksAreDesiredToBuild = true;
+		Broodwar->sendText("Building tanks");
 		buildingManager->factoryBuild = UnitTypes::Terran_Siege_Tank_Tank_Mode;
-		Broodwar->sendText("ENEMY HAS CANNON");
 	}
 	else {
 		buildingManager->factoryBuild = UnitTypes::Terran_Vulture;
@@ -193,6 +196,17 @@ void StrategyManager::unitComplete(const BWAPI::Unit* unit) {
 		supplyDepotsAreNotUnderConstruction = true;
 	}
 }
+
+void StrategyManager::onUnitDestroy(BWAPI::Unit unit) {
+	if (unit->getPlayer()->isEnemy(Broodwar->self())) {
+		if (unit->getType() == UnitTypes::Protoss_Photon_Cannon) {
+			Broodwar->sendText("Cannon killed");
+			tanksAreDesiredToBuild = false;
+
+		}
+	}
+}
+
 
 
 // Iniitial class setup
