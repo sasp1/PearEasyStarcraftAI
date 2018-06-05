@@ -43,14 +43,17 @@ void ExampleAIModule::onStart()
 	constructionManager->buildingManager = buildingManager;
 	constructionManager->unitManager = unitManager;
 	constructionManager->scoutingManager = scoutingManager; 
-	scoutingManager->buildingManager = buildingManager; 
+	scoutingManager->buildingManager = buildingManager;
+	buildingManager->scoutingManager = scoutingManager;
 	combatManager->buildingManager = buildingManager;
-	
+
 
 	//Make managers aware of each other
 	unitManager->setManagers(combatManager, gatheringManager, constructionManager, scoutingManager);
 	executionManager->referenceManagers(unitManager, buildingManager);
 	strategyManager->referenceManagers(executionManager, unitManager, buildingManager, combatManager);
+
+
   // Enable the UserInput flag, which allows us to control the bot and type messages.
   Broodwar->enableFlag(Flag::UserInput);
 

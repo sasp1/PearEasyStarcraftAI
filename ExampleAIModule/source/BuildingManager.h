@@ -1,5 +1,7 @@
 #pragma once
 #include <BWAPI.h>
+#include "ScoutingManager.h"
+
 class BuildingManager
 {
 
@@ -19,4 +21,5 @@ public:
 	BWAPI::UnitType barrackBuild;
 	int totalMachineShops = 0;
 
+	ScoutingManager* scoutingManager;
 };
