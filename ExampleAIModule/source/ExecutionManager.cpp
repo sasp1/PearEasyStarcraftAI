@@ -13,7 +13,7 @@ int reservedGas;
 void ExecutionManager::executeOrders() {
 
 	//Check for new desires
-	if (priorityQueue.size() > 0) {
+	if (priorityQueue._Mysize() > 0) {
 		BWAPI::UnitType building = priorityQueue.front();
 		if (unitManager->requestBuilding(building, reservedMinerals, reservedGas))
 		{

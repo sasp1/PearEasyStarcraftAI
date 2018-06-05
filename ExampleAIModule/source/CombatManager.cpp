@@ -30,6 +30,7 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 	} else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Siege_Tank_Tank_Mode) {
 		CustomUnit* st = new SiegeTank(unit);
 		tanks.push_back(st);
+
 	} else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Marine) {
 		CustomUnit* marine = new Marine(unit); 
 		marines.push_back(marine); 
@@ -78,7 +79,7 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Dragoon, 300);
 		}
 
-		if (desiredUnitToAttack == NULL) {
+		if (desiredUnitToAttack == NULL && ((*unit)->getType() == UnitTypes::Terran_Siege_Tank_Tank_Mode || (*unit)->getType() == UnitTypes::Terran_Siege_Tank_Siege_Mode)) {
 			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Photon_Cannon, 1000);
 		}
 
@@ -265,6 +266,7 @@ bool tankCanMakeSiegeModeAttackOnStructure(const BWAPI::Unit * unit) {
 */
 void CombatManager::executeOrders() {
 
+	//Broodwar->sendText("%i", tanks._Mysize());
 
 	//defendingBase(1000);
 
