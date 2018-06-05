@@ -1,7 +1,8 @@
 #pragma once
 #include <BWAPI.h>
-#include "BuildingManager.h"
 #include "MapData.h"
+class BuildingManager;
+
 class ScoutingManager
 {
 	
