@@ -12,7 +12,7 @@ int gasWorkerLimit = 2;
 void GatheringManager::addWorker(const BWAPI::Unit* worker) {
 	//Receive control of a new worker
 
-	if (gasWorkers.size() < gasWorkerLimit && gas != NULL) {
+	if (gasWorkers._Mysize() < gasWorkerLimit && gas != NULL) {
 		gasWorkers.push_back(worker); 
 	}
 	else {
@@ -42,14 +42,14 @@ void GatheringManager::executeOrders() {
 
 	//Distribute gas and mineral-workers
 	const BWAPI::Unit* worker;
-	if (gasWorkers.size() > 0 && gasWorkers.size() < gasWorkerLimit && gas != NULL && !(*mineralWorkers.back())->isCarryingMinerals()) {
+	if (gasWorkers._Mysize() > 0 && gasWorkers._Mysize() < gasWorkerLimit && gas != NULL && !(*mineralWorkers.back())->isCarryingMinerals()) {
 		worker = mineralWorkers.back();
 		(*worker)->stop();
 		mineralWorkers.pop_back();
 		gasWorkers.push_back(worker);
 		Broodwar->sendText("added worker to gas list");
 	}
-	else if (mineralWorkers.size() > 0 && gasWorkers.size() > gasWorkerLimit && gas != NULL && !(*gasWorkers.back())->isCarryingGas() ) {
+	else if (mineralWorkers._Mysize() > 0 && gasWorkers._Mysize() > gasWorkerLimit && gas != NULL && !(*gasWorkers.back())->isCarryingGas() ) {
 		worker = gasWorkers.back();
 		(*worker)->stop();
 		gasWorkers.pop_back();

@@ -123,7 +123,7 @@ UnitManager::UnitManager() {
 }
 
 void UnitManager::addUnit(const BWAPI::Unit* unit) {
-	if ((scoutingManager->scoutingUnits.size() < 1) & (*unit)->getType() == UnitTypes::Terran_Marine) {
+	if ((scoutingManager->scoutingUnits._Mysize() < 1) & (*unit)->getType() == UnitTypes::Terran_Marine) {
 		(*scoutingManager).addScout(unit);
 	}
 	else {
