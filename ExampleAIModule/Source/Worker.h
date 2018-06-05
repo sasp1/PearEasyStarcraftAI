@@ -18,5 +18,5 @@ public:
 	void Worker::updateCommandCenter(const BWAPI::Unit cc);
 	void Worker::collect();
 	void Worker::stop();
-	bool Worker::handleBuild()
+	bool Worker::handleBuild();
 };

@@ -40,7 +40,7 @@ void StrategyManager::executeTwoFactory() {
 	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
 	
-	if (scoutingManager->scoutingUnits.size() > 0) {
+	if (scoutingManager->scoutingUnits._Mysize() > 0) {
 		buildingManager->barrackBuild = UnitTypes::None;
 	} else {
 		buildingManager->barrackBuild = UnitTypes::Terran_Marine;
@@ -48,7 +48,9 @@ void StrategyManager::executeTwoFactory() {
 	
 
 	//Maintain 20 workers
+
 	if (gatheringManager->workers.size() > numberOfWorkersLimit) {
+
 		buildingManager->setIsDesiredToTrainWorkers(false);
 	}
 	else {
@@ -112,7 +114,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
 
-	if (factoriesOrdered >=3  && Broodwar->self()->minerals() > 500 || (scoutingManager->scoutingUnits.size() < 1)) {
+	if (factoriesOrdered >=3  && Broodwar->self()->minerals() > 500 || (scoutingManager->scoutingUnits._Mysize() < 1)) {
 			buildingManager->barrackBuild = UnitTypes::Terran_Marine;
 	}
 	else {
@@ -120,7 +122,9 @@ void StrategyManager::executeExpandWithOneFactory() {
 	}
 
 	//Maintain workers
+
 	if (gatheringManager->workers.size() > numberOfWorkersLimit) {
+
 		buildingManager->setIsDesiredToTrainWorkers(false);
 	}
 	else { 
@@ -128,7 +132,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 	}
 
 	//Spam voltures when no cannons are discovered
-	if ((tanksAreDesiredToBuild || EnemyHasAStructureMakingTanksRequired()) && combatManager->tanks.size() <= 4) { // OR NumberOfTanks >=2
+	if ((tanksAreDesiredToBuild || EnemyHasAStructureMakingTanksRequired()) && combatManager->tanks._Mysize() <= 4) { // OR NumberOfTanks >=2
 		tanksAreDesiredToBuild = true;
 		Broodwar->sendText("Building tanks");
 		buildingManager->factoryBuild = UnitTypes::Terran_Siege_Tank_Tank_Mode;
@@ -170,11 +174,11 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 	//___________________________Attacking strategy________________________________
 	
-	if (combatManager->getAllCombatUnits().size() >= 2 && scoutingManager->enemyBaseFound && Broodwar->enemy()->getRace() == Races::Protoss) {
+	if (combatManager->getAllCombatUnits()._Mysize() >= 2 && scoutingManager->enemyBaseFound && Broodwar->enemy()->getRace() == Races::Protoss) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 		
 	}
-	else if (combatManager->vultures.size() >= 8 && Broodwar->enemy()->getRace() == Races::Terran) {
+	else if (combatManager->vultures._Mysize() >= 8 && Broodwar->enemy()->getRace() == Races::Terran) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 	}
 

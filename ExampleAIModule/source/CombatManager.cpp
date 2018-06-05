@@ -14,7 +14,6 @@ BWAPI::Position attackLocation;
 BWAPI::Position enemyPos;
 
 
-
 CombatManager::CombatManager() {
 }
 
@@ -32,9 +31,14 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 	} else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Siege_Tank_Tank_Mode) {
 		CustomUnit* st = new SiegeTank(unit);
 		tanks.push_back(st);
+
 	} else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Marine) {
 		CustomUnit* marine = new Marine(unit); 
 		marines.push_back(marine); 
+	}
+	else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Vulture_Spider_Mine) {
+		CustomUnit* mine = new Mine(unit);
+		mines.push_back(mine);
 	}
 	
 	//combatUnits.push_back(unit);
@@ -76,7 +80,7 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Dragoon, 300);
 		}
 
-		if (desiredUnitToAttack == NULL) {
+		if (desiredUnitToAttack == NULL && ((*unit)->getType() == UnitTypes::Terran_Siege_Tank_Tank_Mode || (*unit)->getType() == UnitTypes::Terran_Siege_Tank_Siege_Mode)) {
 			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Photon_Cannon, 1000);
 		}
 
@@ -263,18 +267,27 @@ bool tankCanMakeSiegeModeAttackOnStructure(const BWAPI::Unit * unit) {
 */
 void CombatManager::executeOrders() {
 
+	//Broodwar->sendText("%i", tanks._Mysize());
 
 	//defendingBase(1000);
 
 	for (auto &u : vultures) {
+		Vulture* vulture = dynamic_cast<Vulture*>(u); 
+		if (!vulture->hasLayedDownDefensiveMine && mines.size() < 3 && (*vulture->unit)->getDistance(scoutingManager->startingChokePosition) < 25) {
+			vulture->layDownDefensiveMine(scoutingManager->startingChokePosition + BWAPI::Position(mines.size()*15, mines.size()*15)); 
+			Broodwar->sendText("Number of spidermines: %d", mines.size());			
+		}
+		else {
 
-		if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)){
+			if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)){
 
-			if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
+						if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
 
-				attackNearestEnemy(u->unit);
 
-				//u->putDownMineIfOutsideOfBase(); 
+					attackNearestEnemy(u->unit);
+
+					//u->putDownMineIfOutsideOfBase(); 
+				}
 			}
 		}
 	}
@@ -308,7 +321,7 @@ void CombatManager::executeOrders() {
 	}
 
 	for (auto &u : getAllCombatUnits()) {
-		if ((*u->unit)->isIdle() && shouldAttack ) {
+		if ((*u->unit)->isIdle() && shouldAttack && !u->isOcupied) {
 			(*u->unit)->move(attackLocation);
 		}
 	}
