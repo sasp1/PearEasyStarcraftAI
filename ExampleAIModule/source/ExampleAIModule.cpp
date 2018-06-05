@@ -6,6 +6,7 @@
 #include "CombatManager.h"
 #include "StrategyManager.h"
 #include "ScoutingManager.h"
+#include "MapData.h"
 #include <iostream>
 
 using namespace BWAPI;
@@ -20,6 +21,7 @@ ExecutionManager* executionManager;
 CombatManager* combatManager;
 ScoutingManager* scoutingManager;
 StrategyManager* strategyManager;
+MapData* mapData;
 
 void ExampleAIModule::onStart()
 {
@@ -30,8 +32,10 @@ void ExampleAIModule::onStart()
 	constructionManager = new ConstructionManager();
 	executionManager = new ExecutionManager();
 	combatManager = new CombatManager();
-	scoutingManager = new ScoutingManager(BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation()));
+	mapData = new MapData();
+	scoutingManager = new ScoutingManager(BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation()), mapData);
 	strategyManager = new StrategyManager();
+	 
 
 	// Setting cross-references:
 	strategyManager->scoutingManager = scoutingManager;
@@ -41,6 +45,7 @@ void ExampleAIModule::onStart()
 	constructionManager->scoutingManager = scoutingManager; 
 	scoutingManager->buildingManager = buildingManager; 
 	combatManager->buildingManager = buildingManager;
+	
 
 	//Make managers aware of each other
 	unitManager->setManagers(combatManager, gatheringManager, constructionManager, scoutingManager);
