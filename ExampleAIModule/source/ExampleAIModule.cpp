@@ -221,6 +221,7 @@ void ExampleAIModule::onUnitHide(BWAPI::Unit unit)
 
 void ExampleAIModule::onUnitDestroy(BWAPI::Unit unit)
 {
+	strategyManager->onUnitDestroy(unit);
 
 }
 

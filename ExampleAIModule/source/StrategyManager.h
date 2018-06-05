@@ -21,6 +21,7 @@ public:
 	void StrategyManager::executeTwoFactory();
 	void StrategyManager::executeExpandWithOneFactory();
 	void StrategyManager::unitComplete(const BWAPI::Unit* unit);
+	void StrategyManager::onUnitDestroy(BWAPI::Unit unit);
 	bool StrategyManager::EnemyHasAStructureMakingTanksRequired();
 	GatheringManager* gatheringManager;
 
