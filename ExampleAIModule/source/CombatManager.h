@@ -4,6 +4,8 @@
 #include "Vulture.h"
 #include "SiegeTank.h"
 #include "Marine.h"
+#include "ScoutingManager.h"
+#include "Mine.h"
 
 class CombatManager
 {
@@ -16,6 +18,7 @@ public:
 	std::list<CustomUnit*> vultures; 
 	std::list<CustomUnit*> tanks;
 	std::list<CustomUnit*> marines; 
+	std::list<CustomUnit*> mines; 
 
 	void CombatManager::addCombatUnit(const BWAPI::Unit* unit);
 	void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit);
@@ -34,5 +37,7 @@ public:
 	CombatManager();
 	~CombatManager();
 	void CombatManager::executeOrders();
+
+	ScoutingManager* scoutingManager; 
 };
 

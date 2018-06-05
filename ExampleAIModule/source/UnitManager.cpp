@@ -87,6 +87,7 @@ void UnitManager::executeOrders() {
 	cleanUpUnits(combatManager->vultures); 
 	cleanUpUnits(combatManager->tanks);
 	cleanUpUnits(combatManager->marines);
+	cleanUpUnits(combatManager->mines); 
 
 }
 

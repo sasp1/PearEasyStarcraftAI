@@ -14,7 +14,6 @@ BWAPI::Position attackLocation;
 BWAPI::Position enemyPos;
 
 
-
 CombatManager::CombatManager() {
 }
 
@@ -34,6 +33,10 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 	} else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Marine) {
 		CustomUnit* marine = new Marine(unit); 
 		marines.push_back(marine); 
+	}
+	else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Vulture_Spider_Mine) {
+		CustomUnit* mine = new Mine(unit);
+		mines.push_back(mine);
 	}
 	
 	//combatUnits.push_back(unit);
@@ -237,14 +240,21 @@ void CombatManager::executeOrders() {
 	//defendingBase(1000);
 
 	for (auto &u : vultures) {
+		Vulture* vulture = dynamic_cast<Vulture*>(u); 
+		if (!vulture->hasLayedDownDefensiveMine && mines.size() < 3 && (*vulture->unit)->getDistance(scoutingManager->startingChokePosition) < 25) {
+			vulture->layDownDefensiveMine(scoutingManager->startingChokePosition + BWAPI::Position(mines.size()*5, mines.size()*5)); 
+			vulture->isOcupied = true; 
+		}
+		else {
+			vulture->isOcupied = false; 
+			if (!stayingOutOfRangeFromEnemy(u->unit, 120)) {
 
-		if (!stayingOutOfRangeFromEnemy(u->unit, 120)){
+				if (!defendingBase(1000, u->unit) && shouldAttack) {
 
-			if (!defendingBase(1000, u->unit) && shouldAttack) {
+					attackNearestEnemy(u->unit);
 
-				attackNearestEnemy(u->unit);
-
-				//u->putDownMineIfOutsideOfBase(); 
+					//u->putDownMineIfOutsideOfBase(); 
+				}
 			}
 		}
 	}
@@ -266,7 +276,7 @@ void CombatManager::executeOrders() {
 	}
 
 	for (auto &u : getAllCombatUnits()) {
-		if ((*u->unit)->isIdle() && shouldAttack ) {
+		if ((*u->unit)->isIdle() && shouldAttack && !u->isOcupied) {
 			(*u->unit)->move(attackLocation);
 		}
 	}

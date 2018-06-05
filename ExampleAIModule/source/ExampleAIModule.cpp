@@ -31,11 +31,11 @@ void ExampleAIModule::onStart()
 	unitManager = new UnitManager();
 	constructionManager = new ConstructionManager();
 	executionManager = new ExecutionManager();
-	combatManager = new CombatManager();
+	
 	mapData = new MapData();
 	scoutingManager = new ScoutingManager(BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation()), mapData);
 	strategyManager = new StrategyManager();
-	 
+	combatManager = new CombatManager();
 
 	// Setting cross-references:
 	strategyManager->scoutingManager = scoutingManager;
@@ -45,6 +45,7 @@ void ExampleAIModule::onStart()
 	constructionManager->scoutingManager = scoutingManager; 
 	scoutingManager->buildingManager = buildingManager; 
 	combatManager->buildingManager = buildingManager;
+	combatManager->scoutingManager = scoutingManager; 
 	
 
 	//Make managers aware of each other
@@ -115,6 +116,7 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 
 		else if ((*u)->getType() == UnitTypes::Terran_Siege_Tank_Tank_Mode)
 			(*unitManager).addUnit(u);
+		
 
 		else if ((*u)->getType().isBuilding()) {
 			buildingManager->buildingCreated(u);
@@ -127,6 +129,10 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 
 void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 {
+	BWAPI::Unit* u = new Unit(unit);
+	if ((*u)->getType() == UnitTypes::Terran_Vulture_Spider_Mine) {
+		(*unitManager).addUnit(u);
+	}
 	if (Broodwar->isReplay())
 	{
 		// if we are in a replay, then we will print out the build order of the structures

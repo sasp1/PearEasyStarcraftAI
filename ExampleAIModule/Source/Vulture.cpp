@@ -38,3 +38,17 @@ void Vulture::putDownMineIfOutsideOfBase() {
 bool Vulture::isUnitIdle() {
 	return (*unit)->isIdle();
 }
+
+void Vulture::layDownDefensiveMine(BWAPI::Position targetPosition)
+{
+		if ((*unit)->canUseTech(TechTypes::Spider_Mines, targetPosition)) {
+			hasLayedDownDefensiveMine = (*unit)->useTech(BWAPI::TechTypes::Spider_Mines, targetPosition);;
+			if (hasLayedDownDefensiveMine && (*unit)->getSpellCooldown() > 0) {
+				Broodwar->sendText("Has now used mine");
+				isOcupied = false; 
+			}
+				
+
+		}
+		
+}
