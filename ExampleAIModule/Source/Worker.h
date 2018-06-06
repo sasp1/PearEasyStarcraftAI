@@ -20,4 +20,6 @@ public:
 	void Worker::stop();
 	bool Worker::handleBuild();
 	bool isOcupied(); 
+	BWAPI::Position pos;
+	BWAPI::TilePosition tilePos;
 };

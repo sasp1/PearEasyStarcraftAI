@@ -30,28 +30,20 @@ void ConstructionManager::executeOrders() {
 	//Loops through all builders. If builder is idle, and a certain time has passed
 	//it is assigned back to the gatheringManager.
 	for (auto &b : builders) {
+		if (b == NULL) {
+			builders.remove(b);
+			break;
+		}
 		if (b->unit == NULL) {
 			builders.remove(b);
-			continue;
-		}
-		if (b->isOverTime(500) && b->isUnitIdle()) {
-			unitManager->newWorker(b->unit);
+			break;
+		} 
+		else if (b->handleBuild()) {
+			const BWAPI::Unit* u = new Unit();
+			u = b->unit;
 			builders.remove(b);
-		}
-	}
-
-	/* Issues order to idle worker to construct building.
-	If construction is a refinery, special order is íssued.
-	*/
-
-	if (NULL != (constructionsWorker) && (*constructionsWorker)->isIdle()) {
-
-		if (orderedBuilding == UnitTypes::Terran_Refinery) {
-			buildRefinery(constructionsWorker);
-		}
-		else {
-			TilePosition targetBuildLocation = Broodwar->getBuildLocation(orderedBuilding, (*constructionsWorker)->getTilePosition());
-			(*constructionsWorker)->build(orderedBuilding, targetBuildLocation);
+			unitManager->newWorker(u);
+			break;
 		}
 	}
 }
@@ -65,35 +57,37 @@ void ConstructionManager::executeOrders() {
 void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::Unit* worker) {
 	/*Order received from unitManager.
 	Saves building and worker, and issues order to worker to begin construction at available location. */
+	(*worker)->stop();
 
 	//Save order params, and stops worker action
-
-	if (NULL != worker) {
-		constructionsWorker = worker;
-		(*worker)->stop();
+	if (building == BWAPI::UnitTypes::Terran_Command_Center) {
+		expandBase(worker);
+	}
+	//Save order params, and stops worker action
+	else if (building == BWAPI::UnitTypes::Terran_Refinery) {
+		buildRefinery(worker);
+	}
+	else {
 		Worker* t = new Worker(worker);
-		t->time = Broodwar->getFrameCount();
+		t->buildOrder = building;
+		t->workState = 2;
 		builders.push_back(t);
-		orderedBuilding = (building);
 	}
 }
 
-void ConstructionManager::expandBase(BWAPI::Position pos, BWAPI::Unit* worker) {
+void ConstructionManager::expandBase(const BWAPI::Unit* worker) {
 
+	BWAPI::Position p = scoutingManager->expandBasePosition;
 
-
-
+	Worker* w = new Worker(worker);
+	w->buildOrder = UnitTypes::Terran_Command_Center;
+	w->pos = p;
+	w->workState = 2;
+	builders.push_back(w);
 }
 
-/**
-* Used to construct a refinery, which only can exist at a geyser node
-* @param worker Unit worker assigned to this building
-* @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
-*/
 void ConstructionManager::buildRefinery(const BWAPI::Unit* worker) {
-	//Find location of nearest geyser, and gets worker to build refinery on top of it.
 
-	//Initializing variable, and sets distance to be virtually unllimited units away.
 	BWAPI::Unit* gasLocation = new Unit();
 	int distance = 10000;
 
@@ -106,17 +100,23 @@ void ConstructionManager::buildRefinery(const BWAPI::Unit* worker) {
 		}
 	}
 
+
 	//If geyser is found, construct at location
 	if (distance != 10000) {
 		BWAPI::Position pos = (*gasLocation)->getPosition();
-		TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Refinery, (*gasLocation)->getTilePosition());
-		(*worker)->build(UnitTypes::Terran_Refinery, targetBuildLocation);
+		TilePosition tLoc = Broodwar->getBuildLocation(UnitTypes::Terran_Refinery, (*gasLocation)->getTilePosition());
+		Worker* w = new Worker(worker);
+		w->buildOrder = UnitTypes::Terran_Refinery;
+		w->tilePos = tLoc;
+		w->pos = (*gasLocation)->getPosition();
+		w->workState = 2;
+		builders.push_back(w);
 	}
 }
 
 ConstructionManager::ConstructionManager()
 {
-	constructionsWorker = NULL;
+	
 }
 
 ConstructionManager::~ConstructionManager()

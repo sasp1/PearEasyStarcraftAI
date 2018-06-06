@@ -87,17 +87,46 @@ void GatheringManager::executeOrders() {
 		splitWorkers();
 	}
 
-	//Distribute gas and mineral-workers
-	const BWAPI::Unit* worker;
-	if (gasWorkers < gasWorkerLimit && gas != NULL) {
-		allocateWorker(true);
-		Broodwar->sendText("added worker to gas list");
-	}
-	else if (gasWorkers > gasWorkerLimit) {
-		allocateWorker(false);
-		Broodwar->sendText("added worker to mineral list");
+	bool foundError = false;
+	gasWorkers = 0;
+	mineralWorkers = 0;
+
+	for (auto &w : workers) {
+		if (w == NULL) {
+			workers.remove(w);
+			foundError = true;
+			break;
+		}
+		else if (!w->isValid()) {
+			workers.remove(w);
+			foundError = true;
+			break;
+		}
+		else
+			if (w->workState == 0) mineralWorkers++;
+			else if (w->workState == 1) gasWorkers++;
+			w->collect();
 	}
 
+	if (!foundError) {
+
+		if ((Broodwar->self()->gas()) > (Broodwar->self()->minerals() + 500)) {
+			gasWorkerLimit = 0;
+		}
+		else {
+			gasWorkerLimit = 4;
+		}
+
+		if (gasWorkers < gasWorkerLimit && gas != NULL) {
+			allocateWorker(true);
+			Broodwar->sendText("added worker to gas list");
+		}
+		else if (gasWorkers > gasWorkerLimit) {
+			allocateWorker(false);
+			Broodwar->sendText("added worker to mineral list");
+		}
+	}
+	
 	//Simple look for refinery (handling if the gas is not defined)
 	if (gas == NULL) {
 		for (auto &u : Broodwar->getAllUnits()) {
@@ -108,30 +137,6 @@ void GatheringManager::executeOrders() {
 				}
 			}
 		}
-	}
-
-	//Update count
-	gasWorkers = 0;
-	mineralWorkers = 0;
-
-	//Make workers collect respective rescource
-	for (auto &w : workers) {
-
-		if (!w->isValid()) {
-			workers.remove(w);
-		}
-		else
-			if (w->workState == 0) mineralWorkers++;
-			else if (w->workState == 1) gasWorkers++;
-			w->collect();
-	}
-
-	// Update limit to number of gasworkers: 
-	if ((Broodwar->self()->gas()) > (Broodwar->self()->minerals() + 500)) {
-		gasWorkerLimit = 0;
-	}
-	else {
-		gasWorkerLimit = 4;
 	}
 }
 
