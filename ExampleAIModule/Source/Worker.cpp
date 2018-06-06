@@ -34,10 +34,6 @@ void Worker::replaceUnit(const BWAPI::Unit* worker) {
 
 bool Worker::handleBuild() {
 
-
-	if ((*unit)->getBuildType() != BWAPI::UnitTypes::None && (*unit)->getTarget() != NULL)
-		Broodwar->sendText("%s", (*unit)->getBuildType().c_str());
-
 	if (buildOrder == BWAPI::UnitTypes::Terran_Command_Center)
 	{
 		if (workState == 2) {
