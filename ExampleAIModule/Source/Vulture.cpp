@@ -39,17 +39,22 @@ bool Vulture::isUnitIdle() {
 	return (*unit)->isIdle();
 }
 
+bool Vulture::canUseMine() {
+	return (*unit)->canUseTechWithOrWithoutTarget(TechTypes::Spider_Mines); 
+}
+
+bool Vulture::isOcupied() {
+	if (startTime + 50 < Broodwar->getFrameCount()) {
+		return false;
+	}
+	return true; 
+}
+
 void Vulture::layDownDefensiveMine(BWAPI::Position targetPosition)
 {
-	BWAPI::Position pos = targetPosition + Position(counter, counter); 
-		(*unit)->useTech(BWAPI::TechTypes::Spider_Mines, pos); 
-		Broodwar->sendText("Tried to lay down at %d,%d", pos.x, pos.y); 
-
-		if (!((*unit)->getSpellCooldown() > 5)) {
-			hasLayedDownDefensiveMine = true; 
-		}
-		if (counter > 40) {
-			counter = 0; 
-		}
-		
+	
+		hasBeenOcupied++; 
+		startTime = Broodwar->getFrameCount();
+		(*unit)->useTech(BWAPI::TechTypes::Spider_Mines, targetPosition);
+	
 }

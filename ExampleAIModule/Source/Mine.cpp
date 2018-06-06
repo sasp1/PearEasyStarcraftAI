@@ -8,3 +8,9 @@ Mine::Mine(const Unit * u) : CustomUnit(u)
 		Broodwar->sendText("ERROR, tried to assign non-mine unit to mine object!!!");
 	}
 }
+
+bool Mine::isOcupied()
+{
+	return false;
+}
+

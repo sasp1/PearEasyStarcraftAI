@@ -14,6 +14,7 @@ int strategy = 1;
 int numberOfWorkersLimit = 22;
 int supplyUsed = 0; 
 bool tanksAreDesiredToBuild;
+bool hasExpanded = false;
 
 void StrategyManager::calculateOrders() {
 	supplyUsed = Broodwar->self()->supplyUsed() / 2;
@@ -155,14 +156,25 @@ void StrategyManager::executeExpandWithOneFactory() {
 		supplyDepotsAreNotUnderConstruction = false;
 	}
 
+
 	//Maintain 3 factories  AND EXPAND BASE!!!!!!
-	
+
+	if (Broodwar->self()->supplyUsed() >= 72 && !hasExpanded && Broodwar->self()->minerals() > 400 && factoriesOrdered >= 3) {
+		BWAPI::UnitType building = UnitTypes::Terran_Command_Center;
+		numberOfWorkersLimit *= 2;
+		Broodwar->sendText("adding command center to priorityQueue");
+		executionManager->addPriorityItem(building);
+		hasExpanded = true;
+	}
+
 	if (Broodwar->self()->supplyUsed() >= 72 && factoriesOrdered < 3) {
 		Broodwar->sendText("adding factory to priorityQueue");
 		BWAPI::UnitType building = UnitTypes::Terran_Factory;
 		executionManager->addPriorityItem(building);
 		factoriesOrdered++;
 	}
+
+
 	
 	// Desire Siege Mode for tanks
 	if (!hasResearchedSiegeMode && EnemyHasAStructureMakingTanksRequired()) {

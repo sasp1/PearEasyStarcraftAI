@@ -298,23 +298,23 @@ void CombatManager::executeOrders() {
 		Vulture* vulture = dynamic_cast<Vulture*>(u); 
 		int i = rand() % 6 + 1;
 		int i2 = rand() % 6 + 1;
-		if (!vulture->hasLayedDownDefensiveMine && mines.size() < 3 && (*vulture->unit)->getDistance(scoutingManager->startingChokePosition) < 25) {
-			vulture->layDownDefensiveMine(scoutingManager->startingChokePosition + BWAPI::Position(mines.size()*8 + i, mines.size()*8 + i2)); 
-			Broodwar->sendText("Number of spidermines: %d", mines.size());			
+		
+		
+		if (vulture->canUseMine() && vulture->hasBeenOcupied == 0 && mines.size() < 10 && (*vulture->unit)->getDistance(scoutingManager->startingChokePosition) < 50) {
+			vulture->layDownDefensiveMine(scoutingManager->startingChokePosition + Position(mines.size()*5, mines.size()*5));
 		}
-		else {
+		else if (!vulture->isOcupied()){
+			if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
 
-			if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)){
-
-						if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
-
-
+				if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
 					attackNearestEnemy(u->unit);
 
-					//u->putDownMineIfOutsideOfBase(); 
+					
 				}
 			}
-		}
+
+		
+		} 
 	}
 
 	for (auto &u : tanks) {
@@ -346,7 +346,7 @@ void CombatManager::executeOrders() {
 	}
 
 	for (auto &u : getAllCombatUnits()) {
-		if ((*u->unit)->isIdle() && shouldAttack && !u->isOcupied) {
+		if ((*u->unit)->isIdle() && shouldAttack && !u->isOcupied()) {
 			(*u->unit)->move(attackLocation);
 		}
 	}

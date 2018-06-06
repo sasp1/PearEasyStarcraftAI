@@ -13,4 +13,9 @@ public:
 	bool Vulture::isUnitIdle();
 	void layDownDefensiveMine(BWAPI::Position targetPosition); 
 	bool hasLayedDownDefensiveMine = false; 
+	bool ocupiedLayingDownMine = false; 
+	int startTime = 0; 
+	int hasBeenOcupied = 0; 
+	bool isOcupied();
+	bool canUseMine(); 
 };

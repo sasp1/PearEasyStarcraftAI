@@ -9,3 +9,8 @@ Marine::Marine(const Unit * u) : CustomUnit(u)
 	}
 }
 
+bool Marine::isOcupied()
+{
+	return false;
+}
+

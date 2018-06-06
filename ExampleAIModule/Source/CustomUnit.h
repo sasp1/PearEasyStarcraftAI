@@ -7,5 +7,5 @@ public:
 	virtual bool isValid(); 
 	CustomUnit(const BWAPI::Unit* u); 
 	const BWAPI::Unit* unit; 
-	bool isOcupied = false; 
+	virtual bool isOcupied() = 0; 
 };
