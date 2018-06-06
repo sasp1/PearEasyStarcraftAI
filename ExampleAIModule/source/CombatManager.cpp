@@ -74,10 +74,10 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 		BWAPI::Unit desiredUnitToAttack = NULL;
 
 		//TERRAN V PROTOSS________________________________________________
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Zealot, 300);
+		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Dragoon, 300);
 
 		if (desiredUnitToAttack == NULL) {
-			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Dragoon, 300);
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Zealot, 300);
 		}
 
 		if (desiredUnitToAttack == NULL && ((*unit)->getType() == UnitTypes::Terran_Siege_Tank_Tank_Mode || (*unit)->getType() == UnitTypes::Terran_Siege_Tank_Siege_Mode)) {
