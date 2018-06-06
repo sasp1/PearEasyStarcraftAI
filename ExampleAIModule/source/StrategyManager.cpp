@@ -132,7 +132,8 @@ void StrategyManager::executeExpandWithOneFactory() {
 	}
 
 	//Spam voltures when no cannons are discovered
-	if ((tanksAreDesiredToBuild || EnemyHasAStructureMakingTanksRequired()) && combatManager->tanks._Mysize() <= 4) { // OR NumberOfTanks >=2
+	if (((tanksAreDesiredToBuild || EnemyHasAStructureMakingTanksRequired()) && combatManager->tanks._Mysize() <= 4) || 
+			(Broodwar->self()->minerals() > 500 && Broodwar->self()->gas() > 500 && combatManager->vultures._Mysize() >= 10)) { // OR NumberOfTanks >=2
 		tanksAreDesiredToBuild = true;
 		Broodwar->sendText("Building tanks");
 		buildingManager->factoryBuild = UnitTypes::Terran_Siege_Tank_Tank_Mode;
@@ -165,7 +166,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 	
 	// Desire Siege Mode for tanks
 	if (!hasResearchedSiegeMode && EnemyHasAStructureMakingTanksRequired()) {
-		Broodwar->sendText("adding SiegeMode to priorityQueue!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+		Broodwar->sendText("adding SiegeMode to priorityQueue");
 		BWAPI::TechType research = TechTypes::Tank_Siege_Mode;
 		buildingManager->desiredResearchs.push_back(research);
 		hasResearchedSiegeMode = true;
@@ -181,7 +182,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 	else if (combatManager->vultures._Mysize() >= 8 && Broodwar->enemy()->getRace() == Races::Terran) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 	}
-	else if (combatManager->vultures._Mysize() >= 8 && Broodwar->enemy()->getRace() == Races::Zerg) {
+	else if (combatManager->vultures._Mysize() >= 4 && Broodwar->enemy()->getRace() == Races::Zerg) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 	} //else if MySize = 1-2 ... set false... retreat...
 
