@@ -39,6 +39,8 @@ void GatheringManager::allocateWorker(bool addToGas) {
 	bool alloc = false;
 	for (auto &w : workers) {
 
+		if (alloc) break;
+
 		if (addToGas && !alloc) {
 			if (w->workState == 0) {
 				w->workState = 1;
@@ -102,21 +104,21 @@ void GatheringManager::executeOrders() {
 			foundError = true;
 			break;
 		}
-		else
+		else {
+
 			if (w->workState == 0) mineralWorkers++;
 			else if (w->workState == 1) gasWorkers++;
 			w->collect();
+		}
 	}
 
 	if (!foundError) {
-
-		if ((Broodwar->self()->gas()) > (Broodwar->self()->minerals() + 500)) {
+		if(gasWorkerLimit == 4 && (Broodwar->self()->gas()) > (Broodwar->self()->minerals() + 500))
 			gasWorkerLimit = 0;
-		}
-		else {
-			gasWorkerLimit = 4;
-		}
 
+		else if (gasWorkerLimit == 4 && (Broodwar->self()->gas()) < (Broodwar->self()->minerals() + 300))
+			gasWorkerLimit = 0;
+	
 		if (gasWorkers < gasWorkerLimit && gas != NULL) {
 			allocateWorker(true);
 			Broodwar->sendText("added worker to gas list");
