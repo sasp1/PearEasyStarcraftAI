@@ -335,12 +335,8 @@ void CombatManager::executeOrders() {
 
 				if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
 					attackNearestEnemy(u->unit);
-
-					
 				}
 			}
-
-		
 		} 
 	}
 

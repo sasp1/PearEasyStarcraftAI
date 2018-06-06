@@ -163,6 +163,8 @@ void StrategyManager::executeExpandWithOneFactory() {
 		numberOfWorkersLimit *= 2;
 		Broodwar->sendText("adding command center to priorityQueue");
 		executionManager->addPriorityItem(building);
+		executionManager->addPriorityItem(BWAPI::UnitTypes::Terran_Refinery);
+
 		hasExpanded = true;
 	}
 

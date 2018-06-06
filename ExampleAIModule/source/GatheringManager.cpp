@@ -77,10 +77,14 @@ void GatheringManager::splitWorkers() {
 const BWAPI::Unit* GatheringManager::removeWorker() {
 	//Lose control of a worker
 
-	Worker* w = workers.back();
-	Worker* newW = new Worker(w->unit);
-	workers.pop_back();
-	return newW->unit;
+	const BWAPI::Unit* u = new Unit();
+		for (auto &w : workers) {
+			if (w->workState == 0) {
+				u = w->unit;
+				workers.remove(w);
+				return u;
+			}
+		}
 }
 
 void GatheringManager::executeOrders() {
@@ -99,13 +103,12 @@ void GatheringManager::executeOrders() {
 			foundError = true;
 			break;
 		}
-		else if (!w->isValid()) {
+		else if (!w->isValid() || !((w->workState == 0) || (w->workState == 1))) {
 			workers.remove(w);
 			foundError = true;
 			break;
 		}
 		else {
-
 			if (w->workState == 0) mineralWorkers++;
 			else if (w->workState == 1) gasWorkers++;
 			w->collect();
