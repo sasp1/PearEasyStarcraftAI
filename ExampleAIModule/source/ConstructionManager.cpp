@@ -122,7 +122,6 @@ void ConstructionManager::buildRefinery(const BWAPI::Unit* worker) {
 		}
 	}
 
-
 	//If geyser is found, construct at location
 	if (distance != 10000) {
 		BWAPI::Position pos = (*gasLocation)->getPosition();

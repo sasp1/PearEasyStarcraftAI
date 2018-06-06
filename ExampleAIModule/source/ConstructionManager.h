@@ -5,6 +5,7 @@
 class UnitManager;
 class ScoutingManager; 
 class GatheringManager;
+class Worker;
 
 class ConstructionManager
 {	
