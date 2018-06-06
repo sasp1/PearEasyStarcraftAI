@@ -82,6 +82,7 @@ bool Worker::handleBuild() {
 				addToSpiral();
 				tilePos = Broodwar->getBuildLocation(buildOrder, (*unit)->getTilePosition() + TilePosition(lX, lY));
 				foundLoc = (*unit)->build(buildOrder, tilePos);
+				//Broodwar->drawCircleMap(tilePos, 20, Color::green, true);
 			}
 			else {
 				foundLoc = (*unit)->build(buildOrder, tilePos);
