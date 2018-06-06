@@ -1,5 +1,6 @@
 #include "CombatManager.h"
 #include <BWAPI.h>
+#include "Worker.h"
 /**
 * @file CombatManager.cpp
 * @brief Controls the army, how it initiate combat and how units attack in combat.
