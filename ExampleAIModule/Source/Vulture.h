@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include "CustomUnit.h"
+using namespace BWAPI; 
 
 class Vulture : public CustomUnit
 {
@@ -15,6 +16,7 @@ public:
 	bool hasLayedDownDefensiveMine = false; 
 	bool ocupiedLayingDownMine = false; 
 	int startTime = 0; 
+	Unit* nearestHydra(int radius); 
 	int hasBeenOcupied = 0; 
 	bool isOcupied();
 	bool canUseMine(); 
