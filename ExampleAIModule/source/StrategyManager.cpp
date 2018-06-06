@@ -158,12 +158,12 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 	//Maintain 3 factories  AND EXPAND BASE!!!!!!
 
-	if (Broodwar->self()->supplyUsed() >= 72 && !hasExpanded && Broodwar->self()->minerals() > 400 && factoriesOrdered >= 3) {
+	if (Broodwar->self()->supplyUsed() >= 72 && !hasExpanded && Broodwar->self()->minerals() > 400 && factoriesOrdered >= 3 && Broodwar->enemy()->getRace() != Races::Terran) {
 		BWAPI::UnitType building = UnitTypes::Terran_Command_Center;
 		numberOfWorkersLimit *= 2;
 		Broodwar->sendText("adding command center to priorityQueue");
 		executionManager->addPriorityItem(building);
-		executionManager->addPriorityItem(BWAPI::UnitTypes::Terran_Refinery);
+		//executionManager->addPriorityItem(BWAPI::UnitTypes::Terran_Refinery);
 
 		hasExpanded = true;
 	}
@@ -194,7 +194,8 @@ void StrategyManager::executeExpandWithOneFactory() {
 			unitManager->makeASCVHelpArmy();
 		}
 	}
-	else if (combatManager->vultures._Mysize() >= 8 && Broodwar->enemy()->getRace() == Races::Terran) {
+	else if (combatManager->vultures._Mysize() >= 8 && Broodwar->enemy()->getRace() == Races::Terran && scoutingManager->enemyBaseFound) {
+		Broodwar->sendText("ATTACK");
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 	}
 	else if (combatManager->vultures._Mysize() >= 1 && Broodwar->enemy()->getRace() == Races::Zerg) {
@@ -205,7 +206,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 bool StrategyManager::EnemyHasAStructureMakingTanksRequired() {
 	for (auto &eu : Broodwar->enemy()->getUnits()) {
-		if ((*eu).getType() == UnitTypes::Protoss_Photon_Cannon || (*eu).getType() == UnitTypes::Terran_Bunker ) {
+		if ((*eu).getType() == UnitTypes::Protoss_Photon_Cannon ) {
 			return true;
 		}
 	}
@@ -222,7 +223,7 @@ void StrategyManager::unitComplete(const BWAPI::Unit* unit) {
 
 void StrategyManager::onUnitDestroy(BWAPI::Unit unit) {
 	if (unit->getPlayer()->isEnemy(Broodwar->self())) {
-		if (unit->getType() == UnitTypes::Protoss_Photon_Cannon || unit->getType() == UnitTypes::Terran_Bunker) {
+		if (unit->getType() == UnitTypes::Protoss_Photon_Cannon ) {
 			Broodwar->sendText("Cannon killed");
 			tanksAreDesiredToBuild = false;
 
