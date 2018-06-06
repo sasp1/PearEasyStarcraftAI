@@ -34,10 +34,6 @@ void Worker::replaceUnit(const BWAPI::Unit* worker) {
 
 bool Worker::handleBuild() {
 
-
-	if ((*unit)->getBuildType() != BWAPI::UnitTypes::None && (*unit)->getTarget() != NULL)
-		Broodwar->sendText("%s", (*unit)->getBuildType().c_str());
-
 	if (buildOrder == BWAPI::UnitTypes::Terran_Command_Center)
 	{
 		if (workState == 2) {
@@ -82,10 +78,13 @@ bool Worker::handleBuild() {
 				addToSpiral();
 				tilePos = Broodwar->getBuildLocation(buildOrder, (*unit)->getTilePosition() + TilePosition(lX, lY));
 				foundLoc = (*unit)->build(buildOrder, tilePos);
-				//Broodwar->drawCircleMap(tilePos, 20, Color::green, true);
+				BWAPI::Position p = Position(tilePos);
+				Broodwar->drawCircleMap(p, 30, Colors::Cyan, true);
 			}
 			else {
 				foundLoc = (*unit)->build(buildOrder, tilePos);
+				BWAPI::Position p = Position(tilePos);
+				Broodwar->drawCircleMap(p, 30, Colors::Cyan, true);
 			}
 		}
 	}
