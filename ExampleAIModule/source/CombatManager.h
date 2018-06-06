@@ -32,6 +32,8 @@ public:
 
 	void CombatManager::returnAllUnitsToBase();
 	bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit * unit, const BWAPI::Unit* enemyUnit);
+	bool CombatManager::isMelee(const BWAPI::Unit* unit);
+
 	std::list<CustomUnit*> CombatManager::getAllCombatUnits();
 
 	CombatManager();
