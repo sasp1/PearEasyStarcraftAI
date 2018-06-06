@@ -32,18 +32,18 @@ void ConstructionManager::executeOrders() {
 	for (auto &b : builders) {
 		if (b == NULL) {
 			builders.remove(b);
-			continue;
+			break;
 		}
 		if (b->unit == NULL) {
 			builders.remove(b);
-			continue;
+			break;
 		} 
 		else if (b->handleBuild()) {
 			const BWAPI::Unit* u = new Unit();
 			u = b->unit;
 			builders.remove(b);
 			unitManager->newWorker(u);
-			continue;
+			break;
 		}
 	}
 }
@@ -72,7 +72,6 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 		t->buildOrder = building;
 		t->workState = 2;
 		builders.push_back(t);
-		
 	}
 }
 

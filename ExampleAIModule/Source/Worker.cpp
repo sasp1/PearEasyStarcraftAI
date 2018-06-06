@@ -25,13 +25,16 @@ bool Worker::handleBuild() {
 
 	if (buildOrder == BWAPI::UnitTypes::Terran_Command_Center)
 	{
+		
 		if (workState == 2) {
+			Broodwar->sendText("CC 2");
 			int dist = (*unit)->getDistance(pos);
-			if (dist < 2000) workState = 3;
+			if (dist < 20) workState = 3;
 			else (*unit)->move(pos);
 		}
 		else if (workState == 3) {
 			if ((*unit)->isConstructing()) {
+				Broodwar->sendText("CC 3");
 				workState = 4;
 				time = Broodwar->getFrameCount();
 			}
@@ -106,6 +109,4 @@ void Worker::collect() {
 				(*unit)->returnCargo();
 			}
 		}	
-
-	else Broodwar->sendText("Idle");
 }

@@ -95,12 +95,12 @@ void GatheringManager::executeOrders() {
 		if (w == NULL) {
 			workers.remove(w);
 			foundError = true;
-			continue;
+			break;
 		}
 		else if (!w->isValid()) {
 			workers.remove(w);
 			foundError = true;
-			continue;
+			break;
 		}
 		else
 			if (w->workState == 0) mineralWorkers++;
@@ -117,7 +117,6 @@ void GatheringManager::executeOrders() {
 			gasWorkerLimit = 4;
 		}
 
-		const BWAPI::Unit* worker;
 		if (gasWorkers < gasWorkerLimit && gas != NULL) {
 			allocateWorker(true);
 			Broodwar->sendText("added worker to gas list");
