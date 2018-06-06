@@ -34,17 +34,31 @@ void ConstructionManager::executeOrders() {
 			builders.remove(b);
 			break;
 		}
-		if (b->unit == NULL) {
+		else if (b->unit == NULL) {
 			builders.remove(b);
 			break;
 		} 
 		else if (b->handleBuild()) {
 			const BWAPI::Unit* u = new Unit();
 			u = b->unit;
-			builders.remove(b);
 			unitManager->newWorker(u);
+			builders.remove(b);
 			break;
 		}
+	}
+}
+
+void ConstructionManager::constructiondBegun(BWAPI::Unit build) {
+
+	const BWAPI::Unit* newBuild = new Unit(build);
+	bool isAssigned = false;
+
+	for (auto &u : builders) {
+		if (u->construct == NULL && ((*newBuild)->getType() == u->buildOrder)) {
+			u->construct = newBuild;
+			isAssigned = true;
+		}
+		if (isAssigned) break;
 	}
 }
 
@@ -75,6 +89,13 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 	}
 }
 
+void ConstructionManager::requestFromDead(Worker* w) {
+
+	w->unit = gatheringManager->removeWorker();
+
+
+}
+
 void ConstructionManager::expandBase(const BWAPI::Unit* worker) {
 
 	BWAPI::Position p = scoutingManager->expandBasePosition;
@@ -91,12 +112,14 @@ void ConstructionManager::buildRefinery(const BWAPI::Unit* worker) {
 	BWAPI::Unit* gasLocation = new Unit();
 	int distance = 10000;
 
+	const BWAPI::Unit* cc = buildingManager->commandCenters.back()->unit;
+
 	//Loop through all geysers, and if distance is smaller than last target, set this as new build target.
 	for (auto &u : Broodwar->getGeysers())
 	{
-		if ((*worker)->getDistance(u) < distance) {
+		if ((*cc)->getDistance(u) < distance) {
 			*gasLocation = u;
-			distance = (*worker)->getDistance(u);
+			distance = (*cc)->getDistance(u);
 		}
 	}
 
@@ -116,7 +139,6 @@ void ConstructionManager::buildRefinery(const BWAPI::Unit* worker) {
 
 ConstructionManager::ConstructionManager()
 {
-	
 }
 
 ConstructionManager::~ConstructionManager()
