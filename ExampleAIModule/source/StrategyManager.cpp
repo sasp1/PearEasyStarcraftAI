@@ -205,7 +205,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 bool StrategyManager::EnemyHasAStructureMakingTanksRequired() {
 	for (auto &eu : Broodwar->enemy()->getUnits()) {
-		if ((*eu).getType() == UnitTypes::Protoss_Photon_Cannon) {
+		if ((*eu).getType() == UnitTypes::Protoss_Photon_Cannon || (*eu).getType() == UnitTypes::Terran_Bunker ) {
 			return true;
 		}
 	}
@@ -222,7 +222,7 @@ void StrategyManager::unitComplete(const BWAPI::Unit* unit) {
 
 void StrategyManager::onUnitDestroy(BWAPI::Unit unit) {
 	if (unit->getPlayer()->isEnemy(Broodwar->self())) {
-		if (unit->getType() == UnitTypes::Protoss_Photon_Cannon) {
+		if (unit->getType() == UnitTypes::Protoss_Photon_Cannon || unit->getType() == UnitTypes::Terran_Bunker) {
 			Broodwar->sendText("Cannon killed");
 			tanksAreDesiredToBuild = false;
 

@@ -102,6 +102,7 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 
 		//TERRAN V TERRAN________________________________________________
 
+
 		if (desiredUnitToAttack == NULL) {
 			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Siege_Mode, 300);
 		}
@@ -124,6 +125,10 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 
 		if (desiredUnitToAttack == NULL) {
 			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_SCV, 300);
+		}
+
+		if (desiredUnitToAttack == NULL && (*unit)->getType() == UnitTypes::Terran_Siege_Tank_Siege_Mode) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Bunker, UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange());
 		}
 
 
@@ -202,7 +207,7 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 	//First check if unit are within critical range of a cannonn
 	for (auto &eu : (*unit)->getUnitsInRadius(UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() + UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange()/5)) {
 		
-		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && (*eu).getType() == UnitTypes::Protoss_Photon_Cannon) {
+		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && ( (*eu).getType() == UnitTypes::Protoss_Photon_Cannon || (*eu).getType() == UnitTypes::Terran_Bunker )) {
 
 			BWAPI::Position movePosition = (*unit)->getPosition() - (((*eu).getPosition() - (*unit)->getPosition()));
 			(*unit)->move(movePosition);
