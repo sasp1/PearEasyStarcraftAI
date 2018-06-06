@@ -74,20 +74,19 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 		BWAPI::Unit desiredUnitToAttack = NULL;
 
 		//TERRAN V PROTOSS________________________________________________
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Zealot, 300);
+		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Dragoon, 300);
 
 		if (desiredUnitToAttack == NULL) {
-			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Dragoon, 300);
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Zealot, 300);
 		}
 
 		if (desiredUnitToAttack == NULL && ((*unit)->getType() == UnitTypes::Terran_Siege_Tank_Tank_Mode || (*unit)->getType() == UnitTypes::Terran_Siege_Tank_Siege_Mode)) {
-			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Photon_Cannon, 1000);
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Photon_Cannon, UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange());
 		}
 
 		if (desiredUnitToAttack == NULL) {
 			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Probe, 300);
 		}
-
 
 
 
@@ -116,6 +115,23 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 		if (desiredUnitToAttack == NULL) {
 			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_SCV, 300);
 		}
+
+
+		//TERRAN V ZERG _________________________________________
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Zerg_Hydralisk, 300);
+		}
+
+		if (desiredUnitToAttack == NULL ) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Zerg_Zergling, 300);
+		}
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Zerg_Hydralisk_Den, 300);
+		}
+
+
+		//If all fails: get nearest enemy ... and attack!
 
 		if (desiredUnitToAttack == NULL) {
 			desiredUnitToAttack = (*unit)->getClosestUnit(IsEnemy);
@@ -155,12 +171,21 @@ BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::
 }
 
 bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit* unit, const BWAPI::Unit* enemyUnit) {
-	int enemyWeaponRange = (*unit)->getType().groundWeapon().maxRange(); 
+	int enemyWeaponRange = (*enemyUnit)->getType().groundWeapon().maxRange(); 
+	int unitWeaponRangeMinus5Pct = (*unit)->getType().groundWeapon().maxRange() - ((*unit)->getType().groundWeapon().maxRange()/20);
 	int distanceToEnemy= (*unit)->getPosition().getDistance((*enemyUnit)->getPosition()); 
-	
-	return (distanceToEnemy < enemyWeaponRange + 100); 
+
+	return (distanceToEnemy < unitWeaponRangeMinus5Pct); 
 
 }
+
+bool CombatManager::isMelee(const BWAPI::Unit* unit) {
+	return (*unit)->getType().groundWeapon().maxRange() <= (UnitTypes::Protoss_Zealot.groundWeapon().maxRange() * 5);
+
+
+}
+
+
 
 bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * unit, int range){
 	bool enemiesInCriticalRange = false;
@@ -186,9 +211,7 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 
 		centerOfMass = centerOfMass + ((*eu).getPosition() - (*unit)->getPosition()); 
 
-		//bool enemyIsRanged = (eu->isInWeaponRange(*unit)) && (eu->getDistance(*unit) > 20); !enemyIsRanged && !(eu->getType().isBuilding()) &&
-		if ((eu)->getPlayer()->isEnemy(Broodwar->self()) && isInEnemyCriticalRange(&eu, unit) && eu->getType() == UnitTypes::Protoss_Zealot) {
-			
+		if ((eu)->getPlayer()->isEnemy(Broodwar->self()) && isInEnemyCriticalRange(unit, &eu) && isMelee(&eu) && !(*eu).getType().isBuilding()) {
 			enemiesInCriticalRange = true;
 			centerOfMass = centerOfMass + ((*eu).getPosition() - (*unit)->getPosition()); // Lægges til igen grundet dobbelt vægt
 
@@ -285,12 +308,8 @@ void CombatManager::executeOrders() {
 
 				if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
 					attackNearestEnemy(u->unit);
-
-					
 				}
 			}
-
-		
 		} 
 	}
 
