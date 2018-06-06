@@ -160,7 +160,6 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 
 			//Variables sat so a new construction can be build, and the worker stops building
 			unitManager->newConstructionIsAvailable = true;
-			constructionManager->constructionsWorker = NULL;
 		}
 	}
 }

@@ -7,8 +7,6 @@ class ScoutingManager;
 
 class ConstructionManager
 {	
-	
-
 
 public:
 	ConstructionManager();
@@ -18,8 +16,7 @@ public:
 	const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing();
 	void ConstructionManager::executeOrders();
 	void ConstructionManager::buildRefinery(const BWAPI::Unit* worker);
-	void ConstructionManager::expandBase(BWAPI::Position pos, BWAPI::Unit* worker);
-	const BWAPI::Unit* constructionsWorker; 
+	void ConstructionManager::expandBase(const BWAPI::Unit* worker);
 	BuildingManager* buildingManager;
 	UnitManager* unitManager;
 	ScoutingManager* scoutingManager; 

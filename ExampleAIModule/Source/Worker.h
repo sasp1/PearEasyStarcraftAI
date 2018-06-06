@@ -19,4 +19,6 @@ public:
 	void Worker::collect();
 	void Worker::stop();
 	bool Worker::handleBuild();
+	BWAPI::Position pos;
+	BWAPI::TilePosition tilePos;
 };
