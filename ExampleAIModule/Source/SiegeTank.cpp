@@ -25,3 +25,8 @@ BWAPI::Unit SiegeTank::getUnit() {
 bool SiegeTank::isSiege() {
 	return BWAPI::UnitTypes::Terran_Siege_Tank_Siege_Mode == (*unit)->getType();
 }
+
+bool SiegeTank::isOcupied()
+{
+	return false;
+}

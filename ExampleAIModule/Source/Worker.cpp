@@ -33,6 +33,11 @@ bool Worker::handleBuild() {
 	return (workState == 4) && (*unit)->isIdle();
 }
 
+bool Worker::isOcupied()
+{
+	return false;
+}
+
 void Worker::collect() {
 
 		if (workState == 0 && (center != NULL)) {
