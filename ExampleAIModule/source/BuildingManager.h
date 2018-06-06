@@ -1,8 +1,9 @@
 #pragma once
 #include <BWAPI.h>
-#include "GatheringManager.h"
 #include "Building.h"
 #include "ScoutingManager.h"
+
+class GatheringManager;
 
 class BuildingManager
 {

@@ -4,6 +4,8 @@
 
 class UnitManager;
 class ScoutingManager; 
+class GatheringManager;
+class Worker;
 
 class ConstructionManager
 {	
@@ -20,8 +22,9 @@ public:
 	BuildingManager* buildingManager;
 	UnitManager* unitManager;
 	ScoutingManager* scoutingManager; 
+	GatheringManager* gatheringManager;
 	bool shouldExpandBase;
-	
-	
+	void ConstructionManager::requestFromDead(Worker* w);
+	void ConstructionManager::constructiondBegun(BWAPI::Unit build);
 };
 

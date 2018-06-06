@@ -1,5 +1,6 @@
 #include "CombatManager.h"
 #include <BWAPI.h>
+#include "Worker.h"
 /**
 * @file CombatManager.cpp
 * @brief Controls the army, how it initiate combat and how units attack in combat.
@@ -44,6 +45,13 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 	else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Vulture_Spider_Mine) {
 		CustomUnit* mine = new Mine(unit);
 		mines.push_back(mine);
+
+	}
+	else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_SCV) {
+		CustomUnit* worker = new Worker(unit);
+		workers.push_back(worker);
+		Broodwar->sendText("Worker added");
+
 	}
 
 	//combatUnits.push_back(unit);
@@ -62,6 +70,10 @@ std::list<CustomUnit*> CombatManager::getAllCombatUnits() {
 	}
 
 	for (auto &u : tanks) {
+		combatunits.push_back(u);
+	}
+
+	for (auto &u : workers) {
 		combatunits.push_back(u);
 	}
 
@@ -85,7 +97,9 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Zealot, 300);
 	}
 
+
 	if (desiredUnitToAttack == NULL && ((*unit)->getType() == UnitTypes::Terran_Siege_Tank_Tank_Mode || (*unit)->getType() == UnitTypes::Terran_Siege_Tank_Siege_Mode)) {
+
 		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Photon_Cannon, UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange());
 	}
 
@@ -96,6 +110,7 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 
 
 	//TERRAN V TERRAN________________________________________________
+
 
 	if (desiredUnitToAttack == NULL) {
 		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Siege_Mode, 300);
@@ -134,8 +149,6 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 	if (desiredUnitToAttack == NULL) {
 		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Zerg_Hydralisk_Den, 300);
 	}
-
-
 	//If all fails: get nearest enemy ... and attack!
 
 	if (desiredUnitToAttack == NULL) {
@@ -146,6 +159,8 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 		//Broodwar->sendText("%s", desiredUnitToAttack->getType().c_str());
 		(*unit)->attack(desiredUnitToAttack);
 	}
+
+	
 
 }
 
@@ -185,11 +200,10 @@ bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit* unit, const BWAPI:
 }
 
 bool CombatManager::isMelee(const BWAPI::Unit* unit) {
-	return (*unit)->getType().groundWeapon().maxRange() <= (UnitTypes::Protoss_Zealot.groundWeapon().maxRange() * 5);
+	return ((*unit)->getType().groundWeapon().damageAmount() > 2) && (*unit)->getType().groundWeapon().maxRange() <= (UnitTypes::Protoss_Zealot.groundWeapon().maxRange());
 
 
 }
-
 
 
 bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * unit, int range) {
@@ -198,7 +212,8 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 	//First check if unit are within critical range of a cannonn
 	for (auto &eu : (*unit)->getUnitsInRadius(UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() + UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() / 5)) {
 
-		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && (*eu).getType() == UnitTypes::Protoss_Photon_Cannon) {
+
+		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && ((*eu).getType() == UnitTypes::Protoss_Photon_Cannon )) {
 
 			BWAPI::Position movePosition = (*unit)->getPosition() - (((*eu).getPosition() - (*unit)->getPosition()));
 			(*unit)->move(movePosition);
@@ -209,8 +224,6 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 
 
 	//otherwise juke as normal
-
-
 	BWAPI::Position centerOfMass = Position(0, 0);
 	for (auto &eu : (*unit)->getUnitsInRadius(range)) {
 
@@ -297,6 +310,26 @@ bool CombatManager::fleeIfOutNumbered(Vulture* vulture) {
 	}
 	return false;
 }
+
+
+bool CombatManager::repairNearbyInjuredVehicles(const BWAPI::Unit * worker) {
+
+
+	for (auto &umech : (*worker)->getUnitsInRadius(1000, IsAlly)) {
+		//Broodwar->sendText("unit in radius: %s", umech->getType().c_str());
+
+		if ((umech)->getType().isMechanical() && !(umech)->getType().isBuilding() && (umech)->getHitPoints() < (umech)->getType().maxHitPoints()) {
+			Broodwar->sendText("REPAIRING %i", (umech)->getHitPoints());
+
+			(*worker)->repair(umech);
+			return true;
+		}
+	}
+	return false;
+
+}
+
+
 /**
 * main method of every class. Makes the combatmanager execute orders/relevant computations in every frame.
 * @see attackNearestEnemy()
@@ -334,6 +367,7 @@ void CombatManager::executeOrders() {
 	
 	for (auto &u : vultures) {
 
+
 		Vulture* vulture = dynamic_cast<Vulture*>(u);
 		Unit* unit = (*vulture).nearestHydra(UnitTypes::Zerg_Hydralisk.groundWeapon().maxRange() * 2);
 
@@ -346,10 +380,9 @@ void CombatManager::executeOrders() {
 			} 
 		}
 
-		int i = rand() % 6 + 1;
-		int i2 = rand() % 6 + 1;
+		if (!(Broodwar->enemy()->getRace() == Races::Terran ) && 
+			vulture->canUseMine() && vulture->hasBeenOcupied == 0 && mines.size() < 10 && (*vulture->unit)->getDistance(scoutingManager->startingChokePosition) < 50) {
 
-		if (vulture->canUseMine() && vulture->hasBeenOcupied == 0 && mines.size() < 10 && (*vulture->unit)->getDistance(scoutingManager->startingChokePosition) < 50) {
 			vulture->layDownDefensiveMine(scoutingManager->startingChokePosition + Position(mines.size() * 5, mines.size() * 5));
 		}
 		else if (!vulture->isOcupied()) {
@@ -390,11 +423,19 @@ void CombatManager::executeOrders() {
 
 		}
 	}
+	for (auto &u : workers) {
+
+		if (!repairNearbyInjuredVehicles(u->unit) && vultures.size() > 0) {
+			(*u->unit)->move((*vultures.front()->unit)->getPosition());
+		}
+	}
+
 
 	for (auto &u : getAllCombatUnits()) {
 		if ((*u->unit)->isIdle() && shouldAttack && !u->isOcupied()) {
 			(*u->unit)->move(attackLocation);
 		}
+
 	}
 
 

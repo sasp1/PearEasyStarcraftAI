@@ -14,6 +14,7 @@ public:
 	void UnitManager::addUnit(const BWAPI::Unit* unit);
 	void UnitManager::executeOrders();
 	void UnitManager::newWorker(const BWAPI::Unit* worker);
+	void UnitManager::makeASCVHelpArmy();
 	void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit);
 	void UnitManager::cleanUpUnits(std::list<const BWAPI::Unit*>& unitList); 
 	bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals, int reservedGas);

@@ -46,25 +46,25 @@ void ScoutingManager::setStartingCorner(BWAPI::Position pos) {
 	
 	if (pos.getDistance(cornerCoords0) < 1000) {
 		corner = 1;
-		defendBasePosition = (*mapData).northwestDefend;
+		defendBasePosition = (*mapData).northwestAttack;
 		startingChokePosition = (*mapData).northwestChokePointMid;
 		expandBasePosition = (*mapData).northwestExpand;
 	}
 	else if (pos.getDistance(cornerCoords1) < 1000) {
 		corner = 2;
-		defendBasePosition = (*mapData).northeastDefend;
+		defendBasePosition = (*mapData).northeastAttack;
 		startingChokePosition = (*mapData).northeastChokePointMid;
 		expandBasePosition = (*mapData).northeastExpand;
 	}
 	else if (pos.getDistance(cornerCoords2) < 1000) {
 		corner = 3; 
-		defendBasePosition = (*mapData).southeastDefend;
+		defendBasePosition = (*mapData).southeastAttack;
 		startingChokePosition = (*mapData).southeastChokePointMid;
 		expandBasePosition = (*mapData).southeastExpand;
 	}
 	else {
 		corner = 0;
-		defendBasePosition = (*mapData).southwestDefend;
+		defendBasePosition = (*mapData).southwestAttack;
 		startingChokePosition = (*mapData).southwestChokePointMid;
 		expandBasePosition = (*mapData).southwestExpand;
 	}

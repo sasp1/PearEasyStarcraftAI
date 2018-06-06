@@ -1,6 +1,7 @@
 #include "BuildingManager.h"
 #include <BWAPI.h>
 #include "Building.h"
+#include "GatheringManager.h"
 using namespace BWAPI;
 using namespace Filter;
 using namespace std;
