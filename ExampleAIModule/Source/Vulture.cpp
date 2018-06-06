@@ -44,17 +44,12 @@ bool Vulture::canUseMine() {
 }
 
 bool Vulture::isOcupied() {
-	if (startTime + 50 < Broodwar->getFrameCount()) {
-		return false;
-	}
-	return true; 
+	return  !(startTime + 50 < Broodwar->getFrameCount()); 
 }
 
 void Vulture::layDownDefensiveMine(BWAPI::Position targetPosition)
 {
-	
-		hasBeenOcupied++; 
-		startTime = Broodwar->getFrameCount();
-		(*unit)->useTech(BWAPI::TechTypes::Spider_Mines, targetPosition);
-	
+	hasBeenOcupied++; 
+	startTime = Broodwar->getFrameCount();
+	(*unit)->useTech(BWAPI::TechTypes::Spider_Mines, targetPosition);	
 }
