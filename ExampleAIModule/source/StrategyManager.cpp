@@ -181,6 +181,9 @@ void StrategyManager::executeExpandWithOneFactory() {
 	else if (combatManager->vultures._Mysize() >= 8 && Broodwar->enemy()->getRace() == Races::Terran) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 	}
+	else if (combatManager->vultures._Mysize() >= 8 && Broodwar->enemy()->getRace() == Races::Zerg) {
+		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
+	} //else if MySize = 1-2 ... set false... retreat...
 
 }
 
