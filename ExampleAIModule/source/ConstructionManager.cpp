@@ -39,6 +39,7 @@ void ConstructionManager::executeOrders() {
 			break;
 		} 
 		else if (b->handleBuild()) {
+			Broodwar->sendText("aa");
 			const BWAPI::Unit* u = new Unit();
 			u = b->unit;
 			unitManager->newWorker(u);
@@ -92,8 +93,6 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 void ConstructionManager::requestFromDead(Worker* w) {
 
 	w->unit = gatheringManager->removeWorker();
-
-
 }
 
 void ConstructionManager::expandBase(const BWAPI::Unit* worker) {

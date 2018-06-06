@@ -5,7 +5,7 @@ using namespace Filter;
 /*Workstates:
 0: Collecting mineral, 1: Collecting gas, 2: Moving. 3: Request build, 4: Constructing, 5 Complete
 */
-bool foundLoc = false;
+bool foundLoc = true;
 int locX = 0;
 int locY = 0;
 
@@ -30,6 +30,7 @@ void Worker::replaceUnit(const BWAPI::Unit* worker) {
 }
 
 bool Worker::handleBuild() {
+	
 
 	if ((*unit)->getBuildType() != BWAPI::UnitTypes::None && (*unit)->getTarget() != NULL )
 	Broodwar->sendText("%s", (*unit)->getBuildType().c_str());
@@ -74,7 +75,7 @@ bool Worker::handleBuild() {
 				workState = 4;
 				time = Broodwar->getFrameCount();
 			}
-			else if (foundLoc){
+			else{
 			tilePos = Broodwar->getBuildLocation(buildOrder, (*unit)->getTilePosition());
 			foundLoc = (*unit)->build(buildOrder, tilePos);
 			
