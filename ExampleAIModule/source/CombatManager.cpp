@@ -39,6 +39,12 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 	else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Vulture_Spider_Mine) {
 		CustomUnit* mine = new Mine(unit);
 		mines.push_back(mine);
+
+	} else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_SCV) {
+		CustomUnit* worker = new Worker(unit);
+		workers.push_back(worker);
+		Broodwar->sendText("Worker added");
+
 	}
 	
 	//combatUnits.push_back(unit);
@@ -57,6 +63,10 @@ std::list<CustomUnit*> CombatManager::getAllCombatUnits() {
 	}
 
 	for (auto &u : tanks) {
+		combatunits.push_back(u);
+	}
+
+	for (auto &u : workers) {
 		combatunits.push_back(u);
 	}
 
@@ -80,7 +90,7 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Zealot, 300);
 		}
 
-		if (desiredUnitToAttack == NULL && ((*unit)->getType() == UnitTypes::Terran_Siege_Tank_Tank_Mode || (*unit)->getType() == UnitTypes::Terran_Siege_Tank_Siege_Mode)) {
+		if (desiredUnitToAttack == NULL && (*unit)->getType() == UnitTypes::Terran_Siege_Tank_Siege_Mode) {
 			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Photon_Cannon, UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange());
 		}
 
@@ -186,7 +196,6 @@ bool CombatManager::isMelee(const BWAPI::Unit* unit) {
 }
 
 
-
 bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * unit, int range){
 	bool enemiesInCriticalRange = false;
 
@@ -204,8 +213,6 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 
 
 	//otherwise juke as normal
-
-
 	BWAPI::Position centerOfMass = Position(0, 0); 
 	for (auto &eu : (*unit)->getUnitsInRadius(range)) {
 
@@ -282,6 +289,26 @@ bool tankCanMakeSiegeModeAttackOnStructure(const BWAPI::Unit * unit) {
 }
 
 
+
+bool CombatManager::repairNearbyInjuredVehicles(const BWAPI::Unit * worker) {
+
+
+	for (auto &umech : (*worker)->getUnitsInRadius(1000, IsAlly ) ) {
+		//Broodwar->sendText("unit in radius: %s", umech->getType().c_str());
+
+		if ( (umech)->getType().isMechanical() && !(umech)->getType().isBuilding() && (umech)->getHitPoints() < (umech)->getType().maxHitPoints()) {
+			Broodwar->sendText("REPAIRING %i", (umech)->getHitPoints());
+		
+			(*worker)->repair(umech);
+			return true;
+		}
+	}
+	return false;
+	
+}
+
+
+
 /**
 * main method of every class. Makes the combatmanager execute orders/relevant computations in every frame. 
 * @see attackNearestEnemy()
@@ -344,10 +371,17 @@ void CombatManager::executeOrders() {
 
 		}
 	}
+	for (auto &u : workers) {
+		
+	if (!repairNearbyInjuredVehicles(u->unit) && vultures.size() > 0) {
+		(*u->unit)->move((*vultures.front()->unit)->getPosition());
+	}
+	
 
-	for (auto &u : getAllCombatUnits()) {
-		if ((*u->unit)->isIdle() && shouldAttack && !u->isOcupied()) {
-			(*u->unit)->move(attackLocation);
+		for (auto &u : getAllCombatUnits()) {
+			if ((*u->unit)->isIdle() && shouldAttack && !u->isOcupied()) {
+				(*u->unit)->move(attackLocation);
+			}
 		}
 	}
 

@@ -52,6 +52,7 @@ void UnitManager::executeOrders() {
 	cleanUpUnits(scoutingManager->scoutingUnits);
 	cleanUpUnits(combatManager->vultures); 
 	cleanUpUnits(combatManager->tanks);
+	cleanUpUnits(combatManager->workers);
 	cleanUpUnits(combatManager->marines);
 	cleanUpUnits(combatManager->mines); 
 
@@ -66,6 +67,13 @@ void UnitManager::cleanUpUnits(std::list<const BWAPI::Unit*>& unitList) {
 		}
 	}
 }
+
+
+void UnitManager::makeASCVHelpArmy() {
+	const BWAPI::Unit* worker = gatheringManager->removeWorker();
+	combatManager->addCombatUnit(worker);
+}
+
 
 void UnitManager::cleanUpUnits(std::list<CustomUnit*>& unitList) {
 

@@ -136,7 +136,6 @@ void StrategyManager::executeExpandWithOneFactory() {
 	if (((tanksAreDesiredToBuild || EnemyHasAStructureMakingTanksRequired()) && combatManager->tanks._Mysize() <= 4) || 
 			(Broodwar->self()->minerals() > 500 && Broodwar->self()->gas() > 500 && combatManager->vultures._Mysize() >= 10)) { // OR NumberOfTanks >=2
 		tanksAreDesiredToBuild = true;
-		Broodwar->sendText("Building tanks");
 		buildingManager->factoryBuild = UnitTypes::Terran_Siege_Tank_Tank_Mode;
 	}
 	else {
@@ -189,14 +188,16 @@ void StrategyManager::executeExpandWithOneFactory() {
 	
 	if (combatManager->getAllCombatUnits()._Mysize() >= 2 && scoutingManager->enemyBaseFound && Broodwar->enemy()->getRace() == Races::Protoss) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
-		
+		if (combatManager->workers.size() < 1) {
+			unitManager->makeASCVHelpArmy();
+		}
 	}
 	else if (combatManager->vultures._Mysize() >= 8 && Broodwar->enemy()->getRace() == Races::Terran) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 	}
 	else if (combatManager->vultures._Mysize() >= 1 && Broodwar->enemy()->getRace() == Races::Zerg) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
-	} //else if MySize = 1-2 ... set false... retreat...
+	}  //else if MySize = 1-2 ... set false... retreat...
 
 }
 
