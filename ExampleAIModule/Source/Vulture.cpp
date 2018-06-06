@@ -41,8 +41,9 @@ bool Vulture::isUnitIdle() {
 
 void Vulture::layDownDefensiveMine(BWAPI::Position targetPosition)
 {
-	
-		(*unit)->useTech(BWAPI::TechTypes::Spider_Mines, targetPosition + Position(counter, counter)); 
+	BWAPI::Position pos = targetPosition + Position(counter, counter); 
+		(*unit)->useTech(BWAPI::TechTypes::Spider_Mines, pos); 
+		Broodwar->sendText("Tried to lay down at %d,%d", pos.x, pos.y); 
 
 		if (!((*unit)->getSpellCooldown() > 5)) {
 			hasLayedDownDefensiveMine = true; 
