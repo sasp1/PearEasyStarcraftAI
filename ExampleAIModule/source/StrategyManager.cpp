@@ -3,6 +3,7 @@
 using namespace BWAPI;
 using namespace Filter;
 
+bool academyOrdered = false; 
 bool supplyDepotsAreNotUnderConstruction = true;
 bool desireBuildingBarracks = true;
 bool hasResearchedSiegeMode = false;
@@ -176,7 +177,18 @@ void StrategyManager::executeExpandWithOneFactory() {
 	}
 
 
-	
+	if (scoutingManager->enemyHasLurker && !academyOrdered) { //  && scoutingManager->enemyLurker != NULL && scoutingManager->enemyLurker->isVisible()
+		Broodwar->sendText("Adding academy to priorityqueue because lurker was spotted"); 
+		UnitType building = UnitTypes::Terran_Academy; 
+		executionManager->addPriorityItem(building); 
+		academyOrdered; 
+	}
+	//else if (scoutingManager->enemyHasLurker && scoutingManager->enemyLurker != NULL) {
+	//	Broodwar->sendText("Enemylurker exists: %s", scoutingManager->enemyLurker->exists() ? "true" : "false"); 
+	//}
+	//else if (scoutingManager->enemyHasLurker) {
+	//	Broodwar->sendText("enemylurker is NULL: %s", scoutingManager->enemyLurker == NULL ? "true" : "false");
+	//}
 	// Desire Siege Mode for tanks
 	if (!hasResearchedSiegeMode && EnemyHasAStructureMakingTanksRequired()) {
 		Broodwar->sendText("adding SiegeMode to priorityQueue");
@@ -185,6 +197,8 @@ void StrategyManager::executeExpandWithOneFactory() {
 		hasResearchedSiegeMode = true;
 	}
 
+	
+	
 
 	//___________________________Attacking strategy________________________________
 	

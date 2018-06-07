@@ -37,12 +37,14 @@ bool Worker::handleBuild() {
 	if (buildOrder == BWAPI::UnitTypes::Terran_Command_Center)
 	{
 		if (workState == 2) {
+
 			int dist = (*unit)->getDistance(pos);
 			if (dist < 20) workState = 3;
 			else (*unit)->move(pos);
 		}
 		else if (workState == 3) {
 			if ((*unit)->isConstructing()) {
+
 				workState = 4;
 				time = Broodwar->getFrameCount();
 			}
@@ -79,12 +81,12 @@ bool Worker::handleBuild() {
 				tilePos = Broodwar->getBuildLocation(buildOrder, (*unit)->getTilePosition() + TilePosition(lX, lY));
 				foundLoc = (*unit)->build(buildOrder, tilePos);
 				BWAPI::Position p = Position(tilePos);
-				Broodwar->drawCircleMap(p, 30, Colors::Cyan, true);
+				//Broodwar->drawCircleMap(p, 30, Colors::Cyan, true);
 			}
 			else {
 				foundLoc = (*unit)->build(buildOrder, tilePos);
 				BWAPI::Position p = Position(tilePos);
-				Broodwar->drawCircleMap(p, 30, Colors::Cyan, true);
+				//Broodwar->drawCircleMap(p, 30, Colors::Cyan, true);
 			}
 		}
 	}

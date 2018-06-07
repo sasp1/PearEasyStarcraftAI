@@ -43,6 +43,17 @@ bool Vulture::canUseMine() {
 	return (*unit)->canUseTechWithOrWithoutTarget(TechTypes::Spider_Mines); 
 }
 
+	
+
+
+
+Unit*  Vulture::nearestHydra(int radius)
+{
+	if ((*unit)->getClosestUnit(Filter::GetType == UnitTypes::Zerg_Hydralisk) == NULL)
+		return NULL; 
+	return new Unit((*unit)->getClosestUnit(Filter::GetType == UnitTypes::Zerg_Hydralisk));
+}
+
 bool Vulture::isOcupied() {
 	return  !(startTime + 50 < Broodwar->getFrameCount()); 
 }

@@ -37,11 +37,15 @@ public:
 	bool CombatManager::isMelee(const BWAPI::Unit* unit);
 	bool CombatManager::repairNearbyInjuredVehicles(const BWAPI::Unit * worker);
 
+
 	std::list<CustomUnit*> CombatManager::getAllCombatUnits();
 
 	CombatManager();
 	~CombatManager();
 	void CombatManager::executeOrders();
+	bool CombatManager::fleeIfOutNumbered(Vulture* vulture);
+	bool canScanLurker = false; 
+	bool wantsToScanLurker = false; 
 
 	ScoutingManager* scoutingManager; 
 };
