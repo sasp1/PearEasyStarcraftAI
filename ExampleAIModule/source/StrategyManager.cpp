@@ -115,7 +115,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
 
-	if (factoriesOrdered >=3  && Broodwar->self()->minerals() > 500 || (scoutingManager->scoutingUnits._Mysize() < 1)) {
+	if ( (factoriesOrdered >=3  && Broodwar->self()->minerals() > 500 || (scoutingManager->scoutingUnits._Mysize() < 1))) {
 			buildingManager->barrackBuild = UnitTypes::Terran_Marine;
 	}
 	else {
