@@ -24,6 +24,7 @@ public:
 	void StrategyManager::onUnitDestroy(BWAPI::Unit unit);
 	bool StrategyManager::EnemyHasAStructureMakingTanksRequired();
 	GatheringManager* gatheringManager;
+	bool StrategyManager::enemyHasLurkers(); 
 
 };
 

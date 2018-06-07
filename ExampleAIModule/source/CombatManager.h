@@ -44,6 +44,8 @@ public:
 	~CombatManager();
 	void CombatManager::executeOrders();
 	bool CombatManager::fleeIfOutNumbered(Vulture* vulture);
+	bool canScanLurker = false; 
+	bool wantsToScanLurker = false; 
 
 	ScoutingManager* scoutingManager; 
 };

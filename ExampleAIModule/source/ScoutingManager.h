@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include "MapData.h"
+using namespace BWAPI; 
 class BuildingManager;
 
 class ScoutingManager
@@ -27,6 +28,8 @@ public:
 	void ScoutingManager::setStartingCorner(BWAPI::Position pos);
 	void setEnemyCorner(BWAPI::Position pos);
 	void ScoutingManager::returnToBase(const BWAPI::Unit* unit); 
+	bool enemyHasLurker = false; 
+	Unit enemyLurker = NULL;
 	BuildingManager* buildingManager;
 	MapData* mapData;
 };

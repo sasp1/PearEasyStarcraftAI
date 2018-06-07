@@ -39,7 +39,7 @@ void ConstructionManager::executeOrders() {
 			break;
 		} 
 		else if (b->handleBuild()) {
-			Broodwar->sendText("aa");
+			
 			const BWAPI::Unit* u = new Unit();
 			u = b->unit;
 			unitManager->newWorker(u);

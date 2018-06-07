@@ -13,7 +13,7 @@ using namespace Filter;
 bool shouldAttack = false;
 BWAPI::Position attackLocation;
 BWAPI::Position enemyPos;
-Unit* nearestHydra = NULL; 
+Unit* nearestHydra = NULL;
 int distanceToHydra = -1;
 bool outNumbered = false;
 
@@ -160,7 +160,7 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 		(*unit)->attack(desiredUnitToAttack);
 	}
 
-	
+
 
 }
 
@@ -213,7 +213,7 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 	for (auto &eu : (*unit)->getUnitsInRadius(UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() + UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() / 5)) {
 
 
-		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && ((*eu).getType() == UnitTypes::Protoss_Photon_Cannon )) {
+		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && ((*eu).getType() == UnitTypes::Protoss_Photon_Cannon)) {
 
 			BWAPI::Position movePosition = (*unit)->getPosition() - (((*eu).getPosition() - (*unit)->getPosition()));
 			(*unit)->move(movePosition);
@@ -291,7 +291,7 @@ bool tankCanMakeSiegeModeAttackOnStructure(const BWAPI::Unit * unit) {
 		if (eu->getType().isBuilding() && (*unit)->getDistance(eu) > (UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange()) / 2) {
 			if (!(*unit)->isSieged()) {
 				(*unit)->siege();
-				Broodwar->sendText("SIEGING");
+
 			}
 			return true;
 		}
@@ -304,8 +304,8 @@ bool CombatManager::fleeIfOutNumbered(Vulture* vulture) {
 		return false;
 	}
 	if ((*vulture->unit)->getDistance((*nearestHydra)->getPosition()) < UnitTypes::Zerg_Hydralisk.groundWeapon().maxRange() * 2) {
-		(*vulture->unit)->move(scoutingManager->startingChokePosition);
-		Broodwar->sendText("Is fleeing");
+		(*vulture->unit)->move(scoutingManager->defendBasePosition);
+
 		return true;
 	}
 	return false;
@@ -329,7 +329,13 @@ bool CombatManager::repairNearbyInjuredVehicles(const BWAPI::Unit * worker) {
 
 }
 
+bool fleeFromLurker(const Unit* unit) {
 
+}
+
+bool attackingLurker(const Unit* unit) {
+	Unit* lurker = (*unit)->getUnitsInRadius()
+}
 /**
 * main method of every class. Makes the combatmanager execute orders/relevant computations in every frame.
 * @see attackNearestEnemy()
@@ -342,9 +348,9 @@ void CombatManager::executeOrders() {
 
 	//defendingBase(1000);
 
-	
+
 	if (nearestHydra != NULL && (*nearestHydra)->isVisible()) {
-		
+
 		int numberOfEnemies = 1;
 		int numberOfFriendlyUnits = 0;
 
@@ -356,15 +362,15 @@ void CombatManager::executeOrders() {
 				numberOfEnemies++;
 			}
 		}
-		outNumbered = numberOfEnemies + 3> numberOfFriendlyUnits;
+		outNumbered = numberOfEnemies + 3 > numberOfFriendlyUnits;
 	}
 	else {
-		distanceToHydra = -1; 
+		distanceToHydra = -1;
 	}
 
 
-	Broodwar->sendText("%d", distanceToHydra); 
-	
+
+
 	for (auto &u : vultures) {
 
 
@@ -372,15 +378,15 @@ void CombatManager::executeOrders() {
 		Unit* unit = (*vulture).nearestHydra(UnitTypes::Zerg_Hydralisk.groundWeapon().maxRange() * 2);
 
 		if (unit != NULL) {
-			
+
 			int vultureHydraDistance = (*unit)->getDistance((*vulture->unit)->getPosition());
 			if (vultureHydraDistance < distanceToHydra || distanceToHydra == -1) {
-				nearestHydra = unit; 
+				nearestHydra = unit;
 				distanceToHydra = vultureHydraDistance;
-			} 
+			}
 		}
 
-		if (!(Broodwar->enemy()->getRace() == Races::Terran ) && 
+		if (!(Broodwar->enemy()->getRace() == Races::Terran) &&
 			vulture->canUseMine() && vulture->hasBeenOcupied == 0 && mines.size() < 10 && (*vulture->unit)->getDistance(scoutingManager->startingChokePosition) < 50) {
 
 			vulture->layDownDefensiveMine(scoutingManager->startingChokePosition + Position(mines.size() * 5, mines.size() * 5));
@@ -388,10 +394,14 @@ void CombatManager::executeOrders() {
 		else if (!vulture->isOcupied()) {
 			if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
 				if (!fleeIfOutNumbered(vulture)) {
-					if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
-						attackNearestEnemy(u->unit);
+					if (!attackingLurker(vulture->unit)) {
+						if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
+							attackNearestEnemy(u->unit);
+						}
 					}
 				}
+
+
 			}
 		}
 	}
@@ -433,14 +443,16 @@ void CombatManager::executeOrders() {
 
 	for (auto &u : getAllCombatUnits()) {
 		if ((*u->unit)->isIdle() && shouldAttack && !u->isOcupied()) {
-			(*u->unit)->move(attackLocation);
+			/*if (!fleeFromLurker(u->unit)) {
+				if (!attackingLurker(u->unit)) {*/
+					(*u->unit)->move(attackLocation);
+				//}
+				
+			//}
+			
 		}
 
 	}
-
-
-
-
 }
 
 

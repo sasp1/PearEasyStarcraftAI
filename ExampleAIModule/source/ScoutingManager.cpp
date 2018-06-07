@@ -97,7 +97,7 @@ void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
 	
 	scoutedCorners++; 
 	if (scoutedCorners == 3 && enemyBaseFound == false) {
-		Broodwar->sendText("Scouted 3 corners but still didn't find enemy"); 
+		 
 		enemyBaseFound = true;
 		if (corner == 0) {
 			lastEnemyBuildingPosition = cornerCoords0; 
@@ -157,12 +157,19 @@ void ScoutingManager::returnToBase(const BWAPI::Unit* unit) {
 
 void ScoutingManager::onUnitDiscover(BWAPI::Unit unit)
 {
+
 	 if ((BWAPI::Broodwar->self()->isEnemy(unit->getPlayer()) && (unit->getType().isBuilding()))){
 		//Broodwar->sendText("Enemy contruction found!");
 		enemyBaseFound = true;
 		lastEnemyBuildingPosition = unit->getPosition();
 		setEnemyCorner(lastEnemyBuildingPosition);
 	}
+
+	 if (unit->getType() == UnitTypes::Zerg_Lurker || unit->getType() == UnitTypes::Zerg_Lurker_Egg) {
+		 enemyLurker = unit; 
+		 enemyHasLurker = true;
+		 Broodwar->sendText("ENEMY HAS LURKER AT POSITION: %d, %d", unit->getPosition().x, unit->getPosition().y);
+	 }
 
 	 if (!secondaryMineralFieldFound && unit->getType() == UnitTypes::Resource_Mineral_Field && (*buildingManager->commandCenter)->getDistance(unit) > 350) {
 		 secondaryMineralFieldFound = false; 

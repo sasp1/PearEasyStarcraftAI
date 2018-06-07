@@ -81,12 +81,12 @@ bool Worker::handleBuild() {
 				tilePos = Broodwar->getBuildLocation(buildOrder, (*unit)->getTilePosition() + TilePosition(lX, lY));
 				foundLoc = (*unit)->build(buildOrder, tilePos);
 				BWAPI::Position p = Position(tilePos);
-				Broodwar->drawCircleMap(p, 30, Colors::Cyan, true);
+				//Broodwar->drawCircleMap(p, 30, Colors::Cyan, true);
 			}
 			else {
 				foundLoc = (*unit)->build(buildOrder, tilePos);
 				BWAPI::Position p = Position(tilePos);
-				Broodwar->drawCircleMap(p, 30, Colors::Cyan, true);
+				//Broodwar->drawCircleMap(p, 30, Colors::Cyan, true);
 			}
 		}
 	}
