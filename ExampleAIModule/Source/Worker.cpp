@@ -65,29 +65,14 @@ bool Worker::handleBuild() {
 			workState = 4;
 			time = Broodwar->getFrameCount();
 		}
-		else if (Broodwar->self()->minerals() >= buildOrder.mineralPrice() && Broodwar->self()->gas() >= buildOrder.gasPrice()) {
-			TilePosition tLoc = Broodwar->getBuildLocation(buildOrder, TilePosition(buildPos));
-			if ((*unit)->build(buildOrder, tLoc)) {
-				Broodwar->sendText(buildOrder.c_str());
-			}
-			else hasLoc = false;
-		}
-		else if (!hasLoc) workState = 2;
-	}
-
-	//Find new build location
-	if (workState == 2) {
-		Broodwar->sendText("State2");
-		if (spiral->attempt > 200) workState = 3;
-		else {
+		else if (!hasLoc) {
 			buildPos = originPos + spiral->getNextPos();
 			Broodwar->drawCircleMap(buildPos, 30, Colors::Green, true);
 
-			if (Broodwar->canBuildHere(TilePosition(buildPos), buildOrder, (*unit), true)) {
-				workState = 1;
-				hasLoc = true;
-			}
+			tilePos = Broodwar->getBuildLocation(buildOrder, TilePosition(buildPos));
+			hasLoc = (*unit)->build(buildOrder, tilePos);
 		}
+			 else hasLoc = (*unit)->build(buildOrder, tilePos);	
 	}
 
 	//Scout new area
