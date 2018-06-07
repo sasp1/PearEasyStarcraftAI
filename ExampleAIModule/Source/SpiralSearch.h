@@ -12,7 +12,7 @@ public:
 	int maxX = 0;
 	int maxY = 0;
 	int maxDist;
-	int attempt = -1;
+	int attempt = 6;
 
 	BWAPI::TilePosition SpiralSearch::getNextTilePos();
 	BWAPI::Position SpiralSearch::getNextPos();

@@ -11,7 +11,7 @@ BWAPI::TilePosition SpiralSearch::getNextTilePos() {
 	return BWAPI::TilePosition(x, y);
 }
 BWAPI::Position SpiralSearch::getNextPos() {
-	nextPoint(50);
+	nextPoint(30);
 	//Broodwar->sendText("%d %d", x, y);
 	return BWAPI::Position(x, y);
 }
@@ -46,5 +46,5 @@ void SpiralSearch::nextPoint(int increment) {
 void SpiralSearch::reset() {
 	maxX = 0;
 	maxY = 0;
-	attempt = -1;
+	attempt = 6;
 }

@@ -58,10 +58,8 @@ bool Worker::handleBuild() {
 
 	//Attempt to construct building
 	if (workState == 1) {
-		//Broodwar->sendText("State1");
 
 		if ((*unit)->isConstructing()) {
-			Broodwar->sendText("StateChange");
 			workState = 4;
 			time = Broodwar->getFrameCount();
 		}
@@ -71,6 +69,14 @@ bool Worker::handleBuild() {
 
 			tilePos = Broodwar->getBuildLocation(buildOrder, TilePosition(buildPos));
 			hasLoc = (*unit)->build(buildOrder, tilePos);
+			if (!hasLoc) {
+				hasLoc = (*unit)->build(buildOrder, TilePosition(buildPos));
+				tilePos = TilePosition(buildPos);
+			}
+			if (!hasLoc) {
+				hasLoc = (*unit)->build(buildOrder, TilePosition(originPos));
+				tilePos = TilePosition(originPos);
+			}
 		}
 			 else hasLoc = (*unit)->build(buildOrder, tilePos);	
 	}
@@ -84,11 +90,17 @@ bool Worker::handleBuild() {
 
 	//Check if ready to remove
 	if (workState == 4) {
-		Broodwar->sendText("%d %d", time, Broodwar->getFrameCount());
-		if (time + 2000 < Broodwar->getFrameCount()) workState = 5;
+		if ((*unit)->isConstructing() && Broodwar->getFrameCount() > (time + 500)) workState = 5;
+		else if (!(*unit)->isConstructing()) {
+			workState = 1;
+		}
 	}
 
-	return (workState == 5 && (*unit)->isIdle());
+	 if (workState == 5 && (*unit)->isIdle()) {
+		 Broodwar->sendText("%d", Broodwar->getFrameCount() - time);
+		 return true;
+	 }
+	 else return false;
 }
 
 void Worker::collect() {
