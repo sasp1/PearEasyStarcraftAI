@@ -70,12 +70,15 @@ void StrategyManager::executeTwoFactory() {
 	
 	if (supplies >= 23 && refineriesOrdered == 1) {
 		Broodwar->sendText("adding 2");
+		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
 		executionManager->addPriorityItem(UnitTypes::Terran_Academy);
 		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
-		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
 		executionManager->addPriorityItem(UnitTypes::Terran_Comsat_Station);
-		buildingManager->desiredResearchs.push_front(TechTypes::Scanner_Sweep);
 		refineriesOrdered++;
+	}
+
+	if (supplies >= 23 && refineriesOrdered == 2) {
+		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->attackBasePosition);
 	}
 }
 
