@@ -314,16 +314,16 @@ bool CombatManager::fleeIfOutNumbered(Vulture* vulture) {
 
 
 bool CombatManager::repairNearbyInjuredVehicles(const BWAPI::Unit * worker) {
-	for (auto &umech : (*worker)->getUnitsInRadius(1000, IsAlly)) {
-		//Broodwar->sendText("unit in radius: %s", umech->getType().c_str());
+	//for (auto &umech : (*worker)->getUnitsInRadius(1000, IsAlly)) {
+	//	//Broodwar->sendText("unit in radius: %s", umech->getType().c_str());
 
-		if ((umech)->getType().isMechanical() && !(umech)->getType().isBuilding() && (umech)->getHitPoints() < (umech)->getType().maxHitPoints()) {
-			Broodwar->sendText("REPAIRING %i", (umech)->getHitPoints());
+	//	if ((umech)->getType().isMechanical() && !(umech)->getType().isBuilding() && (umech)->getHitPoints() < (umech)->getType().maxHitPoints()) {
+	//		Broodwar->sendText("REPAIRING %i", (umech)->getHitPoints());
 
-			(*worker)->repair(umech);
-			return true;
-		}
-	}
+	//		(*worker)->repair(umech);
+	//		return true;
+	//	}
+	//}
 	return false;
 
 }
@@ -351,6 +351,17 @@ bool CombatManager::shouldSetMine(Vulture* vulture) {
 		}
 	}
 
+	return false;
+}
+
+bool CombatManager::shouldMoveAwayFromFriendlyUnits(const Unit* unit) {
+	Unit* closestAlly = new Unit((*unit)->getClosestUnit(IsAlly));
+	if ((*closestAlly)->getDistance((*unit)) < 5) {
+		Broodwar->sendText("Is fleeing from ally"); 
+		Broodwar->sendText("DISTANCE : %d", (*closestAlly)->getDistance((*unit)));
+		(*unit)->move((*unit)->getPosition() - (*closestAlly)->getPosition()); 
+		return true; 
+	}
 	return false;
 }
 /**
@@ -398,25 +409,23 @@ void CombatManager::executeOrders() {
 			if (vultureHydraDistance < distanceToHydra || distanceToHydra == -1) {
 				nearestHydra = unit;
 				distanceToHydra = vultureHydraDistance;
-
 			}
 		}
-
-
-
-		if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
-			if (!fleeIfOutNumbered(vulture)) {
-				if (!vulture->isOcupied()) {
-					if (shouldSetMine(vulture)) {
-						if (!attackingLurker(vulture->unit)) {
-							if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
-								attackNearestEnemy(u->unit);
+		//if (!shouldMoveAwayFromFriendlyUnits(u->unit)) {
+			if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
+				if (!fleeIfOutNumbered(vulture)) {
+					if (!vulture->isOcupied()) {
+						if (!shouldSetMine(vulture)) {
+							if (!attackingLurker(vulture->unit)) {
+								if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
+									attackNearestEnemy(u->unit);
+								}
 							}
 						}
 					}
 				}
 			}
-		}
+		//}
 	}
 
 	for (auto &u : tanks) {
