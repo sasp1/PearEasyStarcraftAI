@@ -14,6 +14,7 @@ bool startedBuild;
 int factories = 0;
 bool addedMachineTech = false;
 
+
 /**
 * @file
 * @author  Sebastian Arcos Specht <sebastian.a.specht@gmail.com>
@@ -34,7 +35,7 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 		//Adds command center as separate variable
 		if ((*u)->getType() == UnitTypes::Terran_Command_Center) {
 			commandCenters.push_back(b);
-			commandCenter = commandCenters.front()->getUnit();
+			commandCenter = (commandCenters.front()->unit);
 			gatheringManager->splitWorkers();
 		}
 		else {
@@ -63,12 +64,26 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 	* Issues orders to buildings based on type and state of the game.
 	* @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
 	*/
+
 	void BuildingManager::executeOrders() {
 
 		for (auto &b : commandCenters) {
+
+			if (!b->isUnitValid()) {
+				buildings.remove(b);
+			}
+		}
+
+		if (addComSat && (*commandCenters.front()->unit)->isIdle())
+		{
+			if ((*commandCenters.front()->unit)->getAddon() == NULL)
+				(*commandCenters.front()->unit)->buildAddon(UnitTypes::Terran_Comsat_Station);
+		}
+
+		for (auto &b : commandCenters) {
 			//Command center orders
-			if (isDesiredToTrainWorkers && b->isUnitIdle()) {
-				const BWAPI::Unit* u = b->getUnit();
+			if (isDesiredToTrainWorkers && (*b->unit)->isIdle()) {
+				const BWAPI::Unit* u = b->unit;
 				(*u)->train(UnitTypes::Terran_SCV);
 			}
 		}
@@ -78,8 +93,8 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 			if (!b->isUnitValid()) {
 				buildings.remove(b);
 			}
-			else if (b->isUnitIdle()) {
-				const BWAPI::Unit* u = b->getUnit();
+			else if ((*b->unit)->isIdle()) {
+				const BWAPI::Unit* u = b->unit;
 
 				//Barrack orders
 				if (b->getType() == UnitTypes::Terran_Barracks) {
@@ -112,7 +127,7 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 						//Build if possible at location, else initiate spiral search
 						if ((*u)->buildAddon(UnitTypes::Terran_Machine_Shop)) {
 						}
-						else if (b->isUnitIdle()) {
+						else if ((*b->unit)->isIdle()) {
 							TilePosition loc = (*u)->getTilePosition() + spiralSearch();
 							TilePosition targetBuildLocation = Broodwar->getBuildLocation(UnitTypes::Terran_Machine_Shop, loc);
 

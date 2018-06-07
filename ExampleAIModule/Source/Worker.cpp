@@ -113,7 +113,6 @@ void Worker::collect() {
 		if ((*unit)->isIdle()) {
 			if ((*unit)->isCarryingGas() || (*unit)->isCarryingMinerals())
 				(*unit)->returnCargo();
-
 			else (*unit)->gather(mine);
 		}
 		else if ((*unit)->isCarryingGas()) {

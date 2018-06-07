@@ -66,7 +66,7 @@ void GatheringManager::splitWorkers() {
 	for (auto &m : buildingManager->commandCenters) {
 		for (auto &u : workers) {
 			if (countA % totalCommand == countB) {
-				u->center = m->getUnit();
+				u->center = m->unit;
 			}
 				countA++;
 		}

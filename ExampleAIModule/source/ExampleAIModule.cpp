@@ -158,7 +158,7 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 	if (Broodwar->getFrameCount() > 10) {
 		if (unit->getType().isBuilding()) {
 			executionManager->eventConstructionInitiated(unit);
-			constructionManager->constructiondBegun(unit);
+			constructionManager->constructionBegun(unit);
 
 			//Variables sat so a new construction can be build, and the worker stops building
 			unitManager->newConstructionIsAvailable = true;

@@ -14,18 +14,18 @@ public:
 	void BuildingManager::buildingCreated(const BWAPI::Unit* u);
 	void BuildingManager::executeOrders();
 	void BuildingManager::setIsDesiredToTrainWorkers(bool buildWorkers);
-	BWAPI::TilePosition BuildingManager::spiralSearch();
 	std::list<BWAPI::TechType> desiredResearchs;
 	std::list<BWAPI::UnitType> desiredExpansion;
 	std::list<BWAPI::UpgradeType> desiredUpgrades;
+	std::list<Building*> buildings;
+	std::list<Building*> commandCenters;
 	bool isDesiredToTrainWorkers = false;
+	bool addComSat = false;
 	const BWAPI::Unit* commandCenter;
 	BWAPI::UnitType factoryBuild;
 	BWAPI::UnitType barrackBuild;
+	BWAPI::TilePosition BuildingManager::spiralSearch();
 	int totalMachineShops = 0;
-	std::list<Building*> buildings;
-	std::list<Building*> commandCenters;
 	GatheringManager* gatheringManager;
-
 	ScoutingManager* scoutingManager;
 };

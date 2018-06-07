@@ -10,14 +10,6 @@ BWAPI::UnitType Building::getType() {
 	return (*unit)->getType();
 }
 
-bool Building::isUnitIdle() {
-	return (*unit)->isIdle();
-}
-
-const BWAPI::Unit* Building::getUnit() {
-	return unit;
-}
-
 bool Building::isUnitValid() {
 	return unit != NULL;
 }

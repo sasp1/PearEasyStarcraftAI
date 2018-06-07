@@ -74,14 +74,7 @@ void StrategyManager::executeTwoFactory() {
 			supplyDepotsAreNotUnderConstruction = false;
 	}
 
-	//Build barracks
-	if (Broodwar->self()->supplyUsed() >= 22 && desireBuildingBarracks) {
-		BWAPI::UnitType building = UnitTypes::Terran_Barracks;
 
-		Broodwar->sendText("adding barracks to priorityQueue");
-		executionManager->addPriorityItem(building);
-		desireBuildingBarracks = false;
-	}
 
 	//Order a refinery
 	if (Broodwar->self()->supplyUsed() >= 22 && refineriesOrdered == 0) {
@@ -89,6 +82,15 @@ void StrategyManager::executeTwoFactory() {
 		BWAPI::UnitType building = UnitTypes::Terran_Refinery;
 		executionManager->addPriorityItem(building);
 		refineriesOrdered++;
+	}
+
+	//Build barracks
+	if (Broodwar->self()->supplyUsed() >= 22 && desireBuildingBarracks) {
+		BWAPI::UnitType building = UnitTypes::Terran_Comsat_Station;
+
+		Broodwar->sendText("adding barracks to priorityQueue");
+		executionManager->addPriorityItem(building);
+		desireBuildingBarracks = false;
 	}
 
 	//Order two factories

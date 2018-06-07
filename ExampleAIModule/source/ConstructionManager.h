@@ -25,6 +25,6 @@ public:
 	GatheringManager* gatheringManager;
 	bool shouldExpandBase;
 	void ConstructionManager::requestFromDead(Worker* w);
-	void ConstructionManager::constructiondBegun(BWAPI::Unit build);
+	void ConstructionManager::constructionBegun(BWAPI::Unit build);
 };
 

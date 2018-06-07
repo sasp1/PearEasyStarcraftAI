@@ -63,6 +63,7 @@ void ExecutionManager::eventConstructionInitiated(BWAPI::Unit unit) {
 		reservedMinerals = reservedMinerals - unit->getType().mineralPrice();
 		reservedGas = reservedGas - unit->getType().gasPrice();
 	}
+	else Broodwar->sendText("Queued item is not a building");
 }
 
 void ExecutionManager::referenceManagers(UnitManager* unitManager, BuildingManager* buildingManager) {
