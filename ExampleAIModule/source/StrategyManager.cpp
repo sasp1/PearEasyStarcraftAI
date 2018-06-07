@@ -14,6 +14,8 @@ int basesOrdered = 0;
 int strategy = 1;
 int numberOfWorkersLimit = 22;
 int supplyUsed = 0; 
+int mineralLimitOfWhenRessourcesAreFreeToUse = 700;
+int gasLimitOfWhenRessourcesAreFreeToUse = 500;
 bool tanksAreDesiredToBuild;
 bool hasExpanded = false;
 
@@ -49,7 +51,7 @@ void StrategyManager::executeTwoFactory() {
 	}
 	
 
-	//Maintain 20 workers
+	//Maintain 22 workers
 
 	if (gatheringManager->workers.size() > numberOfWorkersLimit) {
 
@@ -116,7 +118,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
 
-	if ( (factoriesOrdered >=3  && Broodwar->self()->minerals() > 500 || (scoutingManager->scoutingUnits._Mysize() < 1))) {
+	if ( (factoriesOrdered >=3  && Broodwar->self()->minerals() > mineralLimitOfWhenRessourcesAreFreeToUse || (scoutingManager->scoutingUnits._Mysize() < 1))) {
 			buildingManager->barrackBuild = UnitTypes::Terran_Marine;
 	}
 	else {
@@ -135,7 +137,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 	//Spam voltures when no cannons are discovered
 	if (((tanksAreDesiredToBuild || EnemyHasAStructureMakingTanksRequired()) && combatManager->tanks._Mysize() <= 4) || 
-			(Broodwar->self()->minerals() > 500 && Broodwar->self()->gas() > 500 && combatManager->vultures._Mysize() >= 10)) { // OR NumberOfTanks >=2
+			(Broodwar->self()->minerals() > mineralLimitOfWhenRessourcesAreFreeToUse && Broodwar->self()->gas() > gasLimitOfWhenRessourcesAreFreeToUse && combatManager->vultures._Mysize() >= 10)) { // OR NumberOfTanks >=2
 		tanksAreDesiredToBuild = true;
 		buildingManager->factoryBuild = UnitTypes::Terran_Siege_Tank_Tank_Mode;
 	}
@@ -158,7 +160,6 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 
 	//Maintain 3 factories  AND EXPAND BASE!!!!!!
-
 	if (Broodwar->self()->supplyUsed() >= 72 && !hasExpanded && Broodwar->self()->minerals() > 400 && factoriesOrdered >= 3 && Broodwar->enemy()->getRace() != Races::Terran) {
 		BWAPI::UnitType building = UnitTypes::Terran_Command_Center;
 		numberOfWorkersLimit *= 2;
@@ -209,7 +210,6 @@ void StrategyManager::executeExpandWithOneFactory() {
 		}
 	}
 	else if (combatManager->vultures._Mysize() >= 8 && Broodwar->enemy()->getRace() == Races::Terran && scoutingManager->enemyBaseFound) {
-		Broodwar->sendText("ATTACK");
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 	}
 	else if (combatManager->vultures._Mysize() >= 1 && Broodwar->enemy()->getRace() == Races::Zerg) {

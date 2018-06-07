@@ -200,7 +200,8 @@ bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit* unit, const BWAPI:
 }
 
 bool CombatManager::isMelee(const BWAPI::Unit* unit) {
-	return ((*unit)->getType().groundWeapon().damageAmount() > 2) && (*unit)->getType().groundWeapon().maxRange() <= (UnitTypes::Protoss_Zealot.groundWeapon().maxRange());
+	return ((*unit)->getType().groundWeapon().damageAmount() > 2) && (*unit)->getType().groundWeapon().maxRange() <= (UnitTypes::Protoss_Zealot.groundWeapon().maxRange() 
+				&& (*unit)->getType() != UnitTypes::Terran_SCV);
 
 
 }
