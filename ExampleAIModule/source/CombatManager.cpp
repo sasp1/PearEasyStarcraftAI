@@ -406,8 +406,6 @@ void CombatManager::executeOrders() {
 						}
 					}
 				}
-
-
 			}
 		}
 	}
