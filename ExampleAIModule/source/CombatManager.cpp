@@ -156,7 +156,6 @@ void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 	}
 
 	if (desiredUnitToAttack != NULL && desiredUnitToAttack->getType() != UnitTypes::Protoss_Dark_Templar) {
-		//Broodwar->sendText("%s", desiredUnitToAttack->getType().c_str());
 		(*unit)->attack(desiredUnitToAttack);
 	}
 
@@ -179,9 +178,16 @@ BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::
 
 
 	for (auto &eu : (*unit)->getUnitsInRadius(range)) {
+		
+
 		if ((eu)->getType() == target && (eu)->getPlayer()->isEnemy(Broodwar->self())) {
+			
+
 			if ((*unit)->getDistance(desiredUnitToAttack) > (*unit)->getDistance(eu)) {
 				desiredUnitToAttack = eu;
+
+				
+
 
 			}
 		}
@@ -217,6 +223,7 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 
 			BWAPI::Position movePosition = (*unit)->getPosition() - (((*eu).getPosition() - (*unit)->getPosition()));
 			(*unit)->move(movePosition);
+			
 
 			return true;
 		}
@@ -241,6 +248,7 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 		BWAPI::Position movePosition = (*unit)->getPosition() - centerOfMass;
 		(*unit)->move(movePosition);
 	}
+
 
 	return enemiesInCriticalRange;
 
@@ -275,13 +283,16 @@ bool CombatManager::shouldDefendBase(int range, const BWAPI::Unit * unit) {
 			attackNearestEnemy(unit);
 			defendingBase = true;
 		}
+
 	}
+	
 	return defendingBase;
 }
 
 void CombatManager::returnAllUnitsToBase() {
 	for (auto &u : getAllCombatUnits()) {
 		(*u->unit)->move((*buildingManager->commandCenter)->getPosition());
+		
 	}
 }
 
@@ -428,11 +439,14 @@ void CombatManager::executeOrders() {
 			attackNearestEnemy(u->unit);
 
 		}
+
 	}
 	for (auto &u : workers) {
 
 		if (!repairNearbyInjuredVehicles(u->unit) && vultures.size() > 0) {
 			(*u->unit)->move((*vultures.front()->unit)->getPosition());
+			
+			
 		}
 	}
 
@@ -442,11 +456,12 @@ void CombatManager::executeOrders() {
 			/*if (!fleeFromLurker(u->unit)) {
 				if (!attackingLurker(u->unit)) {*/
 					(*u->unit)->move(attackLocation);
+					
 				//}
 				
 			//}
 			
-		}
+		} 
 
 	}
 }

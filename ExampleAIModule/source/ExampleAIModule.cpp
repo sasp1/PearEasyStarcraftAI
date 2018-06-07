@@ -101,6 +101,7 @@ void ExampleAIModule::onFrame()
 	if (Broodwar->getFrameCount() > 2) {
 		strategyManager->calculateOrders();
 	}
+	
 }
 
 void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)

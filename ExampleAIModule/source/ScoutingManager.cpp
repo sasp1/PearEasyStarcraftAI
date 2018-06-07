@@ -46,28 +46,24 @@ void ScoutingManager::setStartingCorner(BWAPI::Position pos) {
 	
 	if (pos.getDistance(cornerCoords0) < 1000) {
 		corner = 1;
-		defendInBasePosition = (*mapData).northwestDefend; 
 		defendBasePosition = (*mapData).northwestAttack;
 		startingChokePosition = (*mapData).northwestChokePointMid;
 		expandBasePosition = (*mapData).northwestExpand;
 	}
 	else if (pos.getDistance(cornerCoords1) < 1000) {
 		corner = 2;
-		defendInBasePosition = (*mapData).northeastDefend;
 		defendBasePosition = (*mapData).northeastAttack;
 		startingChokePosition = (*mapData).northeastChokePointMid;
 		expandBasePosition = (*mapData).northeastExpand;
 	}
 	else if (pos.getDistance(cornerCoords2) < 1000) {
 		corner = 3; 
-		defendInBasePosition = (*mapData).southeastDefend;
 		defendBasePosition = (*mapData).southeastAttack;
 		startingChokePosition = (*mapData).southeastChokePointMid;
 		expandBasePosition = (*mapData).southeastExpand;
 	}
 	else {
 		corner = 0;
-		defendInBasePosition = (*mapData).southwestDefend;
 		defendBasePosition = (*mapData).southwestAttack;
 		startingChokePosition = (*mapData).southwestChokePointMid;
 		expandBasePosition = (*mapData).southwestExpand;
@@ -172,7 +168,7 @@ void ScoutingManager::onUnitDiscover(BWAPI::Unit unit)
 	 if (unit->getType() == UnitTypes::Zerg_Lurker || unit->getType() == UnitTypes::Zerg_Lurker_Egg) {
 		 enemyLurker = unit; 
 		 enemyHasLurker = true;
-		 
+		 Broodwar->sendText("ENEMY HAS LURKER AT POSITION: %d, %d", unit->getPosition().x, unit->getPosition().y);
 	 }
 
 	 if (!secondaryMineralFieldFound && unit->getType() == UnitTypes::Resource_Mineral_Field && (*buildingManager->commandCenter)->getDistance(unit) > 350) {
