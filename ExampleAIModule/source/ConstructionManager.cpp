@@ -39,7 +39,6 @@ void ConstructionManager::executeOrders() {
 			break;
 		} 
 		else if (b->handleBuild()) {
-			
 			const BWAPI::Unit* u = new Unit();
 			u = b->unit;
 			unitManager->newWorker(u);

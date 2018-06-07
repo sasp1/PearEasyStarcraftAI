@@ -103,7 +103,12 @@ void GatheringManager::executeOrders() {
 			foundError = true;
 			break;
 		}
-		else if (!w->isValid() || !((w->workState == 0) || (w->workState == 1))) {
+		else if (!w->isValid()) {
+			workers.remove(w);
+			foundError = true;
+			break;
+		}
+		else if (!((w->workState == 0) || (w->workState == 1))) {
 			workers.remove(w);
 			foundError = true;
 			break;
