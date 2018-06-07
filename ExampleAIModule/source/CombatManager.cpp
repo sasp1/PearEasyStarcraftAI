@@ -216,6 +216,8 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 
 		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && ((*eu).getType() == UnitTypes::Protoss_Photon_Cannon)) {
 
+
+
 			BWAPI::Position movePosition = (*unit)->getPosition() - (((*eu).getPosition() - (*unit)->getPosition()));
 			(*unit)->move(movePosition);
 
@@ -239,7 +241,15 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 
 	if (enemiesInCriticalRange) {
 		//Broodwar->sendText("Center of mass was: %d, %d", centerOfMass.x, centerOfMass.y);
+
+		int centerOfMassDistance = Position(0, 0).getDistance(centerOfMass); 
+
+		centerOfMass.x = (centerOfMass.x* 100 / centerOfMassDistance) ;
+		centerOfMass.y = (centerOfMass.y *100/ centerOfMassDistance);
+
 		BWAPI::Position movePosition = (*unit)->getPosition() - centerOfMass;
+		
+		
 		(*unit)->move(movePosition);
 	}
 
@@ -470,6 +480,10 @@ void CombatManager::executeOrders() {
 
 
 	for (auto &u : getAllCombatUnits()) {
+		
+		Broodwar->drawText(CoordinateType::Map, (*u->unit)->getPosition().x, (*u->unit)->getPosition().y, (*u->unit)->getOrder().c_str()); 
+		Broodwar->drawLineMap((*u->unit)->getPosition(), (*u->unit)->getOrderTargetPosition(), Colors::Red); 
+
 		if ((*u->unit)->isIdle() && shouldAttack && !u->isOcupied()) {
 			/*if (!fleeFromLurker(u->unit)) {
 				if (!attackingLurker(u->unit)) {*/
