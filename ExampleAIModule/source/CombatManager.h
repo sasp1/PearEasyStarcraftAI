@@ -18,7 +18,8 @@ public:
 	std::list<CustomUnit*> vultures; 
 	std::list<CustomUnit*> tanks;
 	std::list<CustomUnit*> marines; 
-	std::list<CustomUnit*> mines; 
+	std::list<CustomUnit*> minesInDefensiveChokePosition; 
+	std::list<CustomUnit*> minesAtEnemeyBase;
 	std::list<CustomUnit*> workers;
 
 
@@ -36,6 +37,7 @@ public:
 	bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit * unit, const BWAPI::Unit* enemyUnit);
 	bool CombatManager::isMelee(const BWAPI::Unit* unit);
 	bool CombatManager::repairNearbyInjuredVehicles(const BWAPI::Unit * worker);
+	bool shouldSetMine(Vulture* vulture); 
 
 
 	std::list<CustomUnit*> CombatManager::getAllCombatUnits();

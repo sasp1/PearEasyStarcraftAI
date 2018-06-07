@@ -44,8 +44,12 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 	}
 	else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Vulture_Spider_Mine) {
 		CustomUnit* mine = new Mine(unit);
-		mines.push_back(mine);
-
+		if ((*unit)->getDistance(scoutingManager->startingChokePosition) < 300) {
+			minesInDefensiveChokePosition.push_back(mine);
+		}
+		else {
+			minesAtEnemeyBase.push_back(mine);
+		}
 	}
 	else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_SCV) {
 		CustomUnit* worker = new Worker(unit);
@@ -185,15 +189,10 @@ BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::
 
 			if ((*unit)->getDistance(desiredUnitToAttack) > (*unit)->getDistance(eu)) {
 				desiredUnitToAttack = eu;
-
-				
-
-
 			}
 		}
 	}
 	return desiredUnitToAttack;
-
 }
 
 bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit* unit, const BWAPI::Unit* enemyUnit) {
@@ -206,9 +205,8 @@ bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit* unit, const BWAPI:
 }
 
 bool CombatManager::isMelee(const BWAPI::Unit* unit) {
-	return (*unit)->getType().groundWeapon().damageAmount() > 2 && (*unit)->getType().groundWeapon().maxRange() <= UnitTypes::Protoss_Zealot.groundWeapon().maxRange() && (*unit)->getType() != UnitTypes::Terran_SCV;
 
-
+	return ((*unit)->getType().groundWeapon().damageAmount() > 2) && (*unit)->getType().groundWeapon().maxRange() <= UnitTypes::Protoss_Zealot.groundWeapon().maxRange() && (*unit)->getType() != UnitTypes::Terran_SCV;
 }
 
 
@@ -316,7 +314,7 @@ bool CombatManager::fleeIfOutNumbered(Vulture* vulture) {
 	}
 	if ((*vulture->unit)->getDistance((*nearestHydra)->getPosition()) < UnitTypes::Zerg_Hydralisk.groundWeapon().maxRange() * 2) {
 		(*vulture->unit)->move(scoutingManager->defendInBasePosition);
-		
+
 		return true;
 	}
 	return false;
@@ -339,12 +337,29 @@ bool CombatManager::repairNearbyInjuredVehicles(const BWAPI::Unit * worker) {
 }
 
 bool fleeFromLurker(const Unit* unit) {
-	return false; 
+	return false;
 }
 
 bool attackingLurker(const Unit* unit) {
 	//Unit* lurker = (*unit)->getUnitsInRadius()
-	return false; 
+	return false;
+}
+
+bool CombatManager::shouldSetMine(Vulture* vulture) {
+	if (!(Broodwar->enemy()->getRace() == Races::Terran) && vulture->canUseMine()) {
+
+		if (vulture->hasBeenOcupied == 0 && minesInDefensiveChokePosition.size() < 3 && (*vulture->unit)->getDistance(scoutingManager->startingChokePosition) < 50) {
+
+			vulture->layDownMine(scoutingManager->startingChokePosition + Position(minesInDefensiveChokePosition.size() * 5, minesInDefensiveChokePosition.size() * 5));
+			return true;
+		}
+		else if (minesAtEnemeyBase.size() < 3 && (*vulture->unit)->getDistance(scoutingManager->enemyChokePosition) < 200 && (*vulture->unit)->getDistance((*vulture->unit)->getClosestUnit(Filter::GetType == UnitTypes::Terran_Vulture_Spider_Mine)) > 100) {
+			vulture->layDownMine((*vulture->unit)->getPosition() + Position(2, 2));
+			return true;
+		}
+	}
+
+	return false;
 }
 /**
 * main method of every class. Makes the combatmanager execute orders/relevant computations in every frame.
@@ -373,7 +388,7 @@ void CombatManager::executeOrders() {
 			}
 		}
 		outNumbered = numberOfEnemies + 3 > numberOfFriendlyUnits;
-		
+
 	}
 	else {
 		distanceToHydra = -1;
@@ -391,26 +406,23 @@ void CombatManager::executeOrders() {
 			if (vultureHydraDistance < distanceToHydra || distanceToHydra == -1) {
 				nearestHydra = unit;
 				distanceToHydra = vultureHydraDistance;
-				
+
 			}
 		}
 
-		if (!(Broodwar->enemy()->getRace() == Races::Terran) &&
-			vulture->canUseMine() && vulture->hasBeenOcupied == 0 && mines.size() < 10 && (*vulture->unit)->getDistance(scoutingManager->startingChokePosition) < 50) {
 
-			vulture->layDownDefensiveMine(scoutingManager->startingChokePosition + Position(mines.size() * 5, mines.size() * 5));
-		}
-		else if (!vulture->isOcupied()) {	
-			if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
-				if (!fleeIfOutNumbered(vulture)) {
-					if (!attackingLurker(vulture->unit)) {
-						if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
-							attackNearestEnemy(u->unit);
+
+		if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
+			if (!fleeIfOutNumbered(vulture)) {
+				if (!vulture->isOcupied()) {
+					if (shouldSetMine(vulture)) {
+						if (!attackingLurker(vulture->unit)) {
+							if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
+								attackNearestEnemy(u->unit);
+							}
 						}
 					}
 				}
-
-
 			}
 		}
 	}
@@ -433,6 +445,7 @@ void CombatManager::executeOrders() {
 		}
 	}
 
+	/*
 	for (auto &u : marines) {
 		if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
 
@@ -441,6 +454,8 @@ void CombatManager::executeOrders() {
 		}
 
 	}
+	*/
+
 	for (auto &u : workers) {
 
 		if (!repairNearbyInjuredVehicles(u->unit) && vultures.size() > 0) {
