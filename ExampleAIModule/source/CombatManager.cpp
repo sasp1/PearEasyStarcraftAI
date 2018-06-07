@@ -203,8 +203,7 @@ bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit* unit, const BWAPI:
 
 bool CombatManager::isMelee(const BWAPI::Unit* unit) {
 
-	return ((*unit)->getType().groundWeapon().damageAmount() > 2) && (*unit)->getType().groundWeapon().maxRange() <= (UnitTypes::Protoss_Zealot.groundWeapon().maxRange() 
-				&& (*unit)->getType() != UnitTypes::Terran_SCV);
+	return ((*unit)->getType().groundWeapon().damageAmount() > 2) && (*unit)->getType().groundWeapon().maxRange() <= UnitTypes::Protoss_Zealot.groundWeapon().maxRange() && (*unit)->getType() != UnitTypes::Terran_SCV;
 }
 
 
@@ -393,13 +392,14 @@ void CombatManager::executeOrders() {
 				vulture->layDownMine(scoutingManager->startingChokePosition + Position(minesInDefensiveChokePosition.size() * 5, minesInDefensiveChokePosition.size() * 5));
 
 			}
-			else if ((*vulture->unit)->getDistance(scoutingManager->enemyChokePosition) < 300 && (*vulture->unit)->getDistance((*vulture->unit)->getClosestUnit(Filter::GetType == UnitTypes::Terran_Vulture_Spider_Mine)) > 60){
-				vulture->layDownMine((*vulture->unit)->getPosition());
+			else if (minesAtEnemeyBase.size()<3 && (*vulture->unit)->getDistance(scoutingManager->enemyChokePosition) < 200 && (*vulture->unit)->getDistance((*vulture->unit)->getClosestUnit(Filter::GetType == UnitTypes::Terran_Vulture_Spider_Mine)) > 100){
+				vulture->layDownMine((*vulture->unit)->getPosition()+ Position(2,2));
 			}
 		}
-		else if (!vulture->isOcupied()) {	
-			if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
-				if (!fleeIfOutNumbered(vulture)) {
+			
+		if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
+			if (!fleeIfOutNumbered(vulture)) {
+				if (!vulture->isOcupied()) {
 					if (!attackingLurker(vulture->unit)) {
 						if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
 							attackNearestEnemy(u->unit);
