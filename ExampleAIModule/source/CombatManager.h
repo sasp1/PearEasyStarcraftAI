@@ -24,8 +24,9 @@ public:
 
 
 	void CombatManager::addCombatUnit(const BWAPI::Unit* unit);
-	void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit);
-	
+	BWAPI::Unit CombatManager::findMostWantedEnemyToKill(const BWAPI::Unit* unit);
+	void attackDesiredUnit(CustomUnit* myUnit, BWAPI::Unit desiredUnitToAttack);
+
 	BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::UnitType target, int range);
 
 	bool shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit* unit, int range);

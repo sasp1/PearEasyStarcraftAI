@@ -90,82 +90,102 @@ std::list<CustomUnit*> CombatManager::getAllCombatUnits() {
 * @param unit a BWAPI unit who is to attack a nearby enemy, if any
 * @see attackEnemyIfInRange()
 */
-void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit) {
 
-	BWAPI::Unit desiredUnitToAttack = NULL;
+int startTime = 0;
 
-	//TERRAN V PROTOSS________________________________________________
-	desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Dragoon, 300);
+BWAPI::Unit CombatManager::findMostWantedEnemyToKill(const BWAPI::Unit* unit) {
+	/*
+	if ((*unit)->getType() == UnitTypes::Terran_Marine) {
+		
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Zealot, 300);
-	}
+		if (startTime + 100 < Broodwar->getFrameCount()) {
+			(*unit)->attack((*unit)->getClosestUnit(IsEnemy));
+			Broodwar->sendText("ATTACK");
+			startTime = Broodwar->getFrameCount();
 
+		}
+		else {
+			
+		}
+		
+			
+		
+	} else {
+	*/
 
-	if (desiredUnitToAttack == NULL && ((*unit)->getType() == UnitTypes::Terran_Siege_Tank_Tank_Mode || (*unit)->getType() == UnitTypes::Terran_Siege_Tank_Siege_Mode)) {
+		BWAPI::Unit desiredUnitToAttack = NULL;
 
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Photon_Cannon, UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange());
-	}
+		//TERRAN V PROTOSS________________________________________________
+		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Dragoon, 300);
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Probe, 300);
-	}
-
-
-
-	//TERRAN V TERRAN________________________________________________
-
-
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Siege_Mode, 300);
-	}
-
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Vulture, 300);
-	}
-
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Tank_Mode, 300);
-	}
-
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Marine, 300);
-	}
-
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Medic, 300);
-	}
-
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_SCV, 300);
-	}
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Zealot, 300);
+		}
 
 
-	//TERRAN V ZERG _________________________________________
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Zerg_Hydralisk, 300);
-	}
+		if (desiredUnitToAttack == NULL && ((*unit)->getType() == UnitTypes::Terran_Siege_Tank_Tank_Mode || (*unit)->getType() == UnitTypes::Terran_Siege_Tank_Siege_Mode)) {
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Zerg_Zergling, 300);
-	}
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Photon_Cannon, UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange());
+		}
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Zerg_Hydralisk_Den, 300);
-	}
-	//If all fails: get nearest enemy ... and attack!
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Protoss_Probe, 300);
+		}
 
-	if (desiredUnitToAttack == NULL) {
-		desiredUnitToAttack = (*unit)->getClosestUnit(IsEnemy);
-	}
 
-	if (desiredUnitToAttack != NULL && desiredUnitToAttack->getType() != UnitTypes::Protoss_Dark_Templar) {
-		(*unit)->attack(desiredUnitToAttack);
-	}
 
+		//TERRAN V TERRAN________________________________________________
+
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Siege_Mode, 300);
+		}
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Vulture, 300);
+		}
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Siege_Tank_Tank_Mode, 300);
+		}
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Marine, 300);
+		}
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Medic, 300);
+		}
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_SCV, 300);
+		}
+
+
+		//TERRAN V ZERG _________________________________________
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Zerg_Hydralisk, 300);
+		}
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Zerg_Zergling, 300);
+		}
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Zerg_Hydralisk_Den, 300);
+		}
+		//If all fails: get nearest enemy ... and attack!
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = (*unit)->getClosestUnit(IsEnemy);
+		}
+
+		return desiredUnitToAttack;
 
 
 }
+
+
 
 /**
 * Attack with a unit at a given enemy type (target) if in range. Method returns an enemy of the specified type within range if found. NULL otherwise
@@ -278,7 +298,7 @@ bool CombatManager::shouldDefendBase(int range, const BWAPI::Unit * unit) {
 	if (BWAPI::Unit(*buildingManager->commandCenter)->getDistance(BWAPI::Unit(*buildingManager->commandCenter)->getClosestUnit(IsEnemy)) < range) {
 		//Only units near base protects base
 		if (BWAPI::Unit(*buildingManager->commandCenter)->getDistance(*unit) < range) {
-			attackNearestEnemy(unit);
+			findMostWantedEnemyToKill(unit);
 			defendingBase = true;
 		}
 
@@ -372,6 +392,16 @@ bool CombatManager::shouldMoveAwayFromFriendlyUnits(const Unit* unit) {
 	}
 	return false;
 }
+
+void CombatManager::attackDesiredUnit(CustomUnit* myUnit, BWAPI::Unit desiredUnitToAttack)
+{
+	//Med eller uden unitIsNewTarget!!
+
+	if (desiredUnitToAttack != NULL && desiredUnitToAttack->getType() != UnitTypes::Protoss_Dark_Templar && myUnit->unitIsNewTarget(desiredUnitToAttack)) {
+		(*myUnit->unit)->attack(desiredUnitToAttack);
+		myUnit->targetEnemy = (desiredUnitToAttack);
+	}
+}
 /**
 * main method of every class. Makes the combatmanager execute orders/relevant computations in every frame.
 * @see attackNearestEnemy()
@@ -420,19 +450,20 @@ void CombatManager::executeOrders() {
 			}
 		}
 		//if (!shouldMoveAwayFromFriendlyUnits(u->unit)) {
-			if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
-				if (!fleeIfOutNumbered(vulture)) {
-					if (!vulture->isOcupied()) {
-						if (!shouldSetMine(vulture)) {
-							if (!attackingLurker(vulture->unit)) {
-								if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
-									attackNearestEnemy(u->unit);
-								}
+		if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
+			if (!fleeIfOutNumbered(vulture)) {
+				if (!vulture->isOcupied()) {
+					if (!shouldSetMine(vulture)) {
+						if (!attackingLurker(vulture->unit)) {
+							if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
+								attackDesiredUnit(u, findMostWantedEnemyToKill(u->unit));
+
 							}
 						}
 					}
 				}
 			}
+		}
 		//}
 	}
 
@@ -448,29 +479,32 @@ void CombatManager::executeOrders() {
 
 				//If the tank should not defend and we are attacking
 				if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
-					attackNearestEnemy(u->unit);
+					//find and attack the desired enemy
+					attackDesiredUnit(u, findMostWantedEnemyToKill(u->unit));
+
 				}
 			}
 		}
 	}
 
-	/*
+
 	for (auto &u : marines) {
+
 		if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
 
-			attackNearestEnemy(u->unit);
+			attackDesiredUnit(u, findMostWantedEnemyToKill(u->unit));
 
 		}
 
 	}
-	*/
+
 
 	for (auto &u : workers) {
 
 		if (!repairNearbyInjuredVehicles(u->unit) && vultures.size() > 0) {
 			(*u->unit)->move((*vultures.front()->unit)->getPosition());
-			
-			
+
+
 		}
 	}
 
@@ -479,15 +513,17 @@ void CombatManager::executeOrders() {
 		if ((*u->unit)->isIdle() && shouldAttack && !u->isOcupied()) {
 			/*if (!fleeFromLurker(u->unit)) {
 				if (!attackingLurker(u->unit)) {*/
-					(*u->unit)->move(attackLocation);
-					
-				//}
-				
+			(*u->unit)->move(attackLocation);
+
 			//}
-			
-		} 
+
+		//}
+
+		}
 
 	}
 }
+
+
 
 
