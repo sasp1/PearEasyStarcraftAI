@@ -169,6 +169,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 		hasExpanded = true;
 	}
+	
 
 	if (Broodwar->self()->supplyUsed() >= 72 && factoriesOrdered < 3) {
 		Broodwar->sendText("adding factory to priorityQueue");
@@ -179,10 +180,11 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 
 	if (scoutingManager->enemyHasLurker && !academyOrdered) { //  && scoutingManager->enemyLurker != NULL && scoutingManager->enemyLurker->isVisible()
-		Broodwar->sendText("Adding academy to priorityqueue because lurker was spotted"); 
-		UnitType building = UnitTypes::Terran_Academy; 
-		executionManager->addPriorityItem(building); 
+		UnitType academy = UnitTypes::Terran_Academy; 
+		executionManager->addPriorityItem(academy); 
 		academyOrdered; 
+		UnitType comsatStation = UnitTypes::Terran_Comsat_Station; 
+		executionManager->addPriorityItem(comsatStation); 
 	}
 	//else if (scoutingManager->enemyHasLurker && scoutingManager->enemyLurker != NULL) {
 	//	Broodwar->sendText("Enemylurker exists: %s", scoutingManager->enemyLurker->exists() ? "true" : "false"); 
@@ -197,8 +199,6 @@ void StrategyManager::executeExpandWithOneFactory() {
 		buildingManager->desiredResearchs.push_back(research);
 		hasResearchedSiegeMode = true;
 	}
-
-	
 	
 
 	//___________________________Attacking strategy________________________________
