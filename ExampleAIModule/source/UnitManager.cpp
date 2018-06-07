@@ -102,6 +102,7 @@ void UnitManager::addUnit(const BWAPI::Unit* unit) {
 		(*scoutingManager).addScout(unit);
 	}
 	else {
+
 		(*combatManager).addCombatUnit(unit);
 	}
 }

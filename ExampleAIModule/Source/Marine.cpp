@@ -2,6 +2,8 @@
 
 using namespace BWAPI; 
 
+
+
 Marine::Marine(const Unit * u) : CustomUnit(u) 
 {
 	if ((*u)->getType() != UnitTypes::Terran_Marine) {
@@ -13,4 +15,7 @@ bool Marine::isOcupied()
 {
 	return false;
 }
+
+
+
 

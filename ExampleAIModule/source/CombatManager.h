@@ -24,8 +24,9 @@ public:
 
 
 	void CombatManager::addCombatUnit(const BWAPI::Unit* unit);
-	void CombatManager::attackNearestEnemy(const BWAPI::Unit* unit);
-	
+	BWAPI::Unit CombatManager::findMostWantedEnemyToKill(const BWAPI::Unit* unit);
+	void attackDesiredUnit(CustomUnit* myUnit, BWAPI::Unit desiredUnitToAttack);
+
 	BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::UnitType target, int range);
 
 	bool shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit* unit, int range);
@@ -37,9 +38,9 @@ public:
 	bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit * unit, const BWAPI::Unit* enemyUnit);
 	bool CombatManager::isMelee(const BWAPI::Unit* unit);
 	bool CombatManager::repairNearbyInjuredVehicles(const BWAPI::Unit * worker);
-	bool CombatManager::shouldSetMine(Vulture* vulture);
 
-
+	bool shouldSetMine(Vulture* vulture); 
+	bool shouldMoveAwayFromFriendlyUnits(const Unit* unit); 
 	std::list<CustomUnit*> CombatManager::getAllCombatUnits();
 
 	CombatManager();

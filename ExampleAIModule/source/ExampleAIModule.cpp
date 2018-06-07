@@ -88,6 +88,8 @@ void ExampleAIModule::onFrame()
 	Broodwar->drawTextScreen(200, 0, "FPS: %d", Broodwar->getFPS());
 	Broodwar->drawTextScreen(200, 20, "Average FPS: %f", Broodwar->getAverageFPS());
 
+	
+
 	// Return if the game is a replay or is paused
 	if (Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self())
 		return;
@@ -101,6 +103,7 @@ void ExampleAIModule::onFrame()
 	if (Broodwar->getFrameCount() > 2) {
 		strategyManager->calculateOrders();
 	}
+	
 }
 
 void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)

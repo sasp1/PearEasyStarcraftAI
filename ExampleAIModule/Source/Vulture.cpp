@@ -56,7 +56,7 @@ Unit*  Vulture::nearestHydra(int radius)
 }
 
 bool Vulture::isOcupied() {
-	return  !(startTime + 50 < Broodwar->getFrameCount()); 
+	return  !(startTime + 10 < Broodwar->getFrameCount()); 
 }
 
 void Vulture::layDownMine(BWAPI::Position targetPosition)

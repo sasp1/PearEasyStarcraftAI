@@ -15,6 +15,7 @@ public:
 	BWAPI::Position attackBasePosition;
 	BWAPI::Position enemyChokePosition;
 	BWAPI::Position expandBasePosition;
+	Position inEnemyBasePosition;
 	Position defendInBasePosition; 
 	bool secondaryMineralFieldFound; 
 	bool enemyBaseFound = false;
