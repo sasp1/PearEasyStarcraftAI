@@ -49,7 +49,6 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 					b->initAddon(UnitTypes::Terran_Machine_Shop);
 				}
 				(*u)->setRallyPoint((*scoutingManager).defendBasePosition);
-				factoryBuild == UnitTypes::Terran_Vulture;
 			}
 			//If machine shop, add researchs for first one.
 			if ((*u)->getType() == UnitTypes::Terran_Machine_Shop) {
@@ -125,7 +124,7 @@ void BuildingManager::executeOrders() {
 			//Factory orders
 			if (b->getType() == UnitTypes::Terran_Factory && (*b->unit)->isIdle()) {
 				//Handle machiine shop build
-				b->trainType = UnitTypes::Terran_Vulture;
+				b->trainType = factoryBuild;
 				b->doCenterOrder();
 			}
 		}

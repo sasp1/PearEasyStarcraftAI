@@ -36,7 +36,6 @@ bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals
 		timer = timer - 550;
 		if (timer < 0) timer = 0;
 	}
-
 	return requestIsAccepted;
 }
 

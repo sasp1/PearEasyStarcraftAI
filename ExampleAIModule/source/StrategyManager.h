@@ -25,6 +25,7 @@ public:
 	bool StrategyManager::EnemyHasAStructureMakingTanksRequired();
 	GatheringManager* gatheringManager;
 	bool StrategyManager::enemyHasLurkers(); 
+	int lastSupply;
 
 };
 
