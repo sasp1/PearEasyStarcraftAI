@@ -34,7 +34,7 @@ void ConstructionManager::executeOrders() {
 			builders.remove(b);
 			break;
 		}
-		else if (b->unit == NULL) {
+		else if (!b->isValid()) {
 			builders.remove(b);
 			break;
 		} 
