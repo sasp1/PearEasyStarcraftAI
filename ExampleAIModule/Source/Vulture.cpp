@@ -35,6 +35,7 @@ void Vulture::putDownMineIfOutsideOfBase() {
 	}
 }
 
+
 bool Vulture::isUnitIdle() {
 	return (*unit)->isIdle();
 }
@@ -58,7 +59,7 @@ bool Vulture::isOcupied() {
 	return  !(startTime + 50 < Broodwar->getFrameCount()); 
 }
 
-void Vulture::layDownDefensiveMine(BWAPI::Position targetPosition)
+void Vulture::layDownMine(BWAPI::Position targetPosition)
 {
 	hasBeenOcupied++; 
 	startTime = Broodwar->getFrameCount();
