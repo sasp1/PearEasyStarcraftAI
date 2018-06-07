@@ -304,8 +304,8 @@ bool CombatManager::fleeIfOutNumbered(Vulture* vulture) {
 		return false;
 	}
 	if ((*vulture->unit)->getDistance((*nearestHydra)->getPosition()) < UnitTypes::Zerg_Hydralisk.groundWeapon().maxRange() * 2) {
-		(*vulture->unit)->move(scoutingManager->defendBasePosition);
-
+		(*vulture->unit)->move(scoutingManager->defendInBasePosition);
+		
 		return true;
 	}
 	return false;
@@ -364,6 +364,7 @@ void CombatManager::executeOrders() {
 			}
 		}
 		outNumbered = numberOfEnemies + 3 > numberOfFriendlyUnits;
+		
 	}
 	else {
 		distanceToHydra = -1;
@@ -384,6 +385,7 @@ void CombatManager::executeOrders() {
 			if (vultureHydraDistance < distanceToHydra || distanceToHydra == -1) {
 				nearestHydra = unit;
 				distanceToHydra = vultureHydraDistance;
+				
 			}
 		}
 
