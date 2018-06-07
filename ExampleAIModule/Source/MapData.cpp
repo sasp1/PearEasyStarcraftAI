@@ -13,6 +13,7 @@ MapData::MapData()
 	northwestExpand = BWAPI::Position(680, 668);
 	northwestDefend = BWAPI::Position(398, 1017);
 	northwestAttack = BWAPI::Position(764, 814);
+	northwestMinePosition = BWAPI::Position(150, 825);
 
 	southwestChokePointMid = BWAPI::Position(573, 3136);
 	southwestChokePointTop = BWAPI::Position(558, 3097);
@@ -22,6 +23,7 @@ MapData::MapData()
 	southwestExpand = BWAPI::Position(669, 3356);
 	southwestDefend = BWAPI::Position(420, 3019);
 	southwestAttack = BWAPI::Position(717, 3250);
+	southwestMinePosition = BWAPI::Position(150, 3300);
 
 	northeastChokePointMid = BWAPI::Position(3531, 924);
 	northeastChokePointTop = BWAPI::Position(3511, 858);
@@ -31,6 +33,7 @@ MapData::MapData()
 	northeastExpand = BWAPI::Position(3293, 679);
 	northeastDefend = BWAPI::Position(3670, 1010);
 	northeastAttack = BWAPI::Position(3335, 809);
+	northeastMinePosition = BWAPI::Position(3900, 825); 
 
 	southeastChokePointMid = BWAPI::Position(3523, 3147);
 	southeastChokePointTop = BWAPI::Position(3536, 3088);
@@ -40,6 +43,7 @@ MapData::MapData()
 	southeastExpand = BWAPI::Position(3290, 3355);
 	southeastDefend = BWAPI::Position(3659, 3035);
 	southeastAttack = BWAPI::Position(3355, 3272);
+	southeastMinePosition = BWAPI::Position(3900, 3300);
 }
 
 MapData::~MapData()
