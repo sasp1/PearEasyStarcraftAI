@@ -330,11 +330,12 @@ bool CombatManager::repairNearbyInjuredVehicles(const BWAPI::Unit * worker) {
 }
 
 bool fleeFromLurker(const Unit* unit) {
-
+	return false; 
 }
 
 bool attackingLurker(const Unit* unit) {
-	Unit* lurker = (*unit)->getUnitsInRadius()
+	//Unit* lurker = (*unit)->getUnitsInRadius()
+	return false; 
 }
 /**
 * main method of every class. Makes the combatmanager execute orders/relevant computations in every frame.
@@ -391,7 +392,7 @@ void CombatManager::executeOrders() {
 
 			vulture->layDownDefensiveMine(scoutingManager->startingChokePosition + Position(mines.size() * 5, mines.size() * 5));
 		}
-		else if (!vulture->isOcupied()) {
+		else if (!vulture->isOcupied()) {	
 			if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
 				if (!fleeIfOutNumbered(vulture)) {
 					if (!attackingLurker(vulture->unit)) {
