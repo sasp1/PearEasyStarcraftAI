@@ -313,8 +313,6 @@ bool CombatManager::fleeIfOutNumbered(Vulture* vulture) {
 
 
 bool CombatManager::repairNearbyInjuredVehicles(const BWAPI::Unit * worker) {
-
-
 	for (auto &umech : (*worker)->getUnitsInRadius(1000, IsAlly)) {
 		//Broodwar->sendText("unit in radius: %s", umech->getType().c_str());
 
@@ -370,9 +368,6 @@ void CombatManager::executeOrders() {
 		distanceToHydra = -1;
 	}
 
-
-
-
 	for (auto &u : vultures) {
 
 
@@ -421,9 +416,7 @@ void CombatManager::executeOrders() {
 
 				//If the tank should not defend and we are attacking
 				if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
-
 					attackNearestEnemy(u->unit);
-
 				}
 			}
 		}
