@@ -54,7 +54,7 @@ void UnitManager::executeOrders() {
 	cleanUpUnits(combatManager->tanks);
 	cleanUpUnits(combatManager->workers);
 	cleanUpUnits(combatManager->marines);
-	cleanUpUnits(combatManager->mines); 
+	cleanUpUnits(combatManager->minesInDefensiveChokePosition); 
 
 }
 

@@ -44,8 +44,12 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 	}
 	else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Vulture_Spider_Mine) {
 		CustomUnit* mine = new Mine(unit);
-		mines.push_back(mine);
-
+		if ((*unit)->getDistance(scoutingManager->startingChokePosition) < 300) {
+			minesInDefensiveChokePosition.push_back(mine);
+		}
+		else {
+			minesAtEnemeyBase.push_back(mine); 
+		}
 	}
 	else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_SCV) {
 		CustomUnit* worker = new Worker(unit);
@@ -384,9 +388,9 @@ void CombatManager::executeOrders() {
 
 		if (!(Broodwar->enemy()->getRace() == Races::Terran) && vulture->canUseMine()) {
 
-			if (vulture->hasBeenOcupied == 0 && mines.size() < 3 && (*vulture->unit)->getDistance(scoutingManager->startingChokePosition) < 50) {
+			if (vulture->hasBeenOcupied == 0 && minesInDefensiveChokePosition.size() < 3 && (*vulture->unit)->getDistance(scoutingManager->startingChokePosition) < 50) {
 
-				vulture->layDownMine(scoutingManager->startingChokePosition + Position(mines.size() * 5, mines.size() * 5));
+				vulture->layDownMine(scoutingManager->startingChokePosition + Position(minesInDefensiveChokePosition.size() * 5, minesInDefensiveChokePosition.size() * 5));
 
 			}
 			else if ((*vulture->unit)->getDistance(scoutingManager->enemyChokePosition) < 300 && (*vulture->unit)->getDistance((*vulture->unit)->getClosestUnit(Filter::GetType == UnitTypes::Terran_Vulture_Spider_Mine)) > 60){
