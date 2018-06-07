@@ -237,7 +237,9 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 	for (auto &eu : (*unit)->getUnitsInRadius(UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() + UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() / 5)) {
 
 
-		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && ((*eu).getType() == UnitTypes::Protoss_Photon_Cannon)) {
+		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && (((*eu).getType() == UnitTypes::Protoss_Photon_Cannon) || ((*eu).getType() == UnitTypes::Zerg_Sunken_Colony))) {
+
+
 
 			BWAPI::Position movePosition = (*unit)->getPosition() - (((*eu).getPosition() - (*unit)->getPosition()));
 			(*unit)->move(movePosition);
@@ -263,7 +265,15 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 
 	if (enemiesInCriticalRange) {
 		//Broodwar->sendText("Center of mass was: %d, %d", centerOfMass.x, centerOfMass.y);
+
+		//int centerOfMassDistance = Position(0, 0).getDistance(centerOfMass); 
+
+		//centerOfMass.x = (centerOfMass.x* 100 / centerOfMassDistance) ;
+		//centerOfMass.y = (centerOfMass.y *100/ centerOfMassDistance);
+
 		BWAPI::Position movePosition = (*unit)->getPosition() - centerOfMass;
+		
+		
 		(*unit)->move(movePosition);
 	}
 
@@ -373,7 +383,12 @@ bool CombatManager::shouldSetMine(Vulture* vulture) {
 			vulture->layDownMine(scoutingManager->startingChokePosition + Position(minesInDefensiveChokePosition.size() * 5, minesInDefensiveChokePosition.size() * 5));
 			return true;
 		}
-		else if (minesAtEnemeyBase.size() < 3 && (*vulture->unit)->getDistance(scoutingManager->enemyChokePosition) < 200 && (*vulture->unit)->getDistance((*vulture->unit)->getClosestUnit(Filter::GetType == UnitTypes::Terran_Vulture_Spider_Mine)) > 100) {
+		else if (Broodwar->enemy()->getRace() == Races::Zerg && minesAtEnemeyBase.size() < 3 && (*vulture->unit)->getDistance(scoutingManager->enemyChokePosition) < 100 && (*vulture->unit)->getDistance((*vulture->unit)->getClosestUnit(Filter::GetType == UnitTypes::Terran_Vulture_Spider_Mine)) > 100) {
+
+			vulture->layDownMine((*vulture->unit)->getPosition() + Position(2, 2));
+			return true;
+		}
+		else if (Broodwar->enemy()->getRace() == Races::Zerg && minesAtEnemeyBase.size() < 6 && (*vulture->unit)->getDistance(scoutingManager->inEnemyBasePosition) < 150 && (*vulture->unit)->getDistance((*vulture->unit)->getClosestUnit(Filter::GetType == UnitTypes::Terran_Vulture_Spider_Mine)) > 100) {
 			vulture->layDownMine((*vulture->unit)->getPosition() + Position(2, 2));
 			return true;
 		}
@@ -383,12 +398,14 @@ bool CombatManager::shouldSetMine(Vulture* vulture) {
 }
 
 bool CombatManager::shouldMoveAwayFromFriendlyUnits(const Unit* unit) {
-	Unit* closestAlly = new Unit((*unit)->getClosestUnit(IsAlly));
+	Unit* closestAlly = new Unit((*unit)->getClosestUnit(Filter::GetType == UnitTypes::Terran_Vulture));
+	if (*closestAlly == NULL)
+		return false;
 	if ((*closestAlly)->getDistance((*unit)) < 5) {
-		Broodwar->sendText("Is fleeing from ally"); 
+		Broodwar->sendText("Is fleeing from ally");
 		Broodwar->sendText("DISTANCE : %d", (*closestAlly)->getDistance((*unit)));
-		(*unit)->move((*unit)->getPosition() - (*closestAlly)->getPosition()); 
-		return true; 
+		(*unit)->move((*unit)->getPosition() - ((*closestAlly)->getPosition() - (*unit)->getPosition()));
+		return true;
 	}
 	return false;
 }
@@ -397,9 +414,14 @@ void CombatManager::attackDesiredUnit(CustomUnit* myUnit, BWAPI::Unit desiredUni
 {
 	//Med eller uden unitIsNewTarget!!
 
-	if (desiredUnitToAttack != NULL && desiredUnitToAttack->getType() != UnitTypes::Protoss_Dark_Templar && myUnit->unitIsNewTarget(desiredUnitToAttack)) {
+	if (desiredUnitToAttack != NULL && desiredUnitToAttack->getType() != UnitTypes::Protoss_Dark_Templar 
+		&& myUnit->unitIsNewTarget(desiredUnitToAttack)) {
+		//!(*myUnit->unit)->getType() == UnitTypes::Terran_Marine)
 		(*myUnit->unit)->attack(desiredUnitToAttack);
 		myUnit->targetEnemy = (desiredUnitToAttack);
+	}
+	else if (!(*myUnit->unit)->isAttacking()) {
+		myUnit->targetEnemy = NULL;
 	}
 }
 /**
@@ -413,6 +435,7 @@ void CombatManager::executeOrders() {
 	//Broodwar->sendText("%i", tanks._Mysize());
 
 	//defendingBase(1000);
+	//Broodwar->drawCircleMap(scoutingManager->inEnemyBasePosition, 200, Colors::Cyan, true);
 
 
 	if (nearestHydra != NULL && (*nearestHydra)->isVisible()) {
@@ -457,7 +480,6 @@ void CombatManager::executeOrders() {
 						if (!attackingLurker(vulture->unit)) {
 							if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
 								attackDesiredUnit(u, findMostWantedEnemyToKill(u->unit));
-
 							}
 						}
 					}
@@ -501,15 +523,17 @@ void CombatManager::executeOrders() {
 
 	for (auto &u : workers) {
 
-		if (!repairNearbyInjuredVehicles(u->unit) && vultures.size() > 0) {
+		/*if (!repairNearbyInjuredVehicles(u->unit) && vultures.size() > 0) {
 			(*u->unit)->move((*vultures.front()->unit)->getPosition());
-
-
-		}
+		}*/
 	}
 
 
 	for (auto &u : getAllCombatUnits()) {
+		
+		Broodwar->drawText(CoordinateType::Map, (*u->unit)->getPosition().x, (*u->unit)->getPosition().y, (*u->unit)->getOrder().c_str()); 
+		Broodwar->drawLineMap((*u->unit)->getPosition(), (*u->unit)->getOrderTargetPosition(), Colors::Red); 
+
 		if ((*u->unit)->isIdle() && shouldAttack && !u->isOcupied()) {
 			/*if (!fleeFromLurker(u->unit)) {
 				if (!attackingLurker(u->unit)) {*/

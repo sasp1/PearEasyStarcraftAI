@@ -160,7 +160,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 
 	//Maintain 3 factories  AND EXPAND BASE!!!!!!
-	if (Broodwar->self()->supplyUsed() >= 72 && !hasExpanded && Broodwar->self()->minerals() > 400 && factoriesOrdered >= 3 && Broodwar->enemy()->getRace() != Races::Terran) {
+	if (Broodwar->self()->supplyUsed() >= 72 && !hasExpanded && Broodwar->self()->minerals() > 400 && factoriesOrdered >= 3 && Broodwar->enemy()->getRace() != Races::Terran ) {
 		BWAPI::UnitType building = UnitTypes::Terran_Command_Center;
 		numberOfWorkersLimit *= 2;
 		Broodwar->sendText("adding command center to priorityQueue");
@@ -169,9 +169,8 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 		hasExpanded = true;
 	}
-	
 
-	if (Broodwar->self()->supplyUsed() >= 72 && factoriesOrdered < 3) {
+	if (Broodwar->self()->supplyUsed() >= 72 && factoriesOrdered < 3 && Broodwar->enemy()->getRace() != Races::Terran) {
 		Broodwar->sendText("adding factory to priorityQueue");
 		BWAPI::UnitType building = UnitTypes::Terran_Factory;
 		executionManager->addPriorityItem(building);
@@ -180,11 +179,10 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 
 	if (scoutingManager->enemyHasLurker && !academyOrdered) { //  && scoutingManager->enemyLurker != NULL && scoutingManager->enemyLurker->isVisible()
-		UnitType academy = UnitTypes::Terran_Academy; 
-		executionManager->addPriorityItem(academy); 
+		Broodwar->sendText("Adding academy to priorityqueue because lurker was spotted"); 
+		UnitType building = UnitTypes::Terran_Academy; 
+		executionManager->addPriorityItem(building); 
 		academyOrdered; 
-		UnitType comsatStation = UnitTypes::Terran_Comsat_Station; 
-		executionManager->addPriorityItem(comsatStation); 
 	}
 	//else if (scoutingManager->enemyHasLurker && scoutingManager->enemyLurker != NULL) {
 	//	Broodwar->sendText("Enemylurker exists: %s", scoutingManager->enemyLurker->exists() ? "true" : "false"); 
@@ -193,12 +191,14 @@ void StrategyManager::executeExpandWithOneFactory() {
 	//	Broodwar->sendText("enemylurker is NULL: %s", scoutingManager->enemyLurker == NULL ? "true" : "false");
 	//}
 	// Desire Siege Mode for tanks
-	if (!hasResearchedSiegeMode && EnemyHasAStructureMakingTanksRequired()) {
+	if (!hasResearchedSiegeMode && tanksAreDesiredToBuild) {
 		Broodwar->sendText("adding SiegeMode to priorityQueue");
 		BWAPI::TechType research = TechTypes::Tank_Siege_Mode;
 		buildingManager->desiredResearchs.push_back(research);
 		hasResearchedSiegeMode = true;
 	}
+
+	
 	
 
 	//___________________________Attacking strategy________________________________

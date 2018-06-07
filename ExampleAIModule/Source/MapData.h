@@ -14,6 +14,7 @@ public:
 	BWAPI::Position northwestExpand;
 	BWAPI::Position northwestDefend;
 	BWAPI::Position northwestAttack;
+	BWAPI::Position northwestMinePosition;
 
 	BWAPI::Position southwestChokePointMid;
 	BWAPI::Position southwestChokePointTop;
@@ -23,6 +24,7 @@ public:
 	BWAPI::Position southwestExpand;
 	BWAPI::Position southwestDefend;
 	BWAPI::Position southwestAttack;
+	BWAPI::Position southwestMinePosition;
 	
 	BWAPI::Position northeastChokePointMid;
 	BWAPI::Position northeastChokePointTop;
@@ -32,6 +34,7 @@ public:
 	BWAPI::Position northeastExpand;
 	BWAPI::Position northeastDefend;
 	BWAPI::Position northeastAttack;
+	BWAPI::Position northeastMinePosition; 
 
 	BWAPI::Position southeastChokePointMid;
 	BWAPI::Position southeastChokePointTop;
@@ -41,4 +44,5 @@ public:
 	BWAPI::Position southeastExpand;
 	BWAPI::Position southeastDefend;
 	BWAPI::Position southeastAttack;
+	BWAPI::Position southeastMinePosition;
 };
