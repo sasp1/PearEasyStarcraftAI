@@ -18,9 +18,9 @@ int mineralLimitOfWhenRessourcesAreFreeToUse = 700;
 int gasLimitOfWhenRessourcesAreFreeToUse = 500;
 bool tanksAreDesiredToBuild;
 bool hasExpanded = false;
+int supplyTime = 0;
 
 void StrategyManager::calculateOrders() {
-	supplyUsed = Broodwar->self()->supplyUsed() / 2;
 	tanksAreDesiredToBuild = false;
 
 	executeTwoFactory();
@@ -29,7 +29,8 @@ void StrategyManager::calculateOrders() {
 
 void StrategyManager::executeTwoFactory() {
 	//Build strategy 1 
-	int unusedSupplies = (Broodwar->self()->supplyTotal()) - Broodwar->self()->supplyUsed();
+	int unusedSupplies = (Broodwar->self()->supplyTotal()- Broodwar->self()->supplyUsed())/2;
+	int supplies = Broodwar->self()->supplyUsed() / 2;
 	
 	
 	//___________________________Moving units________________________________
@@ -44,40 +45,38 @@ void StrategyManager::executeTwoFactory() {
 
 	//Maintain 22 workers
 
-	if (gatheringManager->workers.size() > numberOfWorkersLimit) {
-
-		buildingManager->setIsDesiredToTrainWorkers(false);
-	}
-	else {
 		buildingManager->setIsDesiredToTrainWorkers(true);
-	}
+
 	
 	
 	//___________________________Building strategy________________________________
+		if (unusedSupplies < 5 && supplyDepotsAreNotUnderConstruction) {
+			executionManager->addPriorityItem(UnitTypes::Terran_Supply_Depot);
+			supplyDepotsAreNotUnderConstruction = false;
+			supplyTime = Broodwar->getFrameCount();
+		}
 
+		supplyDepotsAreNotUnderConstruction = (!supplyDepotsAreNotUnderConstruction && supplyTime + 1000 < Broodwar->getFrameCount());
+			
+			//Order a refinery
 
-	//Order a refinery
-
-	if (Broodwar->self()->supplyUsed() >= 5 && refineriesOrdered == 0) {
+	if (supplies >= 12 && refineriesOrdered == 0) {
 		Broodwar->sendText("adding 1");
-		executionManager->addPriorityItem(UnitTypes::Terran_Supply_Depot);
-		//executionManager->addPriorityItem(UnitTypes::Terran_Barracks);
+		executionManager->addPriorityItem(UnitTypes::Terran_Refinery);
+		executionManager->addPriorityItem(UnitTypes::Terran_Barracks);
 		refineriesOrdered++;
 	}
-	/*
 	
-	if (Broodwar->self()->supplyUsed() >= 25 && refineriesOrdered == 1) {
+	
+	if (supplies >= 23 && refineriesOrdered == 1) {
 		Broodwar->sendText("adding 2");
 		executionManager->addPriorityItem(UnitTypes::Terran_Academy);
-		refineriesOrdered++;
-	}
-
-	if (Broodwar->self()->supplyUsed() >= 45 && refineriesOrdered == 2) {
-		Broodwar->sendText("adding 3");
+		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
+		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
 		executionManager->addPriorityItem(UnitTypes::Terran_Comsat_Station);
+		buildingManager->desiredResearchs.push_front(TechTypes::Scanner_Sweep);
 		refineriesOrdered++;
 	}
-	*/
 }
 
 

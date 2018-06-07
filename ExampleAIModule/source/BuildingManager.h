@@ -22,10 +22,10 @@ public:
 	bool isDesiredToTrainWorkers = false;
 	bool addComSat = false;
 	bool haveAcademy = false;
+	bool startedBuild = false;
 	const BWAPI::Unit* commandCenter;
 	BWAPI::UnitType factoryBuild;
 	BWAPI::UnitType barrackBuild;
-	BWAPI::TilePosition BuildingManager::spiralSearch();
 	int totalMachineShops = 0;
 	GatheringManager* gatheringManager;
 	ScoutingManager* scoutingManager;

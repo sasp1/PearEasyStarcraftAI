@@ -81,13 +81,6 @@ bool Worker::handleBuild() {
 			 else hasLoc = (*unit)->build(buildOrder, tilePos);	
 	}
 
-	//Scout new area
-	if (workState == 3) {
-		Broodwar->sendText("State3");
-		spiral->reset();
-		workState = 0;
-	}
-
 	//Check if ready to remove
 	if (workState == 4) {
 		if ((*unit)->isConstructing() && Broodwar->getFrameCount() > (time + 500)) workState = 5;
@@ -97,7 +90,6 @@ bool Worker::handleBuild() {
 	}
 
 	 if (workState == 5 && (*unit)->isIdle()) {
-		 Broodwar->sendText("%d", Broodwar->getFrameCount() - time);
 		 return true;
 	 }
 	 else return false;

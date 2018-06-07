@@ -17,4 +17,5 @@ public:
 	BWAPI::Position buildPos;
 	BWAPI::Position originPos;
 	void Building::initAddon(BWAPI::UnitType type);
+	int time = 0;
 };

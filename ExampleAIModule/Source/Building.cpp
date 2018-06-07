@@ -4,6 +4,7 @@ using namespace BWAPI;
 using namespace Filter;
 
 SpiralSearch* spiral;
+bool startedBuild = false;
 
 int buildState = 0;
 //Buildstates
@@ -30,41 +31,49 @@ void Building::initAddon(BWAPI::UnitType type) {
 
 void Building::buildAddon() {
 
+	if ((*unit)->getAddon() != NULL) buildState = 5;
+
 	if (buildState == 0) {	
-		//Broodwar->sendText("State0");
+
+		if (startedBuild && time + 30 < Broodwar->getFrameCount()) {
+
+			if ((*unit)->isConstructing() || (*unit)->getAddon() != NULL) buildState = 5;
+			else if ((*unit)->isIdle()) buildState = 1;
+	
+		}
+
 		//Can we afford building, and is building idle
-		if ((Broodwar->self()->minerals() > addOnType.mineralPrice()) && (Broodwar->self()->gas() > addOnType.gasPrice()) && (*unit)->isIdle()) {
+		if ((Broodwar->self()->minerals() > addOnType.mineralPrice()) && (Broodwar->self()->gas() > addOnType.gasPrice()) && (*unit)->isIdle() && !startedBuild) {
 			//Attempt construction at location. Change state on result.
 			(*unit)->buildAddon(addOnType);
-			Broodwar->sendText(Broodwar->getLastError().c_str());
-			if ((*unit)->isConstructing()) buildState = 5;
-			else buildState = 1;
+			startedBuild = true;
+			time = Broodwar->getFrameCount();
+			
 		}	
 	}
 	if (buildState == 1) {
-		//Broodwar->sendText("State1");
 		//Find suitable build location
 		if ((*unit)->isIdle()) {
+			startedBuild = false;
 			buildPos = originPos + spiral->getNextPos();
 			Broodwar->drawCircleMap(buildPos, 40, Colors::Red, true);
 			if (Broodwar->canBuildHere(TilePosition(buildPos), addOnType, (*unit))) buildState = 2;
 		}
 	}
 	if (buildState == 2) {
-		//Broodwar->sendText("State2");
 		//Lift off from ground
 		if ((*unit)->isFlying()) buildState = 3;
 		else if ((*unit)->isIdle()) (*unit)->lift();
 	}
 
 	if (buildState == 3) {
-		//Broodwar->sendText("State3");
 		//Move to new location and land
-		if ((*unit)->isLifted()) (*unit)->land(TilePosition(buildPos));
+		if ((*unit)->isLifted()) {
+			if (!(*unit)->land(TilePosition(buildPos))) buildState = 1;
+		}
 		else buildState = 4;
 	}
 	if (buildState == 4) {
-		//Broodwar->sendText("State4");
 		//If landed, restart procedure
 		if ((*unit)->isIdle()) {
 			buildState = 0;
@@ -72,6 +81,8 @@ void Building::buildAddon() {
 			buildPos = Position(0, 0);
 		}
 	}
+	if (buildState == 5) shouldBuildAddon = false;
+
 }
 
 void Building::doCenterOrder() {
