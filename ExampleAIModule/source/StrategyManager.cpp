@@ -23,17 +23,8 @@ void StrategyManager::calculateOrders() {
 	supplyUsed = Broodwar->self()->supplyUsed() / 2;
 	tanksAreDesiredToBuild = false;
 
-	//Set executionManager orders
-	if (strategy == 1) {
-		executeTwoFactory();
-	}
-	else if (strategy == 2) {
-		executeExpandWithOneFactory();
-	}
-
-
+	executeTwoFactory();
 	executionManager->executeOrders();
-
 }
 
 void StrategyManager::executeTwoFactory() {
@@ -65,50 +56,28 @@ void StrategyManager::executeTwoFactory() {
 	//___________________________Building strategy________________________________
 
 
-	//Construct supply depots when needed (2 supplies left)
-	if (  unusedSupplies <= 4 && supplyDepotsAreNotUnderConstruction) {
-
-		BWAPI::UnitType building = Broodwar->self()->getRace().getSupplyProvider();
-
-			executionManager->addPriorityItem(building);
-			supplyDepotsAreNotUnderConstruction = false;
-	}
-
-
-
 	//Order a refinery
-	if (Broodwar->self()->supplyUsed() >= 22 && refineriesOrdered == 0) {
-		Broodwar->sendText("adding refinery to priorityQueue");
-		BWAPI::UnitType building = UnitTypes::Terran_Refinery;
-		executionManager->addPriorityItem(building);
+
+	if (Broodwar->self()->supplyUsed() >= 5 && refineriesOrdered == 0) {
+		Broodwar->sendText("adding 1");
+		executionManager->addPriorityItem(UnitTypes::Terran_Supply_Depot);
+		//executionManager->addPriorityItem(UnitTypes::Terran_Barracks);
+		refineriesOrdered++;
+	}
+	/*
+	
+	if (Broodwar->self()->supplyUsed() >= 25 && refineriesOrdered == 1) {
+		Broodwar->sendText("adding 2");
+		executionManager->addPriorityItem(UnitTypes::Terran_Academy);
 		refineriesOrdered++;
 	}
 
-	//Build barracks
-	if (Broodwar->self()->supplyUsed() >= 22 && desireBuildingBarracks) {
-		BWAPI::UnitType building = UnitTypes::Terran_Comsat_Station;
-
-		Broodwar->sendText("adding barracks to priorityQueue");
-		executionManager->addPriorityItem(building);
-		desireBuildingBarracks = false;
+	if (Broodwar->self()->supplyUsed() >= 45 && refineriesOrdered == 2) {
+		Broodwar->sendText("adding 3");
+		executionManager->addPriorityItem(UnitTypes::Terran_Comsat_Station);
+		refineriesOrdered++;
 	}
-
-	//Order two factories
-	if (Broodwar->self()->supplyUsed() >= 30 && factoriesOrdered < 2) {
-		Broodwar->sendText("adding factory to priorityQueue");
-		BWAPI::UnitType building = UnitTypes::Terran_Factory;
-		executionManager->addPriorityItem(building);
-		factoriesOrdered++;
-	}
-
-
-	//Continue with next strategy with an extra factory STRATEGY // && Broodwar->enemy()->getRace() == Races::Protoss
-	if (!desireBuildingBarracks && factoriesOrdered == 2 ) {
-		strategy = 2;
-		Broodwar->sendText("Executing strategy: expandWithOneFactory");
-	
-	}
-
+	*/
 }
 
 

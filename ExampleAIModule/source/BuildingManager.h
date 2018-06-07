@@ -21,6 +21,7 @@ public:
 	std::list<Building*> commandCenters;
 	bool isDesiredToTrainWorkers = false;
 	bool addComSat = false;
+	bool haveAcademy = false;
 	const BWAPI::Unit* commandCenter;
 	BWAPI::UnitType factoryBuild;
 	BWAPI::UnitType barrackBuild;

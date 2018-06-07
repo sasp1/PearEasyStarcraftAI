@@ -32,6 +32,12 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 	{
 		Building* b = new Building(u);
 
+
+		if ((*u)->getType() == UnitTypes::Terran_Academy) {
+			haveAcademy = true;
+			Broodwar->sendText("builtAcademy");
+		}
+
 		//Adds command center as separate variable
 		if ((*u)->getType() == UnitTypes::Terran_Command_Center) {
 			commandCenters.push_back(b);
@@ -44,7 +50,7 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 			//If factory, adds request machine shop addon for first two factories.
 			if ((*u)->getType() == UnitTypes::Terran_Factory) {
 				factories++;
-				b->buildAddon = factories < 3;
+				b->shouldBuildAddon = factories < 3;
 				(*u)->setRallyPoint((*scoutingManager).defendBasePosition);
 			}
 			//If machine shop, add researchs for first one.
@@ -67,32 +73,26 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 
 	void BuildingManager::executeOrders() {
 
-		for (auto &b : commandCenters) {
+		//Clean command centers
+		for (auto &b : commandCenters) if (!b->isUnitValid()) buildings.remove(b);
 
-			if (!b->isUnitValid()) {
-				buildings.remove(b);
-			}
-		}
-
-		if (addComSat && (*commandCenters.front()->unit)->isIdle())
+		if (addComSat)
 		{
-			if ((*commandCenters.front()->unit)->getAddon() == NULL)
-				(*commandCenters.front()->unit)->buildAddon(UnitTypes::Terran_Comsat_Station);
+			commandCenters.front()->initAddon(UnitTypes::Terran_Comsat_Station);
+			commandCenters.front()->shouldBuildAddon = true;
+			addComSat = false;
 		}
 
 		for (auto &b : commandCenters) {
 			//Command center orders
-			if (isDesiredToTrainWorkers && (*b->unit)->isIdle()) {
-				const BWAPI::Unit* u = b->unit;
-				(*u)->train(UnitTypes::Terran_SCV);
-			}
+			if (isDesiredToTrainWorkers) b->trainType = UnitTypes::Terran_SCV;
+			else b->trainType = UnitTypes::None;
+			b->doCenterOrder();
 		}
 
 		for (auto &b : buildings) {
 
-			if (!b->isUnitValid()) {
-				buildings.remove(b);
-			}
+			if (!b->isUnitValid()) buildings.remove(b);
 			else if ((*b->unit)->isIdle()) {
 				const BWAPI::Unit* u = b->unit;
 
@@ -122,7 +122,7 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 				//Factory orders
 				if (b->getType() == UnitTypes::Terran_Factory) {
 					//Handle machiine shop build
-					if ((*u)->getAddon() == NULL && b->buildAddon) {
+					if ((*u)->getAddon() == NULL && b->shouldBuildAddon) {
 
 						//Build if possible at location, else initiate spiral search
 						if ((*u)->buildAddon(UnitTypes::Terran_Machine_Shop)) {

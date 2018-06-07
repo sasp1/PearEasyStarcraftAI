@@ -1,9 +1,11 @@
 #include "Worker.h"
+#include "SpiralSearch.h"
 using namespace BWAPI;
 using namespace Filter;
 
 /*Workstates:
-0: Collecting mineral, 1: Collecting gas, 2: Moving. 3: Request build, 4: Constructing, 5 Complete
+Gathering - 0: Collecting mineral, 1: Collecting gas,
+Building - 0: Moving, 1: Attempt build, 2: Find build loc, 3: Scout, 4:Building, 5:Done
 */
 bool foundLoc = true;
 int lX = 0;
@@ -11,6 +13,8 @@ int lY = 0;
 int mX = 1;
 int mY = 1;
 int delta = -1;
+bool hasLoc = true;
+bool isBuild = false;
 
 Worker::Worker(const BWAPI::Unit* u) : CustomUnit(u) {
 }
@@ -32,78 +36,74 @@ void Worker::replaceUnit(const BWAPI::Unit* worker) {
 	}
 }
 
-bool Worker::handleBuild() {
-
-	if (buildOrder == BWAPI::UnitTypes::Terran_Command_Center)
-	{
-		if (workState == 2) {
-
-			int dist = (*unit)->getDistance(pos);
-			if (dist < 20) workState = 3;
-			else (*unit)->move(pos);
-		}
-		else if (workState == 3) {
-			if ((*unit)->isConstructing()) {
-
-				workState = 4;
-				time = Broodwar->getFrameCount();
-			}
-			else {
-				tilePos = BWAPI::TilePosition(pos);
-				TilePosition targetBuildLocation = Broodwar->getBuildLocation(buildOrder, tilePos);
-				(*unit)->build(buildOrder, targetBuildLocation);
-			}
-		}
-	}
-	else if (buildOrder == BWAPI::UnitTypes::Terran_Refinery) {
-		if (workState == 2) {
-			int dist = (*unit)->getDistance(pos);
-			if (dist < 2000) workState = 3;
-			else (*unit)->move(pos);
-		}
-		else if (workState == 3) {
-			if ((*unit)->isConstructing()) {
-				workState = 4;
-				time = Broodwar->getFrameCount();
-			}
-			else (*unit)->build(UnitTypes::Terran_Refinery, tilePos);
-		}
-	}
-	else {
-		if (workState == 2) workState = 3;
-		else if (workState == 3) {
-			if ((*unit)->isConstructing()) {
-				workState = 4;
-				time = Broodwar->getFrameCount();
-			}
-			else if (!foundLoc) {
-				addToSpiral();
-				tilePos = Broodwar->getBuildLocation(buildOrder, (*unit)->getTilePosition() + TilePosition(lX, lY));
-				foundLoc = (*unit)->build(buildOrder, tilePos);
-				BWAPI::Position p = Position(tilePos);
-				//Broodwar->drawCircleMap(p, 30, Colors::Cyan, true);
-			}
-			else {
-				foundLoc = (*unit)->build(buildOrder, tilePos);
-				BWAPI::Position p = Position(tilePos);
-				//Broodwar->drawCircleMap(p, 30, Colors::Cyan, true);
-			}
-		}
-	}
-
-	if (workState == 4) {
-		int curFrame = Broodwar->getFrameCount();
-		if ((*unit)->isConstructing() && curFrame > time + 600) workState = 5;
-		else if (!(*unit)->isConstructing()) {
-			workState = 3;
-		}
-	}
-	return (workState == 5) && ((*unit)->isIdle());
+void Worker::initBuild(BWAPI::UnitType type, BWAPI::Position pos) {
+	buildOrder = type;
+	spiral = new SpiralSearch(3000);
+	originPos = pos;
+	workState = 0;
+	//if (type == UnitTypes::Terran_Refinery) workState = 1;
 }
 
-bool Worker::isOcupied()
-{
-	return false;
+bool Worker::handleBuild() {
+
+	//Move to origin point
+	if (workState == 0 && (*unit)->isIdle()) {
+
+		if ((*unit)->getDistance(originPos) < 200) {
+			workState = 1;
+			buildPos = originPos;
+		}
+		else (*unit)->move(originPos);
+	}
+
+	//Attempt to construct building
+	if (workState == 1) {
+		//Broodwar->sendText("State1");
+
+		if ((*unit)->isConstructing()) {
+			Broodwar->sendText("StateChange");
+			workState = 4;
+			time = Broodwar->getFrameCount();
+		}
+		else if (Broodwar->self()->minerals() >= buildOrder.mineralPrice() && Broodwar->self()->gas() >= buildOrder.gasPrice()) {
+			TilePosition tLoc = Broodwar->getBuildLocation(buildOrder, TilePosition(buildPos));
+			if ((*unit)->build(buildOrder, tLoc)) {
+				Broodwar->sendText(buildOrder.c_str());
+			}
+			else hasLoc = false;
+		}
+		else if (!hasLoc) workState = 2;
+	}
+
+	//Find new build location
+	if (workState == 2) {
+		Broodwar->sendText("State2");
+		if (spiral->attempt > 200) workState = 3;
+		else {
+			buildPos = originPos + spiral->getNextPos();
+			Broodwar->drawCircleMap(buildPos, 30, Colors::Green, true);
+
+			if (Broodwar->canBuildHere(TilePosition(buildPos), buildOrder, (*unit), true)) {
+				workState = 1;
+				hasLoc = true;
+			}
+		}
+	}
+
+	//Scout new area
+	if (workState == 3) {
+		Broodwar->sendText("State3");
+		spiral->reset();
+		workState = 0;
+	}
+
+	//Check if ready to remove
+	if (workState == 4) {
+		Broodwar->sendText("%d %d", time, Broodwar->getFrameCount());
+		if (time + 2000 < Broodwar->getFrameCount()) workState = 5;
+	}
+
+	return (workState == 5 && (*unit)->isIdle());
 }
 
 void Worker::collect() {
@@ -133,26 +133,6 @@ void Worker::collect() {
 	}
 }
 
-void Worker::addToSpiral() {
-
-	if (delta == 0) {
-		mX += 1;
-		mY += 1;
-		lX = mX;
-		lY = mY;
-	}
-
-	else if (delta == 1) lX = 0;
-	else if (delta == 2) lX = -mX;
-	else if (delta == 3) lY = 0;
-	else if (delta == 4) lY = -mY;
-	else if (delta == 5) lX = 0;
-	else if (delta == 6) lX = mX;
-	else if (delta == 7) lY = 0;
-	else delta = 0;
-
-	if (mX > 20) mX = 0;
-	if (mY > 20) mY = 0;
-
-	delta++;
+bool Worker::isOcupied() {
+	return false;
 }

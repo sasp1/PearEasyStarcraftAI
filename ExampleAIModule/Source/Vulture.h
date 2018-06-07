@@ -12,7 +12,7 @@ public:
 	BWAPI::Position basePos;
 	int time;
 	bool Vulture::isUnitIdle();
-	void layDownMine(BWAPI::Position targetPosition); 
+	void Vulture::layDownMine(BWAPI::Position targetPosition); 
 	bool hasLayedDownDefensiveMine = false; 
 	bool ocupiedLayingDownMine = false; 
 	int startTime = 0; 

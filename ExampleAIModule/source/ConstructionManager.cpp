@@ -80,10 +80,10 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 		buildingManager->addComSat = true;
 	}
 	else {
-		Worker* t = new Worker(worker);
-		t->buildOrder = building;
-		t->workState = 2;
-		builders.push_back(t);
+		Worker* w = new Worker(worker);
+		w->initBuild(building, (*worker)->getPosition());
+		builders.push_back(w);
+		Broodwar->sendText("worker request");
 	}
 }
 
@@ -106,9 +106,7 @@ void ConstructionManager::expandBase(const BWAPI::Unit* worker) {
 	BWAPI::Position p = scoutingManager->expandBasePosition;
 
 	Worker* w = new Worker(worker);
-	w->buildOrder = UnitTypes::Terran_Command_Center;
-	w->pos = p;
-	w->workState = 2;
+	w->initBuild(UnitTypes::Terran_Command_Center, p);
 	builders.push_back(w);
 }
 
@@ -134,13 +132,9 @@ void ConstructionManager::buildRefinery(const BWAPI::Unit* worker) {
 
 	//If geyser is found, construct at location
 	if (distance != 10000) {
-		BWAPI::Position pos = (*gasLocation)->getPosition();
-		TilePosition tLoc = Broodwar->getBuildLocation(UnitTypes::Terran_Refinery, (*gasLocation)->getTilePosition());
+
 		Worker* w = new Worker(worker);
-		w->buildOrder = UnitTypes::Terran_Refinery;
-		w->tilePos = tLoc;
-		w->pos = (*gasLocation)->getPosition();
-		w->workState = 2;
+		w->initBuild(UnitTypes::Terran_Refinery, (*gasLocation)->getPosition());
 		builders.push_back(w);
 	}
 }

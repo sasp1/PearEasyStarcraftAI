@@ -1,6 +1,8 @@
 #pragma once
 #include <BWAPI.h>
 
+class SpiralSearch;
+
 class CustomUnit 
 {
 public: 
