@@ -237,7 +237,7 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 	for (auto &eu : (*unit)->getUnitsInRadius(UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() + UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() / 5)) {
 		
 
-		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && (((*eu).getType() == UnitTypes::Protoss_Photon_Cannon) || ((*eu).getType() == UnitTypes::Zerg_Sunken_Colony))) {
+		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && (((*eu).getType() == UnitTypes::Protoss_Photon_Cannon) )) {
 
 			BWAPI::Position movePosition = (*unit)->getPosition() - (((*eu).getPosition() - (*unit)->getPosition()));
 			(*unit)->move(movePosition);
