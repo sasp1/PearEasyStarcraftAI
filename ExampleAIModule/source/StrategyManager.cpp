@@ -161,6 +161,19 @@ void StrategyManager::executeExpandWithOneFactory() {
 	else if (combatManager->vultures._Mysize() >= 8 && Broodwar->enemy()->getRace() == Races::Terran && scoutingManager->enemyBaseFound && !combatManager->shouldAttack) {
 			combatManager->attackEnemyBaseWhenVulturesAreGrouped(scoutingManager->lastEnemyBuildingPosition, 8);
 	}
+	else if (Broodwar->enemy()->getRace() == Races::Terran && combatManager->shouldAttack && combatManager->vultures._Mysize() <= 5) {
+		bool shouldRetreat = true;
+		for (auto &u : combatManager->vultures) {
+			if ((*u->unit)->getDistance(scoutingManager->lastEnemyBuildingPosition) < 1000) {
+				shouldRetreat = false;
+			}
+		}
+		combatManager->shouldAttack = !shouldRetreat;
+		if (shouldRetreat) {
+			Broodwar->sendText("Retreaaat");
+			combatManager->returnAllUnitsToBase();
+		}
+	}
 
 
 	else if (combatManager->vultures._Mysize() >= 1 && Broodwar->enemy()->getRace() == Races::Zerg) {
