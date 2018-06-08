@@ -33,6 +33,12 @@ void StrategyManager::calculateOrders() {
 		supplyDepotsAreNotUnderConstruction = (lastSupply + 1500 < Broodwar->getFrameCount());
 	 }
 	 
+	 if (unusedSupplies/2 <= (Broodwar->self()->supplyTotal()/2)*0.2 && supplyDepotsAreNotUnderConstruction) {
+		 if (unitManager->requestSupply()) {
+			 lastSupply = Broodwar->getFrameCount();
+			 supplyDepotsAreNotUnderConstruction = false;
+		 }
+	 }
 
 	//Set executionManager orders
 	if (strategy == 1) executeTwoFactory();
@@ -50,11 +56,6 @@ void StrategyManager::executeTwoFactory() {
 	
 	//___________________________Building strategy________________________________
 	//Construct supply depots when needed (2 supplies left)
-	if (unusedSupplies <= 4 && supplyDepotsAreNotUnderConstruction) {
-			lastSupply = Broodwar->getFrameCount();
-			executionManager->addPriorityItem(UnitTypes::Terran_Supply_Depot);
-			supplyDepotsAreNotUnderConstruction = false;
-	}
 
 	//Build barracks
 	if (Broodwar->self()->supplyUsed() >= 22 && desireBuildingBarracks) {
@@ -105,13 +106,6 @@ void StrategyManager::executeExpandWithOneFactory() {
 	else buildingManager->factoryBuild = UnitTypes::Terran_Vulture;
 	
 	//___________________________Building strategy________________________________
-	//Construct supply depots when needed (11 supplies left)
-	if ((unusedSupplies <= 22)  && supplyDepotsAreNotUnderConstruction) {
-		lastSupply = Broodwar->getFrameCount();
-		executionManager->addPriorityItem(UnitTypes::Terran_Supply_Depot);
-		supplyDepotsAreNotUnderConstruction = false;
-	}
-
 	//Maintain 3 factories  AND EXPAND BASE!!!!!!
 	if (Broodwar->self()->supplyUsed() >= 72 && !hasExpanded && Broodwar->self()->minerals() > 400 && factoriesOrdered >= 3 && Broodwar->enemy()->getRace() != Races::Terran ) {
 		numberOfWorkersLimit *= 2;

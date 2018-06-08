@@ -149,6 +149,17 @@ BuildingManager::BuildingManager()
 
 }
 
+bool BuildingManager::scan(BWAPI::Position pos) {
+
+	const BWAPI::Unit* u = new Unit((*commandCenter)->getAddon());
+
+	if ((*u) == NULL) return false;
+
+	bool res = (*u)->useTech(TechTypes::Scanner_Sweep, pos);
+	if (res) Broodwar->sendText("Scanned");
+	return res;
+}
+
 BuildingManager::~BuildingManager()
 {
 }

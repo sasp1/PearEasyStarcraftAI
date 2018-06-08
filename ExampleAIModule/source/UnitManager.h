@@ -11,6 +11,7 @@ public:
 	void UnitManager::setManagers(CombatManager* combatManager, GatheringManager* gatheringManager, ConstructionManager* constructionManager, ScoutingManager* scoutingManager);
 	~UnitManager();
 	UnitManager();
+	bool UnitManager::requestSupply();
 	void UnitManager::addUnit(const BWAPI::Unit* unit);
 	void UnitManager::executeOrders();
 	void UnitManager::newWorker(const BWAPI::Unit* worker);
