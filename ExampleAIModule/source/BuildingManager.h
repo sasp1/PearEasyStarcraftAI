@@ -29,4 +29,5 @@ public:
 	int totalMachineShops = 0;
 	GatheringManager* gatheringManager;
 	ScoutingManager* scoutingManager;
+	bool BuildingManager::scan(BWAPI::Position pos);
 };

@@ -20,6 +20,20 @@ void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit) {
 	}
 }
 
+bool UnitManager::requestSupply() {
+
+	BWAPI::UnitType b = UnitTypes::Terran_Supply_Depot;
+	bool mineralPriceOk = Broodwar->self()->minerals() >= b.mineralPrice();
+	bool gasPriceOk = Broodwar->self()->gas() >= b.gasPrice();
+
+	bool isBuildOk = mineralPriceOk && gasPriceOk;
+
+	if (isBuildOk) {
+		constructionManager->createBuilding(b, gatheringManager->removeWorker());
+	}
+	return isBuildOk;
+}
+
 bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals, int reservedGas) {
 
 	bool mineralPriceOk = Broodwar->self()->minerals() >= building.mineralPrice() + reservedMinerals;
