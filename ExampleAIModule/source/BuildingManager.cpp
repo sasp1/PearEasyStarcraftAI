@@ -73,6 +73,7 @@ void BuildingManager::executeOrders() {
 	//Clean command centers
 	for (auto &b : commandCenters) if (!b->isUnitValid()) buildings.remove(b);
 
+
 	if (addComSat)
 	{
 		commandCenters.front()->initAddon(UnitTypes::Terran_Comsat_Station);

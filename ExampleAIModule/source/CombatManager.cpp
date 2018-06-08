@@ -163,6 +163,10 @@ BWAPI::Unit CombatManager::findMostWantedEnemyToKill(const BWAPI::Unit* unit) {
 
 		//TERRAN V ZERG _________________________________________
 		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Zerg_Lurker, 300);
+		}
+
+		if (desiredUnitToAttack == NULL) {
 			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Zerg_Hydralisk, 300);
 		}
 
@@ -206,7 +210,7 @@ BWAPI::Unit CombatManager::attackEnemyIfInRange(const BWAPI::Unit* unit, BWAPI::
 		if ((eu)->getType() == target && (eu)->getPlayer()->isEnemy(Broodwar->self())) {
 			
 
-			if ((*unit)->getDistance(desiredUnitToAttack) > (*unit)->getDistance(eu)) {
+			if ((*unit)->getDistance(desiredUnitToAttack) > (*unit)->getDistance(eu) && !(*eu).isBurrowed() && !(*eu).isCloaked()) {
 				desiredUnitToAttack = eu;
 			}
 		}
