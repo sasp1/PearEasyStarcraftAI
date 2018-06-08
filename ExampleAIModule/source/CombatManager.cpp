@@ -164,6 +164,11 @@ BWAPI::Unit CombatManager::findMostWantedEnemyToKill(const BWAPI::Unit* unit) {
 		//TERRAN V ZERG _________________________________________
 		if (desiredUnitToAttack == NULL) {
 			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Zerg_Lurker, 300);
+			if (desiredUnitToAttack != NULL) Broodwar->sendText("Attacking lurker"); 
+		}
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Zerg_Lurker_Egg, 300);
+			if (desiredUnitToAttack != NULL) Broodwar->sendText("Attacking lurker egg");
 		}
 
 		if (desiredUnitToAttack == NULL) {
@@ -378,6 +383,8 @@ bool fleeFromLurker(const Unit* unit) {
 }
 
 bool attackingLurker(const Unit* unit) {
+
+
 	//Unit* lurker = (*unit)->getUnitsInRadius()
 	return false;
 }
