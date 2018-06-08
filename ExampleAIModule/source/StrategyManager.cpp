@@ -120,7 +120,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 		factoriesOrdered++;
 	}
 
-	if (scoutingManager->enemyHasLurker && !academyOrdered) { //  && scoutingManager->enemyLurker != NULL && scoutingManager->enemyLurker->isVisible()
+	if (scoutingManager->enemyHasLurker && !academyOrdered) {
 		Broodwar->sendText("Adding academy to priorityqueue because lurker was spotted"); 
 		executionManager->addPriorityItem(UnitTypes::Terran_Academy);
 		academyOrdered = true; 
