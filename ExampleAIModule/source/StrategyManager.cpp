@@ -28,9 +28,11 @@ void StrategyManager::calculateOrders() {
 	tanksAreDesiredToBuild = false;
 
 	 //Allow build of supply depots if long time since last build
+	
 	 if(!supplyDepotsAreNotUnderConstruction){ 
-		supplyDepotsAreNotUnderConstruction = lastSupply + 1500 < Broodwar->getFrameCount();
+		supplyDepotsAreNotUnderConstruction = (lastSupply + 1500 < Broodwar->getFrameCount());
 	 }
+	 
 
 	//Set executionManager orders
 	if (strategy == 1) executeTwoFactory();
@@ -127,14 +129,8 @@ void StrategyManager::executeExpandWithOneFactory() {
 		executionManager->addPriorityItem(UnitTypes::Terran_Academy);
 		academyOrdered = true; 
 	}
-	
-	if (Broodwar->self()->supplyUsed() >= 120 && factoriesOrdered < 4 && Broodwar->enemy()->getRace() != Races::Terran && hasExpanded) {
-		Broodwar->sendText("adding factory to priorityQueue");
-		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
-		factoriesOrdered++;
-	}
 
-	if (Broodwar->self()->supplyUsed() >= 160 && factoriesOrdered < 5 && Broodwar->enemy()->getRace() != Races::Terran && hasExpanded) {
+	if (Broodwar->self()->supplyUsed() >= 200 && factoriesOrdered < 5 && Broodwar->enemy()->getRace() != Races::Terran && hasExpanded) {
 		Broodwar->sendText("adding factory to priorityQueue");
 		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
 		factoriesOrdered++;
@@ -168,7 +164,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 bool StrategyManager::EnemyHasAStructureMakingTanksRequired() {
 	for (auto &eu : Broodwar->enemy()->getUnits()) {
-		if ((*eu).getType() == UnitTypes::Protoss_Photon_Cannon || (*eu).getType() == UnitTypes::Zerg_Sunken_Colony) {
+		if ((*eu).getType() == UnitTypes::Protoss_Photon_Cannon) {
 			return true;
 		}
 	}
