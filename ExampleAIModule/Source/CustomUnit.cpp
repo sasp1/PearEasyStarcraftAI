@@ -2,7 +2,7 @@
 
 bool CustomUnit::isValid()
 {
-	return (unit != NULL) && ((*unit)->getHitPoints() > 0);
+	return  *unit != NULL && (unit != NULL) &&((*unit)->getHitPoints() > 0);
 }
 
 CustomUnit::CustomUnit(const BWAPI::Unit * u)
