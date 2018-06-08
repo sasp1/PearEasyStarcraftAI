@@ -168,7 +168,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 bool StrategyManager::EnemyHasAStructureMakingTanksRequired() {
 	for (auto &eu : Broodwar->enemy()->getUnits()) {
-		if ((*eu).getType() == UnitTypes::Protoss_Photon_Cannon ) {
+		if ((*eu).getType() == UnitTypes::Protoss_Photon_Cannon || (*eu).getType() == UnitTypes::Zerg_Sunken_Colony) {
 			return true;
 		}
 	}
