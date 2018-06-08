@@ -236,12 +236,11 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 	for (auto &eu : (*unit)->getUnitsInRadius(UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() + UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() / 5)) {
 		
 
-		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && (((*eu).getType() == UnitTypes::Protoss_Photon_Cannon) )) {
+		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && (((*eu).getType() == UnitTypes::Protoss_Photon_Cannon || (*eu).getType() == UnitTypes::Zerg_Sunken_Colony) )) {
 
 			BWAPI::Position movePosition = (*unit)->getPosition() - (((*eu).getPosition() - (*unit)->getPosition()));
 			(*unit)->move(movePosition);
 			Broodwar->drawCircleMap(movePosition, 20, Colors::Cyan, true);
-
 			return true;
 		}
 	}
@@ -262,10 +261,10 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 	if (enemiesInCriticalRange) {
 		//Broodwar->sendText("Center of mass was: %d, %d", centerOfMass.x, centerOfMass.y);
 
-		//int centerOfMassDistance = Position(0, 0).getDistance(centerOfMass); 
+		int centerOfMassDistance = Position(0, 0).getDistance(centerOfMass); 
 
-		//centerOfMass.x = (centerOfMass.x* 100 / centerOfMassDistance) ;
-		//centerOfMass.y = (centerOfMass.y *100/ centerOfMassDistance);
+		centerOfMass.x = (centerOfMass.x* 150 / centerOfMassDistance) ;
+		centerOfMass.y = (centerOfMass.y *150/ centerOfMassDistance);
 
 		BWAPI::Position movePosition = (*unit)->getPosition() - centerOfMass;
 		
@@ -347,7 +346,7 @@ bool CombatManager::fleeIfOutNumbered(Vulture* vulture) {
 		return false;
 	}
 	if ((*vulture->unit)->getDistance((*nearestHydra)->getPosition()) < UnitTypes::Zerg_Hydralisk.groundWeapon().maxRange() * 2) {
-		(*vulture->unit)->move(scoutingManager->defendInBasePosition);
+		(*vulture->unit)->move((*buildingManager->commandCenter)->getPosition());
 		
 		return true;
 	}
@@ -460,6 +459,7 @@ void CombatManager::executeOrders() {
 	}
 	else {
 		distanceToHydra = -1;
+		outNumbered = false; 
 	}
 
 	for (auto &u : vultures) {
