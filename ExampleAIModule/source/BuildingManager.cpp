@@ -170,7 +170,7 @@ void BuildingManager::draw() {
 
 	drawTimer++;
 
-	if (drawTimer == 200) drawTimer = -1;
-	Broodwar->drawCircleMap(scanPoint, 200, Colors::Purple, true);
+	if (drawTimer == 100) drawTimer = -1;
+	Broodwar->drawCircleMap(scanPoint, 100, Colors::Purple, true);
 
 }
