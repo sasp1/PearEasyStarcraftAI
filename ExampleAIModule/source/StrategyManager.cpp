@@ -95,12 +95,15 @@ void StrategyManager::executeExpandWithOneFactory() {
 	else buildingManager->barrackBuild = UnitTypes::None;
 
 	//Spam voltures when no cannons are discovered
-	if ((Broodwar->self()->minerals() > mineralLimitOfWhenRessourcesAreFreeToUse && Broodwar->self()->gas() > gasLimitOfWhenRessourcesAreFreeToUse && combatManager->vultures._Mysize() >= 10)) { // OR NumberOfTanks >=2
+	if (  ( ((tanksAreDesiredToBuild || EnemyHasAStructureMakingTanksRequired()) && combatManager->tanks._Mysize() <= 4 ) || 
+		(Broodwar->self()->minerals() > mineralLimitOfWhenRessourcesAreFreeToUse && Broodwar->self()->gas() > gasLimitOfWhenRessourcesAreFreeToUse ) )
+			&& combatManager->vultures._Mysize() >= 10) { // OR NumberOfTanks >=2
+
 		tanksAreDesiredToBuild = true;
 		buildingManager->factoryBuild = UnitTypes::Terran_Siege_Tank_Tank_Mode;
 	}
 	else buildingManager->factoryBuild = UnitTypes::Terran_Vulture;
-	//tanksAreDesiredToBuild || EnemyHasAStructureMakingTanksRequired() combatManager->tanks._Mysize() <= 4) ||
+	
 	//___________________________Building strategy________________________________
 	//Construct supply depots when needed (11 supplies left)
 	if ((unusedSupplies <= 22)  && supplyDepotsAreNotUnderConstruction) {
