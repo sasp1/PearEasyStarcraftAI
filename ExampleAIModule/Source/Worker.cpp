@@ -40,6 +40,8 @@ void Worker::initBuild(BWAPI::UnitType type, BWAPI::Position pos) {
 	buildOrder = type;
 	spiral = new SpiralSearch(3000);
 	originPos = pos;
+	buildPos = pos;
+	tilePos = TilePosition(buildPos);
 	workState = 0;
 	//if (type == UnitTypes::Terran_Refinery) workState = 1;
 }
@@ -49,7 +51,9 @@ bool Worker::handleBuild() {
 	//Move to origin point
 	if (workState == 0 && (*unit)->isIdle()) {
 
-		if ((*unit)->getDistance(originPos) < 200) {
+		if(originPos == BWAPI::Position(0,0))  Broodwar->sendText("0,0");
+
+		if ((*unit)->getDistance(originPos) < 150) {
 			workState = 1;
 			buildPos = originPos;
 		}
