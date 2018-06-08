@@ -15,6 +15,7 @@ public:
 	~ConstructionManager();
 	//void ConstructionManager::setManagers(BuildingManager* b, UnitManager* u);
 	void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::Unit* worker);
+	void ConstructionManager::createBuildingAtPos(BWAPI::UnitType building, const BWAPI::Unit* worker, BWAPI::Position pos);
 	const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing();
 	void ConstructionManager::executeOrders();
 	void ConstructionManager::buildRefinery(const BWAPI::Unit* worker);

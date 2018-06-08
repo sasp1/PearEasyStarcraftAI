@@ -196,6 +196,7 @@ void ScoutingManager::executeOrders() {
 				Broodwar->sendText("GOING TO ENEMY!!!");
 				(*u)->move(lastEnemyBuildingPosition);
 			}
+
 		}
 	}
 }

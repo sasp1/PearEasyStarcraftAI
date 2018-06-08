@@ -13,6 +13,7 @@ public:
 	~BuildingManager();
 	void BuildingManager::buildingCreated(const BWAPI::Unit* u);
 	void BuildingManager::executeOrders();
+	void BuildingManager::draw();
 	void BuildingManager::setIsDesiredToTrainWorkers(bool buildWorkers);
 	std::list<BWAPI::TechType> desiredResearchs;
 	std::list<BWAPI::UnitType> desiredExpansion;
@@ -26,6 +27,8 @@ public:
 	const BWAPI::Unit* commandCenter;
 	BWAPI::UnitType factoryBuild;
 	BWAPI::UnitType barrackBuild;
+	BWAPI::Position scanPoint;
+	int drawTimer = -1;
 	int totalMachineShops = 0;
 	GatheringManager* gatheringManager;
 	ScoutingManager* scoutingManager;
