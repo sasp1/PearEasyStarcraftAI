@@ -70,6 +70,8 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 
 void BuildingManager::executeOrders() {
 
+	if (drawTimer != -1) draw();
+
 	//Clean command centers
 	for (auto &b : commandCenters) if (!b->isUnitValid()) buildings.remove(b);
 
@@ -152,10 +154,23 @@ bool BuildingManager::scan(BWAPI::Position pos) {
 	if ((*u) == NULL) return false;
 
 	bool res = (*u)->useTech(TechTypes::Scanner_Sweep, pos);
-	if (res) Broodwar->sendText("Scanned");
+	if (res) {
+		Broodwar->sendText("Scanned");
+		drawTimer = 0;
+		scanPoint = pos;
+	}
 	return res;
 }
 
 BuildingManager::~BuildingManager()
 {
+}
+
+void BuildingManager::draw() {
+
+	drawTimer++;
+
+	if (drawTimer == 200) drawTimer = -1;
+	Broodwar->drawCircleMap(scanPoint, 200, Colors::Purple, true);
+
 }
