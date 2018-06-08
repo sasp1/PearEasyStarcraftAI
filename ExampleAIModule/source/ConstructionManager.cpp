@@ -83,12 +83,16 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 	}
 	else {
 		Worker* w = new Worker(worker);
-		if((*worker)->getPosition().isValid()) w->initBuild(building, (*worker)->getPosition());
-		else w->initBuild(building, (*buildingManager->commandCenter)->getPosition());
+		w->initBuild(building, (*worker)->getPosition());
 		builders.push_back(w);
-		Broodwar->sendText("worker request");
 	}
 	}
+}
+
+void ConstructionManager::createBuildingAtPos(BWAPI::UnitType building, const BWAPI::Unit* worker, BWAPI::Position pos) {
+	Worker* w = new Worker(worker);
+	w->initBuild(building, pos);
+	builders.push_back(w);
 }
 
 /**
