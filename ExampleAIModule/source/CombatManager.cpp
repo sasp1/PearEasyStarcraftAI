@@ -10,7 +10,6 @@ using namespace BWAPI;
 using namespace Filter;
 
 
-bool shouldAttack = false;
 BWAPI::Position attackLocation;
 BWAPI::Position enemyPos;
 Unit* nearestHydra = NULL;
@@ -283,12 +282,20 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position enemyBasePosition) {
 	attackLocation = enemyBasePosition;
 	shouldAttack = true;
-	//for (auto &u : getAllCombatUnits()) {
-
-		//(*u->unit)->move(enemyBasePosition);
-
-	//}
 }
+
+void CombatManager::attackEnemyBaseWhenVulturesAreGrouped(BWAPI::Position enemyBasePosition, int groupSize) {
+	if ((*vultures.front()->unit)->getUnitsInRadius(200).size() >= groupSize) {
+		attackEnemyBaseWithAllCombatUnits(enemyBasePosition);
+	}
+	else {
+		for (auto &u : vultures) {
+			(*u->unit)->move((*vultures.front()->unit)->getPosition());
+		}
+		Broodwar->sendText("Gathering vultures");
+	}
+}
+
 
 
 /**
