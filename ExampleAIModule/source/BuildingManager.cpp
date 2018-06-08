@@ -30,7 +30,7 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 	if ((*u)->getType() != UnitTypes::Terran_Supply_Depot)
 	{
 		Building* b = new Building(u);
-		if ((*u)->getType() == UnitTypes::Terran_Academy) haveAcademy = addComSat;
+		if ((*u)->getType() == UnitTypes::Terran_Academy) addComSat = true;
 
 		//Adds command center as separate variable
 		if ((*u)->getType() == UnitTypes::Terran_Command_Center) {
