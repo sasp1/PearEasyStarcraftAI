@@ -100,8 +100,10 @@ bool Worker::handleBuild() {
 }
 
 void Worker::collect() {
-	if (unit == NULL || *unit == NULL)
-		return; 
+	if (unit == NULL || *unit == NULL) {
+		Broodwar->sendText("ERROR UNIT WAS NULL"); 
+		return;
+	}
 	
 	if (workState == 0 && (center != NULL)) {
 		BWAPI::Unit mine = (*center)->getClosestUnit(IsMineralField);

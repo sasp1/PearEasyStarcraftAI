@@ -23,7 +23,7 @@ std::list<Worker*> builders; //List of workers in the process of constructing bu
 void ConstructionManager::executeOrders() {
 
 	for (auto &b : builders) {
-		if (b == NULL) {
+		if (b == NULL ) {
 			builders.remove(b);
 			break;
 		}

@@ -96,20 +96,21 @@ void GatheringManager::executeOrders() {
 	bool foundError = false;
 	gasWorkers = 0;
 	mineralWorkers = 0;
+	std::list<Worker*> workersToBeRemoved; 
 
 	for (auto &w : workers) {
 		if (w == NULL) {
-			workers.remove(w);
+			workersToBeRemoved.push_back(w); 
 			foundError = true;
 			break;
 		}
 		else if (!w->isValid()) {
-			workers.remove(w);
+			workersToBeRemoved.push_back(w);
 			foundError = true;
 			break;
 		}
 		else if (!((w->workState == 0) || (w->workState == 1))) {
-			workers.remove(w);
+			workersToBeRemoved.push_back(w);
 			foundError = true;
 			break;
 		}
@@ -118,6 +119,9 @@ void GatheringManager::executeOrders() {
 			else if (w->workState == 1) gasWorkers++;
 			w->collect();
 		}
+	}
+	for (auto &w : workersToBeRemoved) {
+		workers.remove(w); 
 	}
 
 	if (!foundError) {

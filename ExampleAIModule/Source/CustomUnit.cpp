@@ -2,12 +2,19 @@
 
 bool CustomUnit::isValid()
 {
-	return  *unit != NULL && (unit != NULL) &&((*unit)->getHitPoints() > 0);
+	if (*unit == NULL)
+		return false;
+	if (unit == NULL)
+		return false;
+	if ((*unit)->getHitPoints() == 0)
+		return false;
+	return true;
+
 }
 
 CustomUnit::CustomUnit(const BWAPI::Unit * u)
 {
-	unit = u; 
+	unit = u;
 	targetEnemy = NULL;
 
 }

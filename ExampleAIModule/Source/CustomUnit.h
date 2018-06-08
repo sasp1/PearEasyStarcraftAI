@@ -8,7 +8,7 @@ class CustomUnit
 public: 
 	virtual bool isValid(); 
 	CustomUnit(const BWAPI::Unit* u); 
-	const BWAPI::Unit* unit; 
+	const BWAPI::Unit* unit = NULL; 
 	virtual bool isOcupied() = 0; 
 
 	BWAPI::Unit targetEnemy;
