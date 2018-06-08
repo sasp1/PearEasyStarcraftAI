@@ -235,15 +235,13 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 
 	//First check if unit are within critical range of a cannonn
 	for (auto &eu : (*unit)->getUnitsInRadius(UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() + UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() / 5)) {
-
+		
 
 		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && (((*eu).getType() == UnitTypes::Protoss_Photon_Cannon) || ((*eu).getType() == UnitTypes::Zerg_Sunken_Colony))) {
 
-
-
 			BWAPI::Position movePosition = (*unit)->getPosition() - (((*eu).getPosition() - (*unit)->getPosition()));
 			(*unit)->move(movePosition);
-			
+			Broodwar->drawCircleMap(movePosition, 20, Colors::Cyan, true);
 
 			return true;
 		}
@@ -259,7 +257,6 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 		if ((eu)->getPlayer()->isEnemy(Broodwar->self()) && isInEnemyCriticalRange(unit, &eu) && isMelee(&eu) && !(*eu).getType().isBuilding()) {
 			enemiesInCriticalRange = true;
 			centerOfMass = centerOfMass + ((*eu).getPosition() - (*unit)->getPosition()); // Lægges til igen grundet dobbelt vægt
-
 		}
 	}
 
@@ -344,7 +341,7 @@ bool CombatManager::fleeIfOutNumbered(Vulture* vulture) {
 	}
 	if ((*vulture->unit)->getDistance((*nearestHydra)->getPosition()) < UnitTypes::Zerg_Hydralisk.groundWeapon().maxRange() * 2) {
 		(*vulture->unit)->move(scoutingManager->defendInBasePosition);
-
+		
 		return true;
 	}
 	return false;
@@ -473,6 +470,7 @@ void CombatManager::executeOrders() {
 			}
 		}
 		//if (!shouldMoveAwayFromFriendlyUnits(u->unit)) {
+		
 		if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
 			if (!fleeIfOutNumbered(vulture)) {
 				if (!vulture->isOcupied()) {
