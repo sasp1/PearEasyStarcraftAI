@@ -102,7 +102,7 @@ void ScoutingManager::setEnemyCorner(BWAPI::Position pos) {
 void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
 	//Scout clockwise each corner of the map
 	
-	scoutedCorners++; 
+	//scoutedCorners++; 
 	if (scoutedCorners == 3 && enemyBaseFound == false) {
 		 
 		enemyBaseFound = true;
@@ -122,35 +122,81 @@ void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
 
 	if (corner == 0) {
 		(*scout)->move(cornerCoords0);
+		checkIfCornerDiscovered(scout, cornerCoords0);
 	}
 	else if (corner == 1) {
 		(*scout)->move(cornerCoords1);
+		checkIfCornerDiscovered(scout, cornerCoords1);
+
 	}
 	else if (corner == 2) {
 		(*scout)->move(cornerCoords2);
+		checkIfCornerDiscovered(scout, cornerCoords2);
+
 	}
 	else {
 		(*scout)->move(cornerCoords3);
+		checkIfCornerDiscovered(scout, cornerCoords3);
+
 	}
-	corner = (corner + 1) % 4;
+
+}
+
+void ScoutingManager::checkIfCornerDiscovered(const BWAPI::Unit * unit, BWAPI::Position cornerCord) {
+	if ((*unit)->getDistance(cornerCord) < 300) {
+		corner = (corner + 1) % 4;
+		Broodwar->sendText("NEW CORNER");
 	}
+}
+
+
+bool ScoutingManager::isAvoidingNearbyEnemiesWithinRange(const BWAPI::Unit * unit, int range) {
+	bool enemiesInCriticalRange = false;
+
+	//otherwise juke as normal
+	BWAPI::Position centerOfMass = Position(0, 0);
+	for (auto &eu : (*unit)->getUnitsInRadius(range, IsEnemy)) {
+
+		centerOfMass = centerOfMass + ((*eu).getPosition() - (*unit)->getPosition());
+		enemiesInCriticalRange = true;
+
+	}
+
+	
+	//Broodwar->sendText("Center of mass was: %d, %d", centerOfMass.x, centerOfMass.y);
+
+	//int centerOfMassDistance = Position(0, 0).getDistance(centerOfMass);
+	//centerOfMass.x = (centerOfMass.x * 150 / centerOfMassDistance);
+	//centerOfMass.y = (centerOfMass.y * 150 / centerOfMassDistance);
+
+	BWAPI::Position movePosition = (*unit)->getPosition() - centerOfMass;
+
+	if (enemiesInCriticalRange) {
+		(*unit)->move(movePosition);
+		Broodwar->sendText("Scout fleeing!!!");
+	}
+
+	return enemiesInCriticalRange;
+	
+}
+
+
+
 
 
 void ScoutingManager::executeOrders() {
 
-	for (auto &u : scoutingUnits)
-	{
-		//Broodwar->sendText("pos: %i,%i",(*u)->getPosition().x, (*u)->getPosition().y);
-		if ((*u)->isIdle()) {
-			scoutCornersClockwise(u);
-		
-		}	
-		
-		/*
-		if ((*u)->isUnderAttack() && enemyBaseFound) {
-			returnToBase(u); 
+	for (auto &u : scoutingUnits) {
+		if (!enemyBaseFound || !isAvoidingNearbyEnemiesWithinRange(u, 500)) {
+			if (!enemyBaseFound) {
+				scoutCornersClockwise(u);
+				Broodwar->sendText("CORNNER SSS!!!");
+
+			} else {
+				Broodwar->sendText("GOING TO ENEMY!!!");
+				(*u)->move(lastEnemyBuildingPosition);
+			}
 		}
-		*/
 	}
 }
 

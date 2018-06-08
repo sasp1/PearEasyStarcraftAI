@@ -25,12 +25,14 @@ public:
 	~ScoutingManager();
 	void ScoutingManager::addScout(const BWAPI::Unit* scout);
 	void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout);
+	void ScoutingManager::checkIfCornerDiscovered(const BWAPI::Unit * unit, BWAPI::Position cornerCord);
 	void ScoutingManager::executeOrders();
 	void ScoutingManager::onUnitDiscover(BWAPI::Unit unit);
 	void ScoutingManager::setStartingCorner(BWAPI::Position pos);
 	void setEnemyCorner(BWAPI::Position pos);
 	void ScoutingManager::returnToBase(const BWAPI::Unit* unit); 
 	bool enemyHasLurker = false; 
+	bool ScoutingManager::isAvoidingNearbyEnemiesWithinRange(const BWAPI::Unit * unit, int range);
 	Unit enemyLurker = NULL;
 	BuildingManager* buildingManager;
 	MapData* mapData;
