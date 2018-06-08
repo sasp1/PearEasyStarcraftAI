@@ -21,6 +21,8 @@ public:
 	std::list<CustomUnit*> minesInDefensiveChokePosition; 
 	std::list<CustomUnit*> minesAtEnemeyBase;
 	std::list<CustomUnit*> workers;
+	bool shouldAttack = false;
+
 
 
 	void CombatManager::addCombatUnit(const BWAPI::Unit* unit);
@@ -32,6 +34,7 @@ public:
 	bool shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit* unit, int range);
 	
 	void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position pos);
+	void CombatManager::attackEnemyBaseWhenVulturesAreGrouped(BWAPI::Position enemyBasePosition, int groupSize);
 	bool CombatManager::shouldDefendBase(int range, const BWAPI::Unit * unit);
 
 	void CombatManager::returnAllUnitsToBase();
