@@ -33,6 +33,12 @@ void StrategyManager::calculateOrders() {
 		supplyDepotsAreNotUnderConstruction = (lastSupply + 1500 < Broodwar->getFrameCount());
 	 }
 	 
+	 if (unusedSupplies/2 <= (Broodwar->self()->supplyTotal()/2)*0.2 && supplyDepotsAreNotUnderConstruction) {
+		 if (unitManager->requestSupply()) {
+			 lastSupply = Broodwar->getFrameCount();
+			 supplyDepotsAreNotUnderConstruction = false;
+		 }
+	 }
 
 	//Set executionManager orders
 	if (strategy == 1) executeTwoFactory();
@@ -50,11 +56,6 @@ void StrategyManager::executeTwoFactory() {
 	
 	//___________________________Building strategy________________________________
 	//Construct supply depots when needed (2 supplies left)
-	if (unusedSupplies <= 4 && supplyDepotsAreNotUnderConstruction) {
-			lastSupply = Broodwar->getFrameCount();
-			executionManager->addPriorityItem(UnitTypes::Terran_Supply_Depot);
-			supplyDepotsAreNotUnderConstruction = false;
-	}
 
 	//Build barracks
 	if (Broodwar->self()->supplyUsed() >= 22 && desireBuildingBarracks) {
@@ -105,13 +106,6 @@ void StrategyManager::executeExpandWithOneFactory() {
 	else buildingManager->factoryBuild = UnitTypes::Terran_Vulture;
 	
 	//___________________________Building strategy________________________________
-	//Construct supply depots when needed (11 supplies left)
-	if ((unusedSupplies <= 22)  && supplyDepotsAreNotUnderConstruction) {
-		lastSupply = Broodwar->getFrameCount();
-		executionManager->addPriorityItem(UnitTypes::Terran_Supply_Depot);
-		supplyDepotsAreNotUnderConstruction = false;
-	}
-
 	//Maintain 3 factories  AND EXPAND BASE!!!!!!
 	if (Broodwar->self()->supplyUsed() >= 72 && !hasExpanded && Broodwar->self()->minerals() > 400 && factoriesOrdered >= 3 && Broodwar->enemy()->getRace() != Races::Terran ) {
 		numberOfWorkersLimit *= 2;
@@ -126,7 +120,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 		factoriesOrdered++;
 	}
 
-	if (scoutingManager->enemyHasLurker && !academyOrdered) { //  && scoutingManager->enemyLurker != NULL && scoutingManager->enemyLurker->isVisible()
+	if (scoutingManager->enemyHasLurker && !academyOrdered) {
 		Broodwar->sendText("Adding academy to priorityqueue because lurker was spotted"); 
 		executionManager->addPriorityItem(UnitTypes::Terran_Academy);
 		academyOrdered = true; 
@@ -160,6 +154,19 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 	else if (combatManager->vultures._Mysize() >= 8 && Broodwar->enemy()->getRace() == Races::Terran && scoutingManager->enemyBaseFound && !combatManager->shouldAttack) {
 			combatManager->attackEnemyBaseWhenVulturesAreGrouped(scoutingManager->lastEnemyBuildingPosition, 8);
+	}
+	else if (Broodwar->enemy()->getRace() == Races::Terran && combatManager->shouldAttack && combatManager->vultures._Mysize() <= 5) {
+		bool shouldRetreat = true;
+		for (auto &u : combatManager->vultures) {
+			if ((*u->unit)->getDistance(scoutingManager->lastEnemyBuildingPosition) < 1000) {
+				shouldRetreat = false;
+			}
+		}
+		combatManager->shouldAttack = !shouldRetreat;
+		if (shouldRetreat) {
+			Broodwar->sendText("Retreaaat");
+			combatManager->returnAllUnitsToBase();
+		}
 	}
 
 

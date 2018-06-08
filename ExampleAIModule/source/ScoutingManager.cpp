@@ -3,6 +3,7 @@
 #include <math.h>
 #include <algorithm>
 #include "BuildingManager.h"
+#include "ConstructionManager.h"
 
 using namespace BWAPI;
 using namespace Filter;
@@ -174,6 +175,8 @@ void ScoutingManager::onUnitDiscover(BWAPI::Unit unit)
 		 enemyLurker = unit; 
 		 enemyHasLurker = true;
 		 Broodwar->sendText("ENEMY HAS LURKER AT POSITION: %d, %d", unit->getPosition().x, unit->getPosition().y);
+		 buildingManager->scan(unit->getPosition());
+
 	 }
 
 	 if (!secondaryMineralFieldFound && unit->getType() == UnitTypes::Resource_Mineral_Field && (*buildingManager->commandCenter)->getDistance(unit) > 350) {

@@ -30,7 +30,7 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 	if ((*u)->getType() != UnitTypes::Terran_Supply_Depot)
 	{
 		Building* b = new Building(u);
-		if ((*u)->getType() == UnitTypes::Terran_Academy) haveAcademy = true;
+		if ((*u)->getType() == UnitTypes::Terran_Academy) addComSat = true;
 
 		//Adds command center as separate variable
 		if ((*u)->getType() == UnitTypes::Terran_Command_Center) {
@@ -73,7 +73,7 @@ void BuildingManager::executeOrders() {
 	//Clean command centers
 	for (auto &b : commandCenters) if (!b->isUnitValid()) buildings.remove(b);
 
-	if (addComSat && haveAcademy)
+	if (addComSat)
 	{
 		commandCenters.front()->initAddon(UnitTypes::Terran_Comsat_Station);
 		commandCenters.front()->shouldBuildAddon = true;
@@ -116,11 +116,6 @@ void BuildingManager::executeOrders() {
 				}
 			}
 
-			//ComSat
-			if (b->getType() == UnitTypes::Terran_Comsat_Station && (*b->unit)->isIdle()) {
-				(*b->unit)->useTech(TechTypes::Scanner_Sweep);
-			}
-
 			//Factory orders
 			if (b->getType() == UnitTypes::Terran_Factory && (*b->unit)->isIdle()) {
 				//Handle machiine shop build
@@ -147,6 +142,17 @@ BuildingManager::BuildingManager()
 	factoryBuild = UnitTypes::None;;
 	barrackBuild = UnitTypes::Terran_Marine;;
 
+}
+
+bool BuildingManager::scan(BWAPI::Position pos) {
+
+	const BWAPI::Unit* u = new Unit((*commandCenter)->getAddon());
+
+	if ((*u) == NULL) return false;
+
+	bool res = (*u)->useTech(TechTypes::Scanner_Sweep, pos);
+	if (res) Broodwar->sendText("Scanned");
+	return res;
 }
 
 BuildingManager::~BuildingManager()
