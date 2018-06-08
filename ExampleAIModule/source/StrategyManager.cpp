@@ -164,8 +164,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 		}
 		combatManager->shouldAttack = !shouldRetreat;
 		if (shouldRetreat) {
-			Broodwar->
-				xt("Retreaaat");
+			Broodwar->sendText("Retreaaat");
 			combatManager->returnAllUnitsToBase();
 		}
 	}
