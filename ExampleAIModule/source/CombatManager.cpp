@@ -312,15 +312,16 @@ void CombatManager::attackEnemyBaseWhenVulturesAreGrouped(BWAPI::Position enemyB
 * @param range integer specifing a range from the base
 */
 
-bool CombatManager::shouldDefendBase(int range, const BWAPI::Unit * unit) {
+bool CombatManager::shouldDefendBase(int range, CustomUnit* unit) {
 	//find min distance to defend base (commandcenter to closest enemy)
 
 	bool defendingBase = false;
 
 	if (BWAPI::Unit(*buildingManager->commandCenter)->getDistance(BWAPI::Unit(*buildingManager->commandCenter)->getClosestUnit(IsEnemy)) < range) {
 		//Only units near base protects base
-		if (BWAPI::Unit(*buildingManager->commandCenter)->getDistance(*unit) < range) {
-			findMostWantedEnemyToKill(unit);
+		if (BWAPI::Unit(*buildingManager->commandCenter)->getDistance(*unit->unit) < range) {
+			attackDesiredUnit(unit, findMostWantedEnemyToKill(unit->unit));
+			
 			defendingBase = true;
 		}
 
@@ -494,7 +495,7 @@ void CombatManager::executeOrders() {
 				if (!vulture->isOcupied()) {
 					if (!shouldSetMine(vulture)) {
 						if (!attackingLurker(vulture->unit)) {
-							if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
+							if (!shouldDefendBase(1000, u) && shouldAttack) {
 								attackDesiredUnit(u, findMostWantedEnemyToKill(u->unit));
 							}
 						}
@@ -516,7 +517,7 @@ void CombatManager::executeOrders() {
 			if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
 
 				//If the tank should not defend and we are attacking
-				if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
+				if (!shouldDefendBase(1000, u) && shouldAttack) {
 					//find and attack the desired enemy
 					attackDesiredUnit(u, findMostWantedEnemyToKill(u->unit));
 
@@ -528,7 +529,7 @@ void CombatManager::executeOrders() {
 
 	for (auto &u : marines) {
 
-		if (!shouldDefendBase(1000, u->unit) && shouldAttack) {
+		if (!shouldDefendBase(1000, u) && shouldAttack) {
 
 			attackDesiredUnit(u, findMostWantedEnemyToKill(u->unit));
 

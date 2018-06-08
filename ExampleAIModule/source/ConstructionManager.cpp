@@ -69,7 +69,6 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 	
 	if (*worker != NULL) {
 
-
 	(*worker)->stop();
 
 	//Execute proper build init, based on building type
@@ -86,9 +85,14 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 		Worker* w = new Worker(worker);
 		w->initBuild(building, (*worker)->getPosition());
 		builders.push_back(w);
-		Broodwar->sendText("worker request");
 	}
 	}
+}
+
+void ConstructionManager::createBuildingAtPos(BWAPI::UnitType building, const BWAPI::Unit* worker, BWAPI::Position pos) {
+	Worker* w = new Worker(worker);
+	w->initBuild(building, pos);
+	builders.push_back(w);
 }
 
 /**
