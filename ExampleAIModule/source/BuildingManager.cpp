@@ -30,7 +30,7 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 	if ((*u)->getType() != UnitTypes::Terran_Supply_Depot)
 	{
 		Building* b = new Building(u);
-		if ((*u)->getType() == UnitTypes::Terran_Academy) haveAcademy = true;
+		if ((*u)->getType() == UnitTypes::Terran_Academy) haveAcademy = addComSat;
 
 		//Adds command center as separate variable
 		if ((*u)->getType() == UnitTypes::Terran_Command_Center) {
@@ -73,7 +73,7 @@ void BuildingManager::executeOrders() {
 	//Clean command centers
 	for (auto &b : commandCenters) if (!b->isUnitValid()) buildings.remove(b);
 
-	if (addComSat && haveAcademy)
+	if (addComSat)
 	{
 		commandCenters.front()->initAddon(UnitTypes::Terran_Comsat_Station);
 		commandCenters.front()->shouldBuildAddon = true;
@@ -114,11 +114,6 @@ void BuildingManager::executeOrders() {
 					(*u)->research(TechTypes::Tank_Siege_Mode);
 					if ((*u)->isUpgrading())desiredResearchs.pop_front();
 				}
-			}
-
-			//ComSat
-			if (b->getType() == UnitTypes::Terran_Comsat_Station && (*b->unit)->isIdle()) {
-				(*b->unit)->useTech(TechTypes::Scanner_Sweep);
 			}
 
 			//Factory orders
