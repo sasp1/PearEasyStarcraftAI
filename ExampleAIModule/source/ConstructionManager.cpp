@@ -15,29 +15,34 @@ using namespace BWAPI;
 using namespace Filter;
 
 std::list<Worker*> builders; //List of workers in the process of constructing buildings.
-
+std::list<Worker*> removeBuilders;
 /**
 * Clean up, and order assigning of all controlled units
 * @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
 */
 void ConstructionManager::executeOrders() {
 
+	removeBuilders.clear();
+
 	for (auto &b : builders) {
-		if (b == NULL ) {
-			builders.remove(b);
+		if (b == NULL) {
+			removeBuilders.push_back(b);
 			break;
 		}
 		else if (!b->isValid()) {
-			builders.remove(b);
+			removeBuilders.push_back(b);
 			break;
 		} 
 		else if (b->handleBuild()) {
 			const BWAPI::Unit* u = new Unit();
 			u = b->unit;
 			unitManager->newWorker(u);
-			builders.remove(b);
+			removeBuilders.push_back(b);
 			break;
 		}
+	}
+	for (auto &b : removeBuilders) {
+		builders.remove(b);
 	}
 }
 

@@ -25,30 +25,12 @@ void ExecutionManager::executeOrders() {
 	}
 
 	//Check if minerals is reserved for buildings, and if then stop producing moving units
-	controlTrainingOfMovingUnits();
 	buildingManager->executeOrders();
 	unitManager->executeOrders();
 }
 
 void ExecutionManager::addPriorityItem(BWAPI::UnitType unit) {
 	priorityQueue.push_back(unit);
-}
-
-void ExecutionManager::controlTrainingOfMovingUnits() {
-	/*
-	if (Broodwar->self()->minerals() - reservedMinerals < UnitTypes::Terran_SCV.mineralPrice()) {
-		buildingManager->setIsDesiredToTrainWorkers(false);
-	}
-	else {
-		buildingManager->setIsDesiredToTrainWorkers(true);
-	}
-	if (Broodwar->self()->minerals() - reservedMinerals < UnitTypes::Terran_Marine.mineralPrice()) {
-		buildingManager->setIsDesiredToTrainMarines(false);
-	}
-	else {
-		buildingManager->setIsDesiredToTrainMarines(true);
-	}
-	*/
 }
 
 void ExecutionManager::eventConstructionInitiated(BWAPI::Unit unit) {
