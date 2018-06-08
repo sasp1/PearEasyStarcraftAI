@@ -573,14 +573,10 @@ void CombatManager::executeOrders() {
 		Broodwar->drawLineMap((*u->unit)->getPosition(), (*u->unit)->getOrderTargetPosition(), Colors::Red); 
 
 		if ((*u->unit)->isIdle() && shouldAttack && !u->isOcupied()) {
-			/*if (!fleeFromLurker(u->unit)) {
-				if (!attackingLurker(u->unit)) {*/
 			(*u->unit)->move(attackLocation);
-
-			//}
-
-		//}
-
+		}
+		else if ((*u->unit)->isIdle() && !shouldAttack && !u->isOcupied()) {
+			(*u->unit)->move(scoutingManager->defendBasePosition);
 		}
 
 	}
