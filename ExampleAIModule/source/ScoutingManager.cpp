@@ -145,7 +145,7 @@ void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
 void ScoutingManager::checkIfCornerDiscovered(const BWAPI::Unit * unit, BWAPI::Position cornerCord) {
 	if ((*unit)->getDistance(cornerCord) < 300) {
 		corner = (corner + 1) % 4;
-		Broodwar->sendText("NEW CORNER");
+		//Broodwar->sendText("NEW CORNER");
 	}
 }
 
@@ -173,7 +173,7 @@ bool ScoutingManager::isAvoidingNearbyEnemiesWithinRange(const BWAPI::Unit * uni
 
 	if (enemiesInCriticalRange) {
 		(*unit)->move(movePosition);
-		Broodwar->sendText("Scout fleeing!!!");
+		
 	}
 
 	return enemiesInCriticalRange;
@@ -190,10 +190,10 @@ void ScoutingManager::executeOrders() {
 		if (!enemyBaseFound || !isAvoidingNearbyEnemiesWithinRange(u, 500)) {
 			if (!enemyBaseFound) {
 				scoutCornersClockwise(u);
-				Broodwar->sendText("CORNNER SSS!!!");
+				
 
 			} else {
-				Broodwar->sendText("GOING TO ENEMY!!!");
+				
 				(*u)->move(lastEnemyBuildingPosition);
 			}
 
