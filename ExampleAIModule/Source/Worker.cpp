@@ -96,9 +96,12 @@ bool Worker::handleBuild() {
 }
 
 void Worker::collect() {
-
+	if (unit == NULL || *unit == NULL)
+		return; 
+	
 	if (workState == 0 && (center != NULL)) {
 		BWAPI::Unit mine = (*center)->getClosestUnit(IsMineralField);
+		
 		if ((*unit)->isIdle()) {
 			if ((*unit)->isCarryingGas() || (*unit)->isCarryingMinerals())
 				(*unit)->returnCargo();

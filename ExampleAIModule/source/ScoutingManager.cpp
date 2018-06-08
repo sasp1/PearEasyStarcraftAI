@@ -142,7 +142,6 @@ void ScoutingManager::executeOrders() {
 		//Broodwar->sendText("pos: %i,%i",(*u)->getPosition().x, (*u)->getPosition().y);
 		if ((*u)->isIdle()) {
 			scoutCornersClockwise(u);
-		
 		}	
 		
 		/*
