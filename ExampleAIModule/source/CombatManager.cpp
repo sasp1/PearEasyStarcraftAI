@@ -1,6 +1,8 @@
 #include "CombatManager.h"
 #include <BWAPI.h>
 #include "Worker.h"
+#include "Wraith.h"
+
 /**
 * @file CombatManager.cpp
 * @brief Controls the army, how it initiate combat and how units attack in combat.
@@ -54,6 +56,11 @@ void CombatManager::addCombatUnit(const BWAPI::Unit* unit) {
 		CustomUnit* worker = new Worker(unit);
 		workers.push_back(worker);
 		Broodwar->sendText("Worker added");
+	}
+	else if ((*unit)->getType() == BWAPI::UnitTypes::Terran_Wraith) {
+		CustomUnit* wraith = new Wraith(unit);
+		wraiths.push_back(wraith);
+		Broodwar->sendText("Wraith added");
 
 	}
 
@@ -77,6 +84,10 @@ std::list<CustomUnit*> CombatManager::getAllCombatUnits() {
 	}
 
 	for (auto &u : workers) {
+		combatunits.push_back(u);
+	}
+
+	for (auto &u : wraiths) {
 		combatunits.push_back(u);
 	}
 
@@ -528,6 +539,16 @@ void CombatManager::executeOrders() {
 
 
 	for (auto &u : marines) {
+
+		if (!shouldDefendBase(1000, u) && shouldAttack) {
+
+			attackDesiredUnit(u, findMostWantedEnemyToKill(u->unit));
+
+		}
+
+	}
+
+	for (auto &u : wraiths) {
 
 		if (!shouldDefendBase(1000, u) && shouldAttack) {
 

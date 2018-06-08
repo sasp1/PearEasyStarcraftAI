@@ -103,6 +103,12 @@ void BuildingManager::executeOrders() {
 				}
 			}
 
+			if (b->getType() == UnitTypes::Terran_Starport) {
+				if (starportBuild != UnitTypes::None) {
+					(*u)->train(starportBuild);
+				}
+			}
+
 			//Machine shop orders
 			if ((b->getType() == UnitTypes::Terran_Machine_Shop)) {
 				if (desiredResearchs.front() == TechTypes::Spider_Mines) {
@@ -144,6 +150,7 @@ BuildingManager::BuildingManager()
 {
 	factoryBuild = UnitTypes::None;;
 	barrackBuild = UnitTypes::Terran_Marine;;
+	starportBuild = UnitTypes::None;;
 
 }
 

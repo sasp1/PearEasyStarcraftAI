@@ -19,6 +19,8 @@ int mineralLimitOfWhenRessourcesAreFreeToUse = 700;
 int gasLimitOfWhenRessourcesAreFreeToUse = 500;
 bool tanksAreDesiredToBuild;
 bool hasExpanded = false;
+bool hasRetreated = false;
+
 
 void StrategyManager::calculateOrders() {
 	//Handle workers and supplies
@@ -104,6 +106,13 @@ void StrategyManager::executeExpandWithOneFactory() {
 		buildingManager->factoryBuild = UnitTypes::Terran_Siege_Tank_Tank_Mode;
 	}
 	else buildingManager->factoryBuild = UnitTypes::Terran_Vulture;
+
+
+	//Train wraiths when starport
+	if (starportsOrdered >= 1) {
+		buildingManager->starportBuild = UnitTypes::Terran_Wraith;
+	}
+
 	
 	//___________________________Building strategy________________________________
 	//Maintain 3 factories  AND EXPAND BASE!!!!!!
@@ -131,6 +140,13 @@ void StrategyManager::executeExpandWithOneFactory() {
 		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
 		factoriesOrdered++;
 	}
+
+	if ( Broodwar->enemy()->getRace() == Races::Terran && hasRetreated && starportsOrdered < 1) {
+		Broodwar->sendText("adding starport to priorityQueue");
+		executionManager->addPriorityItem(UnitTypes::Terran_Starport);
+		starportsOrdered++;
+	}
+
 	//else if (scoutingManager->enemyHasLurker && scoutingManager->enemyLurker != NULL) {
 	//	Broodwar->sendText("Enemylurker exists: %s", scoutingManager->enemyLurker->exists() ? "true" : "false"); 
 	//}
@@ -166,6 +182,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 		if (shouldRetreat) {
 			Broodwar->sendText("Retreaaat");
 			combatManager->returnAllUnitsToBase();
+			hasRetreated = true;
 		}
 	}
 

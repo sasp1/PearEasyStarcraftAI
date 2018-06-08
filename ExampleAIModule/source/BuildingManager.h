@@ -27,6 +27,7 @@ public:
 	const BWAPI::Unit* commandCenter;
 	BWAPI::UnitType factoryBuild;
 	BWAPI::UnitType barrackBuild;
+	BWAPI::UnitType starportBuild;
 	BWAPI::Position scanPoint;
 	int drawTimer = -1;
 	int totalMachineShops = 0;
