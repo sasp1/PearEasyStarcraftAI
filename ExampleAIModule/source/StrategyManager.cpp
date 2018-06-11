@@ -7,6 +7,7 @@ bool academyOrdered = false;
 bool supplyDepotsAreNotUnderConstruction = true;
 bool desireBuildingBarracks = true;
 bool hasResearchedSiegeMode = false;
+bool builtArmory = false;
 int refineriesOrdered = 0;
 int factoriesOrdered = 0;
 int starportsOrdered = 0; 
@@ -124,6 +125,12 @@ void StrategyManager::executeExpandWithOneFactory() {
 		Broodwar->sendText("Adding academy to priorityqueue because lurker was spotted"); 
 		executionManager->addPriorityItem(UnitTypes::Terran_Academy);
 		academyOrdered = true; 
+	}
+
+	if (Broodwar->self()->minerals() > 700 && !builtArmory) {
+		Broodwar->sendText("Adding armory and techs");
+		executionManager->addPriorityItem(UnitTypes::Terran_Armory);
+		builtArmory = true;
 	}
 
 	if (Broodwar->self()->supplyUsed() >= 200 && factoriesOrdered < 5 && Broodwar->enemy()->getRace() != Races::Terran && hasExpanded) {

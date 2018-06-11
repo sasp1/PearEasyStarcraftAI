@@ -12,6 +12,7 @@ int maxX = 0;
 int maxY = 0;
 int factories = 0;
 bool addedMachineTech = false;
+bool addedArmoryTech = false;
 
 
 /**
@@ -40,7 +41,13 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 		}
 		else {
 			buildings.push_back(b);
-
+			if ((*u)->getType() == UnitTypes::Terran_Armory) {
+				if (!addedArmoryTech) {
+					desiredUpgrades.push_back(UpgradeTypes::Terran_Vehicle_Weapons);
+					desiredUpgrades.push_back(UpgradeTypes::Terran_Vehicle_Plating);
+					addedArmoryTech = true;
+				}
+			}
 			//If factory, adds request machine shop addon for first two factories.
 			if ((*u)->getType() == UnitTypes::Terran_Factory) {
 				factories++;
@@ -100,6 +107,18 @@ void BuildingManager::executeOrders() {
 			if (b->getType() == UnitTypes::Terran_Barracks) {
 				if (barrackBuild != UnitTypes::None) {
 					(*u)->train(barrackBuild);
+				}
+			}
+
+			//Armory orderrs
+			if ((*u)->getType() == UnitTypes::Terran_Armory) {
+				if (desiredUpgrades.front() == UpgradeTypes::Terran_Vehicle_Weapons) {
+					(*u)->upgrade(UpgradeTypes::Terran_Vehicle_Weapons);
+					if ((*u)->isUpgrading()) desiredUpgrades.pop_front();
+				}
+				else if (desiredUpgrades.front() == UpgradeTypes::Terran_Vehicle_Plating) {
+					(*u)->upgrade(UpgradeTypes::Terran_Vehicle_Plating);
+					if ((*u)->isUpgrading()) desiredUpgrades.pop_front();
 				}
 			}
 

@@ -129,11 +129,9 @@ void GatheringManager::executeOrders() {
 	
 		if (gasWorkers < gasWorkerLimit && gas != NULL) {
 			allocateWorker(true);
-			Broodwar->sendText("added worker to gas list");
 		}
 		else if (gasWorkers > gasWorkerLimit) {
 			allocateWorker(false);
-			Broodwar->sendText("added worker to mineral list");
 		}
 	}
 	
