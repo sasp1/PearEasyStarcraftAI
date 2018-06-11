@@ -120,38 +120,40 @@ void BuildingManager::executeOrders() {
 					(*u)->upgrade(UpgradeTypes::Terran_Vehicle_Plating);
 					if ((*u)->isUpgrading()) desiredUpgrades.pop_front();
 				}
-				if (b->getType() == UnitTypes::Terran_Starport) {
-					if (starportBuild != UnitTypes::None) {
-						(*u)->train(starportBuild);
-					}
+			}
+			if (b->getType() == UnitTypes::Terran_Starport) {
+				if (starportBuild != UnitTypes::None) {
+					(*u)->train(starportBuild);
 				}
 			}
 
-				//Machine shop orders
-				if ((b->getType() == UnitTypes::Terran_Machine_Shop)) {
-					if (desiredResearchs.front() == TechTypes::Spider_Mines) {
-						(*u)->research(TechTypes::Spider_Mines);
-						if ((*u)->isResearching()) desiredResearchs.pop_front();
-					}
-					else if (desiredUpgrades.front() == UpgradeTypes::Ion_Thrusters) {
-						(*u)->upgrade(UpgradeTypes::Ion_Thrusters);
-						if ((*u)->isUpgrading())desiredUpgrades.pop_front();
-					}
-					else if (desiredResearchs.front() == TechTypes::Tank_Siege_Mode) {
-						(*u)->research(TechTypes::Tank_Siege_Mode);
-						if ((*u)->isUpgrading())desiredResearchs.pop_front();
-					}
-				}
 
-				//Factory orders
-				if (b->getType() == UnitTypes::Terran_Factory && (*b->unit)->isIdle()) {
-					//Handle machiine shop build
-					b->trainType = factoryBuild;
-					b->doCenterOrder();
+			//Machine shop orders
+			if ((b->getType() == UnitTypes::Terran_Machine_Shop)) {
+				if (desiredResearchs.front() == TechTypes::Spider_Mines) {
+					(*u)->research(TechTypes::Spider_Mines);
+					if ((*u)->isResearching()) desiredResearchs.pop_front();
 				}
+				else if (desiredUpgrades.front() == UpgradeTypes::Ion_Thrusters) {
+					(*u)->upgrade(UpgradeTypes::Ion_Thrusters);
+					if ((*u)->isUpgrading())desiredUpgrades.pop_front();
+				}
+				else if (desiredResearchs.front() == TechTypes::Tank_Siege_Mode) {
+					(*u)->research(TechTypes::Tank_Siege_Mode);
+					if ((*u)->isUpgrading())desiredResearchs.pop_front();
+				}
+			}
+
+			//Factory orders
+			if (b->getType() == UnitTypes::Terran_Factory && (*b->unit)->isIdle()) {
+				//Handle machiine shop build
+				b->trainType = factoryBuild;
+				b->doCenterOrder();
 			}
 		}
 	}
+}
+
 
 
 
