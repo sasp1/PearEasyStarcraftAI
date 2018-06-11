@@ -97,6 +97,7 @@ void ScoutingManager::setEnemyCorner(BWAPI::Position pos) {
 void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
 	//Scout clockwise each corner of the map
 
+	//Set enemy corner as missing corner, if others are scouted.
 	if (scoutedCorners == 3 && enemyBaseFound == false) {
 		 
 		enemyBaseFound = true;

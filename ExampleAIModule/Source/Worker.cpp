@@ -85,7 +85,7 @@ bool Worker::handleBuild() {
 	//Evaluation state for if building is under construction for a longer period of time.
 	if (workState == 4) {
 		//If certain time has passed, and unit is constructing, consider building as being completed. Else try construction again.
-		if ((*unit)->isConstructing() && Broodwar->getFrameCount() > (time + 700)) workState = 5;
+		if ((*unit)->isConstructing() && Broodwar->getFrameCount() > (time + 500)) workState = 5;
 		else if (!(*unit)->isConstructing()) {
 			workState = 1;
 		}
