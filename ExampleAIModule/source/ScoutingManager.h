@@ -15,6 +15,9 @@ public:
 	BWAPI::Position attackBasePosition = BWAPI::Position(0, 0);
 	BWAPI::Position enemyChokePosition = BWAPI::Position(0, 0);
 	BWAPI::Position expandBasePosition = BWAPI::Position(0, 0);
+	TilePosition simCityTilePositionBarracks = TilePosition(0,0);
+	TilePosition simCityTilePositionSupplyDepots1 = TilePosition(0, 0);
+	TilePosition simCityTilePositionSupplyDepots2 = TilePosition(0, 0);
 	Position inEnemyBasePosition = BWAPI::Position(0, 0);;
 	Position defendInBasePosition; 
 	Unit enemyLurker = NULL;

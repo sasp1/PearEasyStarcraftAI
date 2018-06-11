@@ -110,11 +110,11 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 
 	//Train wraiths when starport
-	/*
+	
 	if (starportsOrdered >= 1) {
 		buildingManager->starportBuild = UnitTypes::Terran_Wraith;
 	}
-	*/
+	
 
 	
 	//___________________________Building strategy________________________________
@@ -156,16 +156,13 @@ void StrategyManager::executeExpandWithOneFactory() {
 	}
 
 
-	/*
-	if ( Broodwar->enemy()->getRace() == Races::Terran && retreats>0 && starportsOrdered < 1) {
+	
+	if ( Broodwar->enemy()->getRace() == Races::Terran && retreats>0 && starportsOrdered < 1 && Broodwar->self()->minerals() > 2000 && Broodwar->self()->gas() > 700) {
 		Broodwar->sendText("adding starport to priorityQueue");
 		executionManager->addPriorityItem(UnitTypes::Terran_Starport);
 		starportsOrdered++;
-		Broodwar->sendText("adding factory to priorityQueue");
-		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
-		factoriesOrdered++;
 	}
-	*/
+	
 
 	//else if (scoutingManager->enemyHasLurker && scoutingManager->enemyLurker != NULL) {
 	//	Broodwar->sendText("Enemylurker exists: %s", scoutingManager->enemyLurker->exists() ? "true" : "false"); 

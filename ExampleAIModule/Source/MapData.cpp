@@ -14,6 +14,9 @@ MapData::MapData()
 	northwestDefend = BWAPI::Position(398, 1017);
 	northwestAttack = BWAPI::Position(764, 814);
 	northwestMinePosition = BWAPI::Position(150, 825);
+	northwestSimCityTilePositionBarracks = BWAPI::TilePosition(24, 31);
+	northwestSimCityTilePositionSupplyDepots1 = BWAPI::TilePosition(27, 29);
+	northwestSimCityTilePositionSupplyDepots2 = BWAPI::TilePosition(29, 27);
 
 	southwestChokePointMid = BWAPI::Position(573, 3136);
 	southwestChokePointTop = BWAPI::Position(558, 3097);
@@ -24,6 +27,10 @@ MapData::MapData()
 	southwestDefend = BWAPI::Position(420, 3019);
 	southwestAttack = BWAPI::Position(717, 3250);
 	southwestMinePosition = BWAPI::Position(150, 3300);
+	southwestSimCityTilePositionBarracks = BWAPI::TilePosition(28, 99);
+	southwestSimCityTilePositionSupplyDepots1 = BWAPI::TilePosition(26, 97);
+	southwestSimCityTilePositionSupplyDepots2 = BWAPI::TilePosition(24, 95);
+
 
 	northeastChokePointMid = BWAPI::Position(3531, 924);
 	northeastChokePointTop = BWAPI::Position(3511, 858);
@@ -33,7 +40,11 @@ MapData::MapData()
 	northeastExpand = BWAPI::Position(3293, 679);
 	northeastDefend = BWAPI::Position(3670, 1010);
 	northeastAttack = BWAPI::Position(3335, 809);
-	northeastMinePosition = BWAPI::Position(3900, 825); 
+	northeastMinePosition = BWAPI::Position(3900, 825);
+	northeastSimCityTilePositionBarracks = BWAPI::TilePosition(102, 25);
+	northeastSimCityTilePositionSupplyDepots1 = BWAPI::TilePosition(105, 24);
+	northeastSimCityTilePositionSupplyDepots2 = BWAPI::TilePosition(107, 22);
+
 
 	southeastChokePointMid = BWAPI::Position(3523, 3147);
 	southeastChokePointTop = BWAPI::Position(3536, 3088);
@@ -44,6 +55,10 @@ MapData::MapData()
 	southeastDefend = BWAPI::Position(3659, 3035);
 	southeastAttack = BWAPI::Position(3355, 3272);
 	southeastMinePosition = BWAPI::Position(3900, 3300);
+	southeastSimCityTilePositionBarracks = BWAPI::TilePosition(96, 99);
+	southeastSimCityTilePositionSupplyDepots1 = BWAPI::TilePosition(99, 97);
+	southeastSimCityTilePositionSupplyDepots2 = BWAPI::TilePosition(101, 95);
+
 }
 
 MapData::~MapData()

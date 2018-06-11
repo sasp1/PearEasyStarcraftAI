@@ -43,24 +43,36 @@ void ScoutingManager::setStartingCorner(BWAPI::Position pos) {
 		defendBasePosition = (*mapData).northwestAttack;
 		startingChokePosition = (*mapData).northwestChokePointMid;
 		expandBasePosition = (*mapData).northwestExpand;
+		simCityTilePositionBarracks = (*mapData).northwestSimCityTilePositionBarracks;
+		simCityTilePositionSupplyDepots1 = (*mapData).northwestSimCityTilePositionSupplyDepots1;
+		simCityTilePositionSupplyDepots2 = (*mapData).northwestSimCityTilePositionSupplyDepots2;
 	}
 	else if (pos.getDistance(cornerCoords1) < 1000) {
 		corner = 2;
 		defendBasePosition = (*mapData).northeastAttack;
 		startingChokePosition = (*mapData).northeastChokePointMid;
 		expandBasePosition = (*mapData).northeastExpand;
+		simCityTilePositionBarracks = (*mapData).northeastSimCityTilePositionBarracks;
+		simCityTilePositionSupplyDepots1 = (*mapData).northeastSimCityTilePositionSupplyDepots1;
+		simCityTilePositionSupplyDepots2 = (*mapData).northeastSimCityTilePositionSupplyDepots2;
 	}
 	else if (pos.getDistance(cornerCoords2) < 1000) {
 		corner = 3; 
 		defendBasePosition = (*mapData).southeastAttack;
 		startingChokePosition = (*mapData).southeastChokePointMid;
 		expandBasePosition = (*mapData).southeastExpand;
+		simCityTilePositionBarracks = (*mapData).southeastSimCityTilePositionBarracks;
+		simCityTilePositionSupplyDepots1 = (*mapData).southeastSimCityTilePositionSupplyDepots1;
+		simCityTilePositionSupplyDepots2 = (*mapData).southeastSimCityTilePositionSupplyDepots2;
 	}
 	else {
 		corner = 0;
 		defendBasePosition = (*mapData).southwestAttack;
 		startingChokePosition = (*mapData).southwestChokePointMid;
 		expandBasePosition = (*mapData).southwestExpand;
+		simCityTilePositionBarracks = (*mapData).southwestSimCityTilePositionBarracks;
+		simCityTilePositionSupplyDepots1 = (*mapData).southwestSimCityTilePositionSupplyDepots1;
+		simCityTilePositionSupplyDepots2 = (*mapData).southwestSimCityTilePositionSupplyDepots2;
 	}
 }
 
