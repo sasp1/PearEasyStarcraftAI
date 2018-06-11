@@ -69,7 +69,7 @@ void Building::buildAddon() {
 	if (buildState == 3) {
 		//Attempt landing at new location
 		if ((*unit)->isLifted()) {
-			if (!(*unit)->land(TilePosition(buildPos)/32)) buildState = 1;
+			if (!(*unit)->land(TilePosition(buildPos))) buildState = 1;
 		}
 		else buildState = 4;
 	}
