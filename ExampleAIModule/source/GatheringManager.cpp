@@ -125,11 +125,13 @@ void GatheringManager::executeOrders() {
 	}
 
 	if (!foundError) {
+		/*
 		if(gasWorkerLimit == 4 && (Broodwar->self()->gas()) > (Broodwar->self()->minerals() + 500))
 			gasWorkerLimit = 0;
 
 		else if (gasWorkerLimit == 4 && (Broodwar->self()->gas()) < (Broodwar->self()->minerals() + 300))
 			gasWorkerLimit = 0;
+		*/
 	
 		if (gasWorkers < gasWorkerLimit && gas != NULL) {
 			allocateWorker(true);
@@ -139,6 +141,10 @@ void GatheringManager::executeOrders() {
 			allocateWorker(false);
 			Broodwar->sendText("added worker to mineral list");
 		}
+	}
+	else {
+		Broodwar->sendText("Error in GatheringManager KONTAKT T :D (plz)");
+
 	}
 	
 	//Simple look for refinery (handling if the gas is not defined)

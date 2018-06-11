@@ -19,7 +19,7 @@ int mineralLimitOfWhenRessourcesAreFreeToUse = 700;
 int gasLimitOfWhenRessourcesAreFreeToUse = 500;
 bool tanksAreDesiredToBuild;
 bool hasExpanded = false;
-bool hasRetreated = false;
+int retreats = 0;
 
 
 void StrategyManager::calculateOrders() {
@@ -100,7 +100,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 	//Spam voltures when no cannons are discovered
 	if (  ( ((tanksAreDesiredToBuild || EnemyHasAStructureMakingTanksRequired()) && combatManager->tanks._Mysize() <= 4 ) || 
 		(Broodwar->self()->minerals() > mineralLimitOfWhenRessourcesAreFreeToUse && Broodwar->self()->gas() > gasLimitOfWhenRessourcesAreFreeToUse ) )
-			&& combatManager->vultures._Mysize() >= 10) { // OR NumberOfTanks >=2
+			&& combatManager->vultures._Mysize() >= 10) { 
 
 		tanksAreDesiredToBuild = true;
 		buildingManager->factoryBuild = UnitTypes::Terran_Siege_Tank_Tank_Mode;
@@ -109,21 +109,23 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 
 	//Train wraiths when starport
+	/*
 	if (starportsOrdered >= 1) {
 		buildingManager->starportBuild = UnitTypes::Terran_Wraith;
 	}
+	*/
 
 	
 	//___________________________Building strategy________________________________
 	//Maintain 3 factories  AND EXPAND BASE!!!!!!
-	if (Broodwar->self()->supplyUsed() >= 72 && !hasExpanded && Broodwar->self()->minerals() > 400 && factoriesOrdered >= 3 && Broodwar->enemy()->getRace() != Races::Terran ) {
+	if (Broodwar->self()->supplyUsed() >= 72 && !hasExpanded && Broodwar->self()->minerals() > 400 && factoriesOrdered >= 3 && (Broodwar->enemy()->getRace() != Races::Terran || retreats>0) ) {
 		numberOfWorkersLimit *= 2;
 		Broodwar->sendText("adding command center to priorityQueue");
 		executionManager->addPriorityItem(UnitTypes::Terran_Command_Center);
 		hasExpanded = true;
 	}
 
-	if (Broodwar->self()->supplyUsed() >= 72 && factoriesOrdered < 3 && Broodwar->enemy()->getRace() != Races::Terran) {
+	if (Broodwar->self()->supplyUsed() >= 72 && factoriesOrdered < 3 && (Broodwar->enemy()->getRace() != Races::Terran || retreats>0)) {
 		Broodwar->sendText("adding factory to priorityQueue");
 		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
 		factoriesOrdered++;
@@ -135,17 +137,22 @@ void StrategyManager::executeExpandWithOneFactory() {
 		academyOrdered = true; 
 	}
 
-	if (Broodwar->self()->supplyUsed() >= 200 && factoriesOrdered < 5 && Broodwar->enemy()->getRace() != Races::Terran && hasExpanded) {
+	if (Broodwar->self()->supplyUsed() >= 200 && factoriesOrdered < 5 && (Broodwar->enemy()->getRace() != Races::Terran || retreats>0) ) {
 		Broodwar->sendText("adding factory to priorityQueue");
 		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
 		factoriesOrdered++;
 	}
 
-	if ( Broodwar->enemy()->getRace() == Races::Terran && hasRetreated && starportsOrdered < 1) {
+	/*
+	if ( Broodwar->enemy()->getRace() == Races::Terran && retreats>0 && starportsOrdered < 1) {
 		Broodwar->sendText("adding starport to priorityQueue");
 		executionManager->addPriorityItem(UnitTypes::Terran_Starport);
 		starportsOrdered++;
+		Broodwar->sendText("adding factory to priorityQueue");
+		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
+		factoriesOrdered++;
 	}
+	*/
 
 	//else if (scoutingManager->enemyHasLurker && scoutingManager->enemyLurker != NULL) {
 	//	Broodwar->sendText("Enemylurker exists: %s", scoutingManager->enemyLurker->exists() ? "true" : "false"); 
@@ -162,34 +169,60 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 	//___________________________Attacking strategy________________________________
 
-	if (combatManager->getAllCombatUnits()._Mysize() >= 2 && scoutingManager->enemyBaseFound && Broodwar->enemy()->getRace() == Races::Protoss) {
+	if (Broodwar->enemy()->getRace() == Races::Protoss) {
+		attackingStrategyProtoss();
+	} else if (Broodwar->enemy()->getRace() == Races::Terran) {
+		attackingStrategyTerran();
+	} else if (Broodwar->enemy()->getRace() == Races::Zerg) {
+		attackingStrategyZerg();
+	}
+
+
+}
+
+void StrategyManager::attackingStrategyTerran() {
+
+		//First attack
+		if (combatManager->vultures._Mysize() >= 8 && scoutingManager->enemyBaseFound && !combatManager->shouldAttack && retreats < 1) {
+			combatManager->attackEnemyBaseWhenVulturesAreGrouped(scoutingManager->lastEnemyBuildingPosition, 8);
+		}
+
+		//Second attack
+		if (combatManager->vultures._Mysize() >= 1 && scoutingManager->enemyBaseFound && !combatManager->shouldAttack && retreats > 0) {
+			combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
+		}
+	
+
+		//retreat
+		else if (combatManager->shouldAttack && combatManager->vultures._Mysize() <= 4) {
+			bool shouldRetreat = true;
+			for (auto &u : combatManager->vultures) {
+				if ((*u->unit)->getDistance(scoutingManager->lastEnemyBuildingPosition) < 1000) {
+					shouldRetreat = false;
+				}
+			}
+			combatManager->shouldAttack = !shouldRetreat;
+			if (shouldRetreat) {
+				Broodwar->sendText("Retreaaat");
+				combatManager->returnAllUnitsToBase();
+				retreats++;
+			}
+		}
+}
+
+
+void StrategyManager::attackingStrategyZerg() {
+
+	if (combatManager->vultures._Mysize() >= 1 ) {
+		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
+	}
+}
+void StrategyManager::attackingStrategyProtoss() {
+
+	if (combatManager->getAllCombatUnits()._Mysize() >= 2 && scoutingManager->enemyBaseFound) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 		if (combatManager->workers.size() < 1) unitManager->makeASCVHelpArmy();
 	}
-
-
-	else if (combatManager->vultures._Mysize() >= 8 && Broodwar->enemy()->getRace() == Races::Terran && scoutingManager->enemyBaseFound && !combatManager->shouldAttack) {
-			combatManager->attackEnemyBaseWhenVulturesAreGrouped(scoutingManager->lastEnemyBuildingPosition, 8);
-	}
-	else if (Broodwar->enemy()->getRace() == Races::Terran && combatManager->shouldAttack && combatManager->vultures._Mysize() <= 5) {
-		bool shouldRetreat = true;
-		for (auto &u : combatManager->vultures) {
-			if ((*u->unit)->getDistance(scoutingManager->lastEnemyBuildingPosition) < 1000) {
-				shouldRetreat = false;
-			}
-		}
-		combatManager->shouldAttack = !shouldRetreat;
-		if (shouldRetreat) {
-			Broodwar->sendText("Retreaaat");
-			combatManager->returnAllUnitsToBase();
-			hasRetreated = true;
-		}
-	}
-
-
-	else if (combatManager->vultures._Mysize() >= 1 && Broodwar->enemy()->getRace() == Races::Zerg) {
-		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
-	}  //else if MySize = 1-2 ... set false... retreat...
 }
 
 bool StrategyManager::EnemyHasAStructureMakingTanksRequired() {

@@ -38,6 +38,7 @@ public:
 	void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position pos);
 	void CombatManager::attackEnemyBaseWhenVulturesAreGrouped(BWAPI::Position enemyBasePosition, int groupSize);
 	bool CombatManager::shouldDefendBase(int range, CustomUnit* unit);
+	void CombatManager::analyzeEnemyArmy();
 
 	void CombatManager::returnAllUnitsToBase();
 	bool CombatManager::isInEnemyCriticalRange(const BWAPI::Unit * unit, const BWAPI::Unit* enemyUnit);
