@@ -27,5 +27,9 @@ public:
 	bool StrategyManager::enemyHasLurkers(); 
 	int lastSupply;
 
+	void StrategyManager::attackingStrategyProtoss();
+	void StrategyManager::attackingStrategyTerran();
+	void StrategyManager::attackingStrategyZerg();
+
 };
 

@@ -168,7 +168,11 @@ BWAPI::Unit CombatManager::findMostWantedEnemyToKill(const BWAPI::Unit* unit) {
 		}
 
 		if (desiredUnitToAttack == NULL) {
-			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_SCV, 300);
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_SCV, 500);
+		}
+
+		if (desiredUnitToAttack == NULL) {
+			desiredUnitToAttack = attackEnemyIfInRange(unit, UnitTypes::Terran_Bunker, 300);
 		}
 
 
