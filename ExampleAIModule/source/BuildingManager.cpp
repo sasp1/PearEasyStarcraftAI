@@ -6,12 +6,10 @@ using namespace BWAPI;
 using namespace Filter;
 using namespace std;
 
-
 int startBuildFrame;
-int maxX = 0;
-int maxY = 0;
 int factories = 0;
 bool addedMachineTech = false;
+bool addedArmoryTech = false;
 
 
 /**
@@ -40,7 +38,13 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 		}
 		else {
 			buildings.push_back(b);
-
+			if ((*u)->getType() == UnitTypes::Terran_Armory) {
+				if (!addedArmoryTech) {
+					desiredUpgrades.push_back(UpgradeTypes::Terran_Vehicle_Weapons);
+					desiredUpgrades.push_back(UpgradeTypes::Terran_Vehicle_Plating);
+					addedArmoryTech = true;
+				}
+			}
 			//If factory, adds request machine shop addon for first two factories.
 			if ((*u)->getType() == UnitTypes::Terran_Factory) {
 				factories++;
@@ -69,13 +73,13 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 */
 
 void BuildingManager::executeOrders() {
-
+	//Draw a recent scan
 	if (drawTimer != -1) draw();
 
 	//Clean command centers
 	for (auto &b : commandCenters) if (!b->isUnitValid()) buildings.remove(b);
 
-
+	//Build comsat station
 	if (addComSat)
 	{
 		commandCenters.front()->initAddon(UnitTypes::Terran_Comsat_Station);
@@ -83,33 +87,43 @@ void BuildingManager::executeOrders() {
 		addComSat = false;
 	}
 
+	//Issue and execute commandcenter orders
 	for (auto &b : commandCenters) {
-		//Command center orders
 		if (isDesiredToTrainWorkers) b->trainType = UnitTypes::Terran_SCV;
 		else b->trainType = UnitTypes::None;
 		b->doCenterOrder();
 	}
 
+	//Issue and execute orders for all other buildings
 	for (auto &b : buildings) {
-
 		if (!b->isUnitValid()) buildings.remove(b);
 		else if ((*b->unit)->isIdle()) {
 			const BWAPI::Unit* u = b->unit;
 
-			//Barrack orders
+			//Barrack, build units
 			if (b->getType() == UnitTypes::Terran_Barracks) {
 				if (barrackBuild != UnitTypes::None) {
 					(*u)->train(barrackBuild);
 				}
 			}
-
+			//Armory, research techs
+			if ((*u)->getType() == UnitTypes::Terran_Armory) {
+				if (desiredUpgrades.front() == UpgradeTypes::Terran_Vehicle_Weapons) {
+					(*u)->upgrade(UpgradeTypes::Terran_Vehicle_Weapons);
+					if ((*u)->isUpgrading()) desiredUpgrades.pop_front();
+				}
+				else if (desiredUpgrades.front() == UpgradeTypes::Terran_Vehicle_Plating) {
+					(*u)->upgrade(UpgradeTypes::Terran_Vehicle_Plating);
+					if ((*u)->isUpgrading()) desiredUpgrades.pop_front();
+				}
+			}
+			//Starport, build units.
 			if (b->getType() == UnitTypes::Terran_Starport) {
 				if (starportBuild != UnitTypes::None) {
 					(*u)->train(starportBuild);
 				}
 			}
-
-			//Machine shop orders
+			//Machine shop, research techs
 			if ((b->getType() == UnitTypes::Terran_Machine_Shop)) {
 				if (desiredResearchs.front() == TechTypes::Spider_Mines) {
 					(*u)->research(TechTypes::Spider_Mines);
@@ -124,8 +138,7 @@ void BuildingManager::executeOrders() {
 					if ((*u)->isUpgrading())desiredResearchs.pop_front();
 				}
 			}
-
-			//Factory orders
+			//Factory, build units
 			if (b->getType() == UnitTypes::Terran_Factory && (*b->unit)->isIdle()) {
 				//Handle machiine shop build
 				b->trainType = factoryBuild;
@@ -135,31 +148,34 @@ void BuildingManager::executeOrders() {
 	}
 }
 
-
 /**
 * Execute orders for build manager
 * @param buildWorkers that tells if a worker should be built.
 */
 void BuildingManager::setIsDesiredToTrainWorkers(bool buildWorkers) {
-
 	this->isDesiredToTrainWorkers = buildWorkers;
 }
 
 
 BuildingManager::BuildingManager()
 {
-	factoryBuild = UnitTypes::None;;
-	barrackBuild = UnitTypes::Terran_Marine;;
-	starportBuild = UnitTypes::None;;
-
+	//Set initial production types.
+	factoryBuild = UnitTypes::None;
+	barrackBuild = UnitTypes::Terran_Marine;
+	starportBuild = UnitTypes::None;
 }
 
+/**
+* Performs scan to reveal lurkers at position.
+* @param pos desired location for scan.
+*/
 bool BuildingManager::scan(BWAPI::Position pos) {
 
+	//Get main command center
 	const BWAPI::Unit* u = new Unit((*commandCenter)->getAddon());
-
 	if ((*u) == NULL) return false;
 
+	//Perform scan, and init draw on map
 	bool res = (*u)->useTech(TechTypes::Scanner_Sweep, pos);
 	if (res) {
 		Broodwar->sendText("Scanned");
@@ -175,6 +191,7 @@ BuildingManager::~BuildingManager()
 
 void BuildingManager::draw() {
 
+	//Draw scan location repeatedly on map
 	drawTimer++;
 
 	if (drawTimer == 100) drawTimer = -1;

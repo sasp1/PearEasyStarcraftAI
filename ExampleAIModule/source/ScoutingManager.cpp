@@ -8,29 +8,19 @@
 using namespace BWAPI;
 using namespace Filter;
 
-// std::list<const BWAPI::Unit*> scoutingUnits;
-
-BWAPI::Position lastEnemyBuildingPosition;
 //The map is 4096x4096 pixels (64^2)
-int enemeyMarinesSpotted = 0; 
+BWAPI::Position lastEnemyBuildingPosition = BWAPI::Position(0, 0);
 BWAPI::Position cornerCoords0= Position(100, 100);
 BWAPI::Position cornerCoords1 = Position(4000, 100);
 BWAPI::Position cornerCoords2 = Position(4000, 4000);
 BWAPI::Position cornerCoords3 = Position(100, 4000);
 int scoutedCorners = 0; 
+int enemeyMarinesSpotted = 0;
 
 
 ScoutingManager::ScoutingManager(BWAPI::Position startingPosition, MapData* mapData)
 {
 	this->mapData = mapData; 
-	secondaryMineralFieldPosition = BWAPI::Position(0, 0);
-	defendBasePosition = BWAPI::Position(0, 0);
-	attackBasePosition = BWAPI::Position(0, 0);
-	enemyChokePosition = BWAPI::Position(0, 0);
-	expandBasePosition = BWAPI::Position(0, 0);
-	inEnemyBasePosition = BWAPI::Position(0, 0);
-	lastEnemyBuildingPosition = BWAPI::Position(0, 0); 
-	startingChokePosition = BWAPI::Position(0, 0); 
 	setStartingCorner(startingPosition);
 	scoutingUnits.clear(); 
 }
@@ -45,7 +35,9 @@ void ScoutingManager::addScout(const BWAPI::Unit* scout) {
 }
 
 void ScoutingManager::setStartingCorner(BWAPI::Position pos) {
-	
+
+	//Set key positions based on starting coordinate
+
 	if (pos.getDistance(cornerCoords0) < 1000) {
 		corner = 1;
 		defendBasePosition = (*mapData).northwestAttack;
@@ -73,6 +65,9 @@ void ScoutingManager::setStartingCorner(BWAPI::Position pos) {
 }
 
 void ScoutingManager::setEnemyCorner(BWAPI::Position pos) {
+
+	//Set key locations based on found enemy location
+
 	if (pos.getDistance(cornerCoords0) < 1000) {
 		attackBasePosition = (*mapData).northwestDefend;
 		enemyChokePosition = (*mapData).northwestChokePointMid;
@@ -101,22 +96,16 @@ void ScoutingManager::setEnemyCorner(BWAPI::Position pos) {
 
 void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
 	//Scout clockwise each corner of the map
-	
-	//scoutedCorners++; 
+
+	//Set enemy corner as missing corner, if others are scouted.
 	if (scoutedCorners == 3 && enemyBaseFound == false) {
 		 
 		enemyBaseFound = true;
-		if (corner == 0) {
-			lastEnemyBuildingPosition = cornerCoords0; 
-		} else if (corner == 1) {
-			lastEnemyBuildingPosition = cornerCoords1;
-		}
-		else if (corner == 2) {
-			lastEnemyBuildingPosition = cornerCoords2;
-		}
-		else {
-			lastEnemyBuildingPosition = cornerCoords3;
-		}
+		if (corner == 0) lastEnemyBuildingPosition = cornerCoords0; 
+		else if (corner == 1)lastEnemyBuildingPosition = cornerCoords1;
+		else if (corner == 2)lastEnemyBuildingPosition = cornerCoords2;
+		else lastEnemyBuildingPosition = cornerCoords3;
+
 		setEnemyCorner(lastEnemyBuildingPosition);
 	}
 
@@ -127,25 +116,20 @@ void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
 	else if (corner == 1) {
 		(*scout)->move(cornerCoords1);
 		checkIfCornerDiscovered(scout, cornerCoords1);
-
 	}
 	else if (corner == 2) {
 		(*scout)->move(cornerCoords2);
 		checkIfCornerDiscovered(scout, cornerCoords2);
-
 	}
 	else {
 		(*scout)->move(cornerCoords3);
 		checkIfCornerDiscovered(scout, cornerCoords3);
-
 	}
-
 }
 
 void ScoutingManager::checkIfCornerDiscovered(const BWAPI::Unit * unit, BWAPI::Position cornerCord) {
 	if ((*unit)->getDistance(cornerCord) < 300) {
 		corner = (corner + 1) % 4;
-		//Broodwar->sendText("NEW CORNER");
 	}
 }
 

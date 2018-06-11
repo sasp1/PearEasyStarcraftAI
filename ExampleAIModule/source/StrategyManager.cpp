@@ -7,6 +7,7 @@ bool academyOrdered = false;
 bool supplyDepotsAreNotUnderConstruction = true;
 bool desireBuildingBarracks = true;
 bool hasResearchedSiegeMode = false;
+bool builtArmory = false;
 int refineriesOrdered = 0;
 int factoriesOrdered = 0;
 int starportsOrdered = 0; 
@@ -118,6 +119,8 @@ void StrategyManager::executeExpandWithOneFactory() {
 	
 	//___________________________Building strategy________________________________
 	//Maintain 3 factories  AND EXPAND BASE!!!!!!
+
+	//command center
 	if (Broodwar->self()->supplyUsed() >= 72 && !hasExpanded && Broodwar->self()->minerals() > 400 && factoriesOrdered >= 3 && (Broodwar->enemy()->getRace() != Races::Terran || retreats>0) ) {
 		numberOfWorkersLimit *= 2;
 		Broodwar->sendText("adding command center to priorityQueue");
@@ -125,23 +128,33 @@ void StrategyManager::executeExpandWithOneFactory() {
 		hasExpanded = true;
 	}
 
+	//Factories 
 	if (Broodwar->self()->supplyUsed() >= 72 && factoriesOrdered < 3 && (Broodwar->enemy()->getRace() != Races::Terran || retreats>0)) {
 		Broodwar->sendText("adding factory to priorityQueue");
 		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
 		factoriesOrdered++;
 	}
 
+	if (Broodwar->self()->supplyUsed() >= 200 && factoriesOrdered < 5 && hasExpanded && (Broodwar->enemy()->getRace() != Races::Terran || retreats>0)) {
+		Broodwar->sendText("adding factory to priorityQueue");
+		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
+		factoriesOrdered++;
+	}
+
+	//academy
 	if (scoutingManager->enemyHasLurker && !academyOrdered) {
 		Broodwar->sendText("Adding academy to priorityqueue because lurker was spotted"); 
 		executionManager->addPriorityItem(UnitTypes::Terran_Academy);
 		academyOrdered = true; 
 	}
 
-	if (Broodwar->self()->supplyUsed() >= 200 && factoriesOrdered < 5 && (Broodwar->enemy()->getRace() != Races::Terran || retreats>0) ) {
-		Broodwar->sendText("adding factory to priorityQueue");
-		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
-		factoriesOrdered++;
+/*
+	if (Broodwar->self()->minerals() > 700 && !builtArmory) {
+		Broodwar->sendText("Adding armory and techs");
+		executionManager->addPriorityItem(UnitTypes::Terran_Armory);
+		builtArmory = true;
 	}
+	*/
 
 	/*
 	if ( Broodwar->enemy()->getRace() == Races::Terran && retreats>0 && starportsOrdered < 1) {

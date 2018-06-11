@@ -15,11 +15,14 @@ public:
 	void BuildingManager::executeOrders();
 	void BuildingManager::draw();
 	void BuildingManager::setIsDesiredToTrainWorkers(bool buildWorkers);
+	bool BuildingManager::scan(BWAPI::Position pos);
 	std::list<BWAPI::TechType> desiredResearchs;
 	std::list<BWAPI::UnitType> desiredExpansion;
 	std::list<BWAPI::UpgradeType> desiredUpgrades;
 	std::list<Building*> buildings;
 	std::list<Building*> commandCenters;
+	int drawTimer = -1;
+	int totalMachineShops = 0;
 	bool isDesiredToTrainWorkers = false;
 	bool addComSat = false;
 	bool haveAcademy = false;
@@ -29,9 +32,7 @@ public:
 	BWAPI::UnitType barrackBuild;
 	BWAPI::UnitType starportBuild;
 	BWAPI::Position scanPoint;
-	int drawTimer = -1;
-	int totalMachineShops = 0;
 	GatheringManager* gatheringManager;
 	ScoutingManager* scoutingManager;
-	bool BuildingManager::scan(BWAPI::Position pos);
+	
 };

@@ -23,6 +23,7 @@ bool Building::isUnitValid() {
 }
 
 void Building::initAddon(BWAPI::UnitType type) {
+	//Save current position, and addon type.
 	addOnType = type;
 	spiral = new SpiralSearch(5000);
 	originPos = Position((*unit)->getPosition());
@@ -30,29 +31,28 @@ void Building::initAddon(BWAPI::UnitType type) {
 }
 
 void Building::buildAddon() {
-
+	//If we have addon, set as finished
 	if ((*unit)->getAddon() != NULL) buildState = 5;
 
+	//State for attempting construction of addon
 	if (buildState == 0) {	
 
+		//If we are constructing, set as finished, else search for new location
 		if (startedBuild && time + 30 < Broodwar->getFrameCount()) {
-
 			if ((*unit)->isConstructing() || (*unit)->getAddon() != NULL) buildState = 5;
 			else if ((*unit)->isIdle()) buildState = 1;
-	
 		}
 
-		//Can we afford building, and is building idle
+		//Attempt construction if we can afford addon, and is building idle
 		if ((Broodwar->self()->minerals() > addOnType.mineralPrice()) && (Broodwar->self()->gas() > addOnType.gasPrice()) && (*unit)->isIdle() && !startedBuild) {
-			//Attempt construction at location. Change state on result.
 			(*unit)->buildAddon(addOnType);
 			startedBuild = true;
 			time = Broodwar->getFrameCount();
-			
 		}	
 	}
+	//State for finding  a new build location
 	if (buildState == 1) {
-		//Find suitable build location
+		//If location is ok, move to new location, else spiral out and try next location
 		if ((*unit)->isIdle()) {
 			startedBuild = false;
 			buildPos = originPos + spiral->getNextPos();
@@ -60,32 +60,34 @@ void Building::buildAddon() {
 			if (Broodwar->canBuildHere(TilePosition(buildPos), addOnType, (*unit))) buildState = 2;
 		}
 	}
+	//State for taking off from ground
 	if (buildState == 2) {
-		//Lift off from ground
 		if ((*unit)->isFlying()) buildState = 3;
 		else if ((*unit)->isIdle()) (*unit)->lift();
 	}
-
+	//State for moving to new location
 	if (buildState == 3) {
-		//Move to new location and land
+		//Attempt landing at new location
 		if ((*unit)->isLifted()) {
 			if (!(*unit)->land(TilePosition(buildPos))) buildState = 1;
 		}
 		else buildState = 4;
 	}
+	//State for re-initializing at new location
 	if (buildState == 4) {
-		//If landed, restart procedure
+		//If landed, set new location as new origin point and retry construction 
 		if ((*unit)->isIdle()) {
 			buildState = 0;
 			originPos = Position((*unit)->getPosition());
 			buildPos = Position(0, 0);
 		}
 	}
+	//Finished state.
 	if (buildState == 5) shouldBuildAddon = false;
-
 }
 
 void Building::doCenterOrder() {
+	//Build addon if requested, else build unit.
 	if ((*unit)->isIdle()) {
 		if (shouldBuildAddon && (*unit)->getAddon() == NULL) buildAddon();
 		else (*unit)->train(trainType);

@@ -8,17 +8,19 @@ class ScoutingManager
 {
 	
 public:
-	BWAPI::Position lastEnemyBuildingPosition;
-	BWAPI::Position secondaryMineralFieldPosition;
-	BWAPI::Position defendBasePosition;
-	BWAPI::Position startingChokePosition;
-	BWAPI::Position attackBasePosition;
-	BWAPI::Position enemyChokePosition;
-	BWAPI::Position expandBasePosition;
-	Position inEnemyBasePosition;
+	BWAPI::Position lastEnemyBuildingPosition = BWAPI::Position(0, 0);
+	BWAPI::Position secondaryMineralFieldPosition = BWAPI::Position(0, 0);
+	BWAPI::Position defendBasePosition = BWAPI::Position(0, 0);
+	BWAPI::Position startingChokePosition = BWAPI::Position(0, 0);
+	BWAPI::Position attackBasePosition = BWAPI::Position(0, 0);
+	BWAPI::Position enemyChokePosition = BWAPI::Position(0, 0);
+	BWAPI::Position expandBasePosition = BWAPI::Position(0, 0);
+	void setEnemyCorner(BWAPI::Position pos);
+	Position inEnemyBasePosition = BWAPI::Position(0, 0);;
 	Position defendInBasePosition; 
 	bool secondaryMineralFieldFound; 
 	bool enemyBaseFound = false;
+	bool enemyHasLurker = false;
 	int corner = 0;
 	std::list<const BWAPI::Unit*> scoutingUnits;
 	ScoutingManager(BWAPI::Position startingPosition, MapData* mapData);
@@ -29,9 +31,8 @@ public:
 	void ScoutingManager::executeOrders();
 	void ScoutingManager::onUnitDiscover(BWAPI::Unit unit);
 	void ScoutingManager::setStartingCorner(BWAPI::Position pos);
-	void setEnemyCorner(BWAPI::Position pos);
 	void ScoutingManager::returnToBase(const BWAPI::Unit* unit); 
-	bool enemyHasLurker = false; 
+
 	bool ScoutingManager::isAvoidingNearbyEnemiesWithinRange(const BWAPI::Unit * unit, int range);
 	Unit enemyLurker = NULL;
 	BuildingManager* buildingManager;
