@@ -239,14 +239,18 @@ bool CombatManager::isMelee(const BWAPI::Unit* unit) {
 }
 
 
+
 bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * unit, int range) {
 	bool enemiesInCriticalRange = false;
 
 	//First check if unit are within critical range of a cannonn
 	for (auto &eu : (*unit)->getUnitsInRadius(UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() + UnitTypes::Protoss_Photon_Cannon.groundWeapon().maxRange() / 5)) {
-		
 
-		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && (((*eu).getType() == UnitTypes::Protoss_Photon_Cannon || (*eu).getType() == UnitTypes::Zerg_Sunken_Colony) )) {
+
+		if ((*eu).getPlayer()->isEnemy((*unit)->getPlayer()) && (((*eu).getType() == UnitTypes::Protoss_Photon_Cannon || (*eu).getType() == UnitTypes::Zerg_Sunken_Colony) || 
+			 (    (eu)->getType() == UnitTypes::Terran_Bunker ) ) ) {
+
+			
 
 			BWAPI::Position movePosition = (*unit)->getPosition() - (((*eu).getPosition() - (*unit)->getPosition()));
 			(*unit)->move(movePosition);
@@ -341,7 +345,9 @@ void CombatManager::returnAllUnitsToBase() {
 
 bool tankCanMakeSiegeModeAttackOnStructure(const BWAPI::Unit * unit) {
 	for (auto &eu : (*unit)->getUnitsInRadius(UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange(), IsEnemy)) {
-		if (eu->getType().isBuilding() && (*unit)->getDistance(eu) > (UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange()) / 2) {
+
+
+		if ((eu->getType().isBuilding() || eu->getType() == UnitTypes::Terran_Marine) && (*unit)->getDistance(eu) > (UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange()) / 2) {
 			if (!(*unit)->isSieged()) {
 				(*unit)->siege();
 
