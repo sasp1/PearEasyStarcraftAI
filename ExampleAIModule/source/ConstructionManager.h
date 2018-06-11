@@ -13,19 +13,18 @@ class ConstructionManager
 public:
 	ConstructionManager();
 	~ConstructionManager();
-	//void ConstructionManager::setManagers(BuildingManager* b, UnitManager* u);
 	void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::Unit* worker);
 	void ConstructionManager::createBuildingAtPos(BWAPI::UnitType building, const BWAPI::Unit* worker, BWAPI::Position pos);
-	const BWAPI::Unit* ConstructionManager::removeWorkersDoneConstructing();
 	void ConstructionManager::executeOrders();
 	void ConstructionManager::buildRefinery(const BWAPI::Unit* worker);
 	void ConstructionManager::expandBase(const BWAPI::Unit* worker);
+	void ConstructionManager::requestFromDead(Worker* w);
+	void ConstructionManager::constructionBegun(BWAPI::Unit build);
 	BuildingManager* buildingManager;
 	UnitManager* unitManager;
 	ScoutingManager* scoutingManager; 
 	GatheringManager* gatheringManager;
 	bool shouldExpandBase;
-	void ConstructionManager::requestFromDead(Worker* w);
-	void ConstructionManager::constructionBegun(BWAPI::Unit build);
+
 };
 
