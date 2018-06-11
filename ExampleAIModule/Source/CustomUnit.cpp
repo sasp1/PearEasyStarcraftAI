@@ -4,10 +4,8 @@ bool CustomUnit::isValid()
 {
 	if (*unit == NULL)
 		return false;
-	if (unit == NULL)
-		return false;
-	if ((*unit)->getHitPoints() == 0)
-		return false;
+	//if ((*unit)->getHitPoints() == 0)
+	//	return false;
 	return true;
 
 }

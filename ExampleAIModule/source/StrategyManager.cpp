@@ -148,13 +148,13 @@ void StrategyManager::executeExpandWithOneFactory() {
 		academyOrdered = true; 
 	}
 
-/*
-	if (Broodwar->self()->minerals() > 700 && !builtArmory) {
+
+	if (Broodwar->self()->minerals() > 2500 && !builtArmory) {
 		Broodwar->sendText("Adding armory and techs");
 		executionManager->addPriorityItem(UnitTypes::Terran_Armory);
 		builtArmory = true;
 	}
-	*/
+
 
 	/*
 	if ( Broodwar->enemy()->getRace() == Races::Terran && retreats>0 && starportsOrdered < 1) {

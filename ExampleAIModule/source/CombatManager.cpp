@@ -71,25 +71,11 @@ std::list<CustomUnit*> CombatManager::getAllCombatUnits() {
 
 	std::list<CustomUnit*> combatunits;
 
-	for (auto &u : vultures) {
-		combatunits.push_back(u);
-	}
-
-	for (auto &u : marines) {
-		combatunits.push_back(u);
-	}
-
-	for (auto &u : tanks) {
-		combatunits.push_back(u);
-	}
-
-	for (auto &u : workers) {
-		combatunits.push_back(u);
-	}
-
-	for (auto &u : wraiths) {
-		combatunits.push_back(u);
-	}
+	for (auto &u : vultures) combatunits.push_back(u);
+	for (auto &u : marines) combatunits.push_back(u);
+	for (auto &u : tanks) combatunits.push_back(u);
+	for (auto &u : workers)combatunits.push_back(u);
+	for (auto &u : wraiths)combatunits.push_back(u);
 
 	return combatunits;
 }
