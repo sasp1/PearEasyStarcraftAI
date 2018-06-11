@@ -7,24 +7,31 @@ SpiralSearch::SpiralSearch(int dist){
 }
 
 BWAPI::TilePosition SpiralSearch::getNextTilePos() {
+	//Get next location as TilePosition
 	nextPoint(1);
 	return BWAPI::TilePosition(x, y);
 }
 BWAPI::Position SpiralSearch::getNextPos() {
+	//Get next location as Position
 	nextPoint(30);
-	//Broodwar->sendText("%d %d", x, y);
 	return BWAPI::Position(x, y);
 }
 
 SpiralSearch::~SpiralSearch()
 {
-
 }
 
+/**
+* Get next point in a spiral shaped outward search
+* @param increment int Distance to add pr. spiral
+* @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
+*/
 void SpiralSearch::nextPoint(int increment) {
 		
+	//Get comparison value
 	int res = attempt % 8;
 
+	//Begin searhing in a wider spiral
 	if (res == 0) {
 		maxX += increment;
 		maxY += increment;
@@ -32,6 +39,7 @@ void SpiralSearch::nextPoint(int increment) {
 		y = maxY;
 	}
 
+	//Move around in spiral
 	else if (res == 1) x = 0;
 	else if (res == 2) x = -maxX;
 	else if (res == 3) y = 0;
@@ -44,6 +52,7 @@ void SpiralSearch::nextPoint(int increment) {
 }
 
 void SpiralSearch::reset() {
+	//Reset spiral 
 	maxX = 0;
 	maxY = 0;
 	attempt = 6;
