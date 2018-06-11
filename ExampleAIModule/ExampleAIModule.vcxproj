@@ -113,6 +113,7 @@
     <ClCompile Include="Source\UnitManager.cpp" />
     <ClCompile Include="Source\Vulture.cpp" />
     <ClCompile Include="Source\SpiralSearch.cpp" />
+    <ClCompile Include="Source\Wraith.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CustomUnit.h" />
@@ -133,6 +134,7 @@
     <ClInclude Include="Source\UnitManager.h" />
     <ClInclude Include="Source\Vulture.h" />
     <ClInclude Include="Source\SpiralSearch.h" />
+    <ClInclude Include="Source\Wraith.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Debug\ExampleAIModule.Build.CppClean.log" />
