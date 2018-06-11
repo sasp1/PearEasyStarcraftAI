@@ -15,9 +15,11 @@ public:
 	BWAPI::Position attackBasePosition = BWAPI::Position(0, 0);
 	BWAPI::Position enemyChokePosition = BWAPI::Position(0, 0);
 	BWAPI::Position expandBasePosition = BWAPI::Position(0, 0);
-	void setEnemyCorner(BWAPI::Position pos);
 	Position inEnemyBasePosition = BWAPI::Position(0, 0);;
 	Position defendInBasePosition; 
+	Unit enemyLurker = NULL;
+	BuildingManager* buildingManager;
+	MapData* mapData;
 	bool secondaryMineralFieldFound; 
 	bool enemyBaseFound = false;
 	bool enemyHasLurker = false;
@@ -25,6 +27,7 @@ public:
 	std::list<const BWAPI::Unit*> scoutingUnits;
 	ScoutingManager(BWAPI::Position startingPosition, MapData* mapData);
 	~ScoutingManager();
+	void setEnemyCorner(BWAPI::Position pos);
 	void ScoutingManager::addScout(const BWAPI::Unit* scout);
 	void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout);
 	void ScoutingManager::checkIfCornerDiscovered(const BWAPI::Unit * unit, BWAPI::Position cornerCord);
@@ -32,10 +35,7 @@ public:
 	void ScoutingManager::onUnitDiscover(BWAPI::Unit unit);
 	void ScoutingManager::setStartingCorner(BWAPI::Position pos);
 	void ScoutingManager::returnToBase(const BWAPI::Unit* unit); 
-
 	bool ScoutingManager::isAvoidingNearbyEnemiesWithinRange(const BWAPI::Unit * unit, int range);
-	Unit enemyLurker = NULL;
-	BuildingManager* buildingManager;
-	MapData* mapData;
+
 };
 
