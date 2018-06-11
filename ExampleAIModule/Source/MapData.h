@@ -15,6 +15,9 @@ public:
 	BWAPI::Position northwestDefend;
 	BWAPI::Position northwestAttack;
 	BWAPI::Position northwestMinePosition;
+	BWAPI::TilePosition northwestSimCityTilePositionBarracks;
+	BWAPI::TilePosition northwestSimCityTilePositionSupplyDepots1;
+	BWAPI::TilePosition northwestSimCityTilePositionSupplyDepots2;
 
 	BWAPI::Position southwestChokePointMid;
 	BWAPI::Position southwestChokePointTop;
@@ -25,6 +28,9 @@ public:
 	BWAPI::Position southwestDefend;
 	BWAPI::Position southwestAttack;
 	BWAPI::Position southwestMinePosition;
+	BWAPI::TilePosition southwestSimCityTilePositionBarracks;
+	BWAPI::TilePosition southwestSimCityTilePositionSupplyDepots1;
+	BWAPI::TilePosition southwestSimCityTilePositionSupplyDepots2;
 	
 	BWAPI::Position northeastChokePointMid;
 	BWAPI::Position northeastChokePointTop;
@@ -35,6 +41,9 @@ public:
 	BWAPI::Position northeastDefend;
 	BWAPI::Position northeastAttack;
 	BWAPI::Position northeastMinePosition; 
+	BWAPI::TilePosition northeastSimCityTilePositionBarracks;
+	BWAPI::TilePosition northeastSimCityTilePositionSupplyDepots1;
+	BWAPI::TilePosition northeastSimCityTilePositionSupplyDepots2;
 
 	BWAPI::Position southeastChokePointMid;
 	BWAPI::Position southeastChokePointTop;
@@ -45,4 +54,8 @@ public:
 	BWAPI::Position southeastDefend;
 	BWAPI::Position southeastAttack;
 	BWAPI::Position southeastMinePosition;
+	BWAPI::TilePosition southeastSimCityTilePositionBarracks;
+	BWAPI::TilePosition southeastSimCityTilePositionSupplyDepots1;
+	BWAPI::TilePosition southeastSimCityTilePositionSupplyDepots2;
+
 };
