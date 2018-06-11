@@ -11,11 +11,12 @@ public:
 	~GatheringManager();
 	void GatheringManager::addWorker(const BWAPI::Unit* worker);
 	void GatheringManager::executeOrders();
-	const BWAPI::Unit* GatheringManager::removeWorker();
+	void GatheringManager::allocateWorker(bool addToGas);
 	void GatheringManager::addGasworker();
 	void GatheringManager::splitWorkers();
+	const BWAPI::Unit* GatheringManager::removeWorker();
 	BuildingManager* buildingManager;
-	void GatheringManager::allocateWorker(bool addToGas);
+	
 	
 };
 

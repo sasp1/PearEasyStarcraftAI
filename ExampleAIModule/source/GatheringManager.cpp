@@ -12,14 +12,16 @@ int gasWorkers = 0;
 int mineralWorkers = 0;
 
 void GatheringManager::addWorker(const BWAPI::Unit* worker) {
-	//Receive control of a new worker
 
+	//Set new worker as collecting minreals
 	Worker* w = new Worker(worker);
 	w->workState = 0;
 
+	//Set virtual commandcenter to unlimited distance away
 	int tempDist = 10000;
 	const BWAPI::Unit* nextCenter = NULL;
 
+	//Find closest commandcenter
 	for (auto &c : (*buildingManager).commandCenters) {
 		const BWAPI::Unit* center = c->unit;
 		int dist = (*center)->getDistance(*worker);
@@ -31,6 +33,7 @@ void GatheringManager::addWorker(const BWAPI::Unit* worker) {
 		}
 	}
 
+	//Set closest commandcenter as "home", and add worker to list.
 	w->center = nextCenter;
 	workers.push_back(w);
 }
@@ -38,9 +41,7 @@ void GatheringManager::addWorker(const BWAPI::Unit* worker) {
 void GatheringManager::allocateWorker(bool addToGas) {
 	bool alloc = false;
 	for (auto &w : workers) {
-
-		if (alloc) break;
-
+		// If requested, assign first worker who collects minerals to collect gas
 		if (addToGas && !alloc) {
 			if (w->workState == 0) {
 				w->workState = 1;
@@ -49,6 +50,7 @@ void GatheringManager::allocateWorker(bool addToGas) {
 				alloc = true;
 			}
 		}
+		// If requested, assign first worker who collects gas to collect monerals
 		else if (!addToGas && !alloc) {
 			if (w->workState == 1) {
 				w->workState = 0;
@@ -63,83 +65,71 @@ void GatheringManager::splitWorkers() {
 	int countA = 0;
 	int countB = 0;
 	int totalCommand = buildingManager->commandCenters.size();
+
+	//Split workers evenly between commandcenters
 	for (auto &m : buildingManager->commandCenters) {
 		for (auto &u : workers) {
 			if (countA % totalCommand == countB) {
 				u->center = m->unit;
 			}
-				countA++;
+			countA++;
 		}
 		countB++;
 	}
 }
 
 const BWAPI::Unit* GatheringManager::removeWorker() {
-	//Lose control of a worker
 
+	// Lose control of first found mineral collector.
 	const BWAPI::Unit* u = new Unit();
-		for (auto &w : workers) {
-			if (w->workState == 0) {
-				u = w->unit;
-				workers.remove(w);
-				return u;
-			}
+	for (auto &w : workers) {
+		if (w->workState == 0) {
+			u = w->unit;
+			workers.remove(w);
+			return u;
 		}
+	}
 }
 
 void GatheringManager::executeOrders() {
 
+	//Assign workers to commandcenter on game start
 	if (Broodwar->getFrameCount() == 20) {
 		splitWorkers();
 	}
 
+	//Prepare worker list cleanup
 	bool foundError = false;
 	gasWorkers = 0;
 	mineralWorkers = 0;
-	std::list<Worker*> workersToBeRemoved; 
+	std::list<Worker*> workersToBeRemoved;
+
 
 	for (auto &w : workers) {
-		if (w == NULL) {
-			workersToBeRemoved.push_back(w); 
-			foundError = true;
-			break;
-		}
-		else if (!w->isValid()) {
+		//Add invalid workers to temp list
+		if (w == NULL) workersToBeRemoved.push_back(w);
+		else if (!w->isValid()) workersToBeRemoved.push_back(w);
+		else if (!((w->workState == 0) || (w->workState == 1)))
 			workersToBeRemoved.push_back(w);
-			foundError = true;
-			break;
-		}
-		else if (!((w->workState == 0) || (w->workState == 1))) {
-			workersToBeRemoved.push_back(w);
-			foundError = true;
-			break;
-		}
+
+		//If not invalid increase respective job counter
 		else {
 			if (w->workState == 0) mineralWorkers++;
 			else if (w->workState == 1) gasWorkers++;
 			w->collect();
 		}
 	}
-	for (auto &w : workersToBeRemoved) {
-		workers.remove(w); 
-	}
 
-	if (!foundError) {
-		if(gasWorkerLimit == 4 && (Broodwar->self()->gas()) > (Broodwar->self()->minerals() + 500))
-			gasWorkerLimit = 0;
+	//Remove invalid workers 
+	for (auto &w : workersToBeRemoved) workers.remove(w);
 
-		else if (gasWorkerLimit == 4 && (Broodwar->self()->gas()) < (Broodwar->self()->minerals() + 300))
-			gasWorkerLimit = 0;
-	
-		if (gasWorkers < gasWorkerLimit && gas != NULL) {
-			allocateWorker(true);
-		}
-		else if (gasWorkers > gasWorkerLimit) {
-			allocateWorker(false);
-		}
-	}
-	
-	//Simple look for refinery (handling if the gas is not defined)
+	//Distribute workers between gas and minerals.
+	if (gasWorkers < gasWorkerLimit && gas != NULL)
+		allocateWorker(true);
+	else if (gasWorkers > gasWorkerLimit)
+		allocateWorker(false);
+
+	//If refinery is built, set at refinery to collect from.
 	if (gas == NULL) {
 		for (auto &u : Broodwar->getAllUnits()) {
 			if (u->getType().isBuilding()) {

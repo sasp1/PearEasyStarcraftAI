@@ -72,7 +72,6 @@ void ScoutingManager::setEnemyCorner(BWAPI::Position pos) {
 		attackBasePosition = (*mapData).northwestDefend;
 		enemyChokePosition = (*mapData).northwestChokePointMid;
 		inEnemyBasePosition = (*mapData).northwestMinePosition;
-
 	}
 	else if (pos.getDistance(cornerCoords1) < 1000) {
 		corner = 2;
@@ -97,7 +96,7 @@ void ScoutingManager::setEnemyCorner(BWAPI::Position pos) {
 void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
 	//Scout clockwise each corner of the map
 
-	//Set enemy corner as missing corner, if others are scouted.
+	//Set enemy corner as remaining corner, if 3 are scouted.
 	if (scoutedCorners == 3 && enemyBaseFound == false) {
 		 
 		enemyBaseFound = true;
@@ -109,6 +108,7 @@ void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
 		setEnemyCorner(lastEnemyBuildingPosition);
 	}
 
+	//Send scout to corner
 	if (corner == 0) {
 		(*scout)->move(cornerCoords0);
 		checkIfCornerDiscovered(scout, cornerCoords0);
@@ -128,97 +128,60 @@ void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
 }
 
 void ScoutingManager::checkIfCornerDiscovered(const BWAPI::Unit * unit, BWAPI::Position cornerCord) {
+	// Set corner as discovered if scout is nearby
 	if ((*unit)->getDistance(cornerCord) < 300) {
 		corner = (corner + 1) % 4;
 	}
 }
 
-
 bool ScoutingManager::isAvoidingNearbyEnemiesWithinRange(const BWAPI::Unit * unit, int range) {
+	//Prepare enemy search
 	bool enemiesInCriticalRange = false;
-
-	//otherwise juke as normal
 	BWAPI::Position centerOfMass = Position(0, 0);
-	for (auto &eu : (*unit)->getUnitsInRadius(range, IsEnemy)) {
 
+	//Calculate evasion area if enemies are too close
+	for (auto &eu : (*unit)->getUnitsInRadius(range, IsEnemy)) {
 		centerOfMass = centerOfMass + ((*eu).getPosition() - (*unit)->getPosition());
 		enemiesInCriticalRange = true;
-
 	}
 
-	
-	//Broodwar->sendText("Center of mass was: %d, %d", centerOfMass.x, centerOfMass.y);
-
-	//int centerOfMassDistance = Position(0, 0).getDistance(centerOfMass);
-	//centerOfMass.x = (centerOfMass.x * 150 / centerOfMassDistance);
-	//centerOfMass.y = (centerOfMass.y * 150 / centerOfMassDistance);
-
+	//Move unit to evasion area
 	BWAPI::Position movePosition = (*unit)->getPosition() - centerOfMass;
-
-	if (enemiesInCriticalRange) {
-		(*unit)->move(movePosition);
-		
-	}
-
+	if (enemiesInCriticalRange) (*unit)->move(movePosition);
 	return enemiesInCriticalRange;
-	
 }
-
-
-
-
 
 void ScoutingManager::executeOrders() {
 
+	//Make unit scout enemy base, or unscouted corners.
 	for (auto &u : scoutingUnits) {
 		if (!enemyBaseFound || !isAvoidingNearbyEnemiesWithinRange(u, 500)) {
-			if (!enemyBaseFound) {
-				scoutCornersClockwise(u);
-				
-
-			} else {
-				
-				(*u)->move(lastEnemyBuildingPosition);
-			}
-
+			if (!enemyBaseFound) scoutCornersClockwise(u);
+			else (*u)->move(lastEnemyBuildingPosition);
 		}
 	}
 }
 
 void ScoutingManager::returnToBase(const BWAPI::Unit* unit) {
-	
+	//Return scout to base
 	if ((*unit)->getTargetPosition() != (*buildingManager->commandCenter)->getPosition()) {
 		(*unit)->move((*buildingManager->commandCenter)->getPosition());
 	}
-
 }
 
 void ScoutingManager::onUnitDiscover(BWAPI::Unit unit)
 {
-
+	//If unit is enemy building, update enemy location.
 	 if ((BWAPI::Broodwar->self()->isEnemy(unit->getPlayer()) && (unit->getType().isBuilding()))){
-		//Broodwar->sendText("Enemy contruction found!");
 		enemyBaseFound = true;
 		lastEnemyBuildingPosition = unit->getPosition();
 		setEnemyCorner(lastEnemyBuildingPosition);
 	}
-
+	 //If unit is lurker, request scan at location.
 	 if (unit->getType() == UnitTypes::Zerg_Lurker || unit->getType() == UnitTypes::Zerg_Lurker_Egg) {
 		 enemyLurker = unit; 
 		 enemyHasLurker = true;
-		 Broodwar->sendText("ENEMY HAS LURKER AT POSITION: %d, %d", unit->getPosition().x, unit->getPosition().y);
+		 Broodwar->sendText("Lurker at: %d, %d", unit->getPosition().x, unit->getPosition().y);
 		 buildingManager->scan(unit->getPosition());
-
-	 }
-
-	 if (!secondaryMineralFieldFound && unit->getType() == UnitTypes::Resource_Mineral_Field && (*buildingManager->commandCenter)->getDistance(unit) > 350) {
-		 secondaryMineralFieldFound = false; 
-		 secondaryMineralFieldPosition = unit->getPosition(); 
-		 /*Broodwar->sendText("Found secondary mineralField"); 
-		 Broodwar->sendText("distance to mineral field%d", (*buildingManager->commandCenter)->getDistance(unit)); 
-		 Broodwar->sendText("%d", (*buildingManager->commandCenter)->getPosition().x);
-		 Broodwar->sendText("%d", (*buildingManager->commandCenter)->getPosition().y);
-		 Broodwar->sendText("mineral x %d", unit->getPosition().x);
-		 Broodwar->sendText("mineral y %d", unit->getPosition().y);*/
 	 }
 }
