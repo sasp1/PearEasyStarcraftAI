@@ -7,7 +7,7 @@ using namespace BWAPI;
 using namespace Filter;
 
 BWAPI::Unit* gas = NULL;
-int gasWorkerLimit = 2;
+int gasWorkerLimit = 3;
 int gasWorkers = 0;
 int mineralWorkers = 0;
 
