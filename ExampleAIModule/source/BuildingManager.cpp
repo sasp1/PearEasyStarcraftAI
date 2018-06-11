@@ -125,6 +125,7 @@ void BuildingManager::executeOrders() {
 						(*u)->train(starportBuild);
 					}
 				}
+			}
 
 				//Machine shop orders
 				if ((b->getType() == UnitTypes::Terran_Machine_Shop)) {
@@ -151,7 +152,7 @@ void BuildingManager::executeOrders() {
 			}
 		}
 	}
-}
+
 
 
 /**
