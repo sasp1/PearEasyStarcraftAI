@@ -361,7 +361,8 @@ bool tankCanMakeSiegeModeAttackOnStructure(const BWAPI::Unit * unit) {
 	for (auto &eu : (*unit)->getUnitsInRadius(UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange(), IsEnemy)) {
 
 
-		if ((eu->getType().isBuilding() || eu->getType() == UnitTypes::Terran_Marine) && (*unit)->getDistance(eu) > (UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange()) / 2) {
+		if (eu->getType().isBuilding() && (*unit)->getDistance(eu) > (UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange()) / 2
+			|| (Broodwar->enemy()->getRace() == Races::Terran && !eu->isFlying() )) {
 			if (!(*unit)->isSieged()) {
 				(*unit)->siege();
 
