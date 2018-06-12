@@ -172,7 +172,7 @@ bool ScoutingManager::isAvoidingNearbyEnemiesWithinRange(const BWAPI::Unit * uni
 void ScoutingManager::executeOrders() {
 	//Make unit scout enemy base, or unscouted corners.
 	for (auto &u : scoutingUnits) {
-		if ((*u)->getHitPoints == 0) {
+		if ((*u)->getHitPoints() == 0) {
 			corner = (corner + 1) % 4;
 			Broodwar->sendText("NEW CORNER");
 		}
@@ -197,8 +197,8 @@ void ScoutingManager::onUnitDiscover(BWAPI::Unit unit) {
 		enemyBaseFound = true;
 		lastEnemyBuildingPosition = unit->getPosition();
 		setEnemyCorner(lastEnemyBuildingPosition);
-	 }
-	}
+	 
+}
 	 //If unit is lurker, request scan at location.
 	 if (unit->getType() == UnitTypes::Zerg_Lurker || unit->getType() == UnitTypes::Zerg_Lurker_Egg) {
 		 enemyLurker = unit; 
