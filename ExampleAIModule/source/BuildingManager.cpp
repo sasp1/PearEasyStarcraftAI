@@ -71,11 +71,6 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 }
 
 
-/**
-* Issues orders to buildings based on type and state of the game.
-* @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
-*/
-
 void BuildingManager::executeOrders() {
 	//Draw a recent scan
 	if (drawTimer != -1) draw();

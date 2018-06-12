@@ -23,6 +23,10 @@ void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit) {
 	}
 }
 
+/**
+* Tries to initiate construction af a supply depot, if there is enough rescources available
+* @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
+*/
 bool UnitManager::requestSupply() {
 	//Request construction of a supply depot if resources allow it
 

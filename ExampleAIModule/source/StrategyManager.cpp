@@ -58,6 +58,7 @@ void StrategyManager::calculateOrders() {
 	executionManager->executeOrders();
 }
 
+
 void StrategyManager::executeTwoFactory() {
 
 	//___________________________Moving units________________________________

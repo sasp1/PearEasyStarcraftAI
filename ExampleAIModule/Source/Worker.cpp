@@ -48,6 +48,10 @@ void Worker::initBuild(BWAPI::UnitType type, BWAPI::Position pos) {
 	workState = 0;
 }
 
+/**
+* Find a suitable location and start constructing a building.
+* @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
+*/
 bool Worker::handleBuild() {
 
 	//State for moving to buildsite
@@ -101,6 +105,10 @@ bool Worker::handleBuild() {
 	return (workState == 5 && (*unit)->isIdle());
 }
 
+/**
+* Collect or return the rescource the worker is assigned to
+* @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
+*/
 void Worker::collect() {
 	//Check if unit is valid
 	if (unit == NULL || *unit == NULL) {

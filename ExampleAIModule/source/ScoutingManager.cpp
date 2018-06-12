@@ -170,7 +170,6 @@ bool ScoutingManager::isAvoidingNearbyEnemiesWithinRange(const BWAPI::Unit * uni
 }
 
 void ScoutingManager::executeOrders() {
-
 	//Make unit scout enemy base, or unscouted corners.
 	for (auto &u : scoutingUnits) {
 		if (!enemyBaseFound || !isAvoidingNearbyEnemiesWithinRange(u, 500)) {
@@ -187,8 +186,7 @@ void ScoutingManager::returnToBase(const BWAPI::Unit* unit) {
 	}
 }
 
-void ScoutingManager::onUnitDiscover(BWAPI::Unit unit)
-{
+void ScoutingManager::onUnitDiscover(BWAPI::Unit unit) {
 	//If unit is enemy building, update enemy location.
 	 if ((BWAPI::Broodwar->self()->isEnemy(unit->getPlayer()) && (unit->getType().isBuilding()))){
 		enemyBaseFound = true;
