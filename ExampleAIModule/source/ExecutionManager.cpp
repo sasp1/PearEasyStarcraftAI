@@ -7,12 +7,12 @@ using namespace BWAPI;
 using namespace Filter;
 
 std::list <UnitType> priorityQueue;
-int reservedMinerals;
-int reservedGas;
+int reservedMinerals = 0;
+int reservedGas = 0;
 
 void ExecutionManager::executeOrders() {
 
-	//Check for new desires
+	//Request construction of a building if ther eis enough resources
 	if (priorityQueue._Mysize() > 0) {
 		BWAPI::UnitType building = priorityQueue.front();
 		if (unitManager->requestBuilding(building, reservedMinerals, reservedGas))
@@ -20,21 +20,21 @@ void ExecutionManager::executeOrders() {
 			priorityQueue.pop_front();
 			reservedMinerals = reservedMinerals + building.mineralPrice();
 			reservedGas = reservedGas + building.gasPrice();
-
 		}
 	}
 
-	//Check if minerals is reserved for buildings, and if then stop producing moving units
+	//Execute orders for lower managers
 	buildingManager->executeOrders();
 	unitManager->executeOrders();
 }
 
 void ExecutionManager::addPriorityItem(BWAPI::UnitType unit) {
+	//Add requested building to queue
 	priorityQueue.push_back(unit);
 }
 
 void ExecutionManager::eventConstructionInitiated(BWAPI::Unit unit) {
-	//When a construction has begun building
+	//Remove reserved funds when constrution of a building has begun
 	if (unit->getType().isBuilding()) {
 		reservedMinerals = reservedMinerals - unit->getType().mineralPrice();
 		reservedGas = reservedGas - unit->getType().gasPrice();
@@ -42,15 +42,13 @@ void ExecutionManager::eventConstructionInitiated(BWAPI::Unit unit) {
 }
 
 void ExecutionManager::referenceManagers(UnitManager* unitManager, BuildingManager* buildingManager) {
+	//Make manager aware of relevant managers
 	this->buildingManager = buildingManager;
 	this->unitManager = unitManager;
 }
 
-//Initial setup of class
 ExecutionManager::ExecutionManager()
 {
-	reservedMinerals = 0;
-	reservedGas = 0;
 }
 
 ExecutionManager::~ExecutionManager()

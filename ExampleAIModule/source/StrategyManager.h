@@ -22,14 +22,14 @@ public:
 	void StrategyManager::executeExpandWithOneFactory();
 	void StrategyManager::unitComplete(const BWAPI::Unit* unit);
 	void StrategyManager::onUnitDestroy(BWAPI::Unit unit);
-	bool StrategyManager::EnemyHasAStructureMakingTanksRequired();
-	GatheringManager* gatheringManager;
-	bool StrategyManager::enemyHasLurkers(); 
-	int lastSupply;
-
 	void StrategyManager::attackingStrategyProtoss();
 	void StrategyManager::attackingStrategyTerran();
 	void StrategyManager::attackingStrategyZerg();
+	bool StrategyManager::EnemyHasAStructureMakingTanksRequired();
+	bool StrategyManager::enemyHasLurkers();
+	GatheringManager* gatheringManager;
+	int lastSupply;
+
 
 };
 

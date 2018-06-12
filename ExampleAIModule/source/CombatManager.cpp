@@ -196,7 +196,7 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 
 		if ((eu)->getPlayer()->isEnemy(Broodwar->self()) && isInEnemyCriticalRange(unit, &eu) && isMelee(&eu) && !(*eu).getType().isBuilding()) {
 			enemiesInCriticalRange = true;
-			centerOfMass = centerOfMass + ((*eu).getPosition() - (*unit)->getPosition()); // Lægges til igen grundet dobbelt vægt
+			centerOfMass = centerOfMass + ((*eu).getPosition() - (*unit)->getPosition());
 		}
 	}
 
@@ -217,6 +217,7 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 
 
 void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position enemyBasePosition) {
+	//
 	attackLocation = enemyBasePosition;
 	shouldAttack = true;
 }
@@ -260,15 +261,13 @@ void CombatManager::returnAllUnitsToBase() {
 
 bool tankCanMakeSiegeModeAttackOnStructure(const BWAPI::Unit * unit) {
 
-
-	//If tank is within range of certain units, go in siegemode.
+	//If a tank is within attackrange of a building, enter siegemode
 	for (auto &eu : (*unit)->getUnitsInRadius(UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange(), IsEnemy)) {
 
 		if (eu->getType().isBuilding() && (*unit)->getDistance(eu) > (UnitTypes::Terran_Siege_Tank_Siege_Mode.groundWeapon().maxRange()) / 2
 			|| (Broodwar->enemy()->getRace() == Races::Terran && !eu->isFlying() )) {
 			if (!(*unit)->isSieged()) {
 				(*unit)->siege();
-
 			}
 			return true;
 		}
@@ -277,9 +276,11 @@ bool tankCanMakeSiegeModeAttackOnStructure(const BWAPI::Unit * unit) {
 }
 
 bool CombatManager::fleeIfOutNumbered(Vulture* vulture) {
+	//Stop fleeing if not outnumbered, or near hydralisk
 	if (nearestHydra == NULL || outNumbered == false) {
 		return false;
 	}
+	//Flee if near hydralisk
 	if ((*vulture->unit)->getDistance((*nearestHydra)->getPosition()) < UnitTypes::Zerg_Hydralisk.groundWeapon().maxRange() * 2) {
 		(*vulture->unit)->move((*buildingManager->commandCenter)->getPosition());
 		return true;
@@ -287,7 +288,11 @@ bool CombatManager::fleeIfOutNumbered(Vulture* vulture) {
 	return false;
 }
 
-
+/**
+* Deprecated method. Makes a worker unit repair any nearby damaged vehicles.
+* @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
+* @param worker Unit The worker assigned to repairs
+*/
 bool CombatManager::repairNearbyInjuredVehicles(const BWAPI::Unit * worker) {
 	//for (auto &umech : (*worker)->getUnitsInRadius(1000, IsAlly)) {
 	//	//Broodwar->sendText("unit in radius: %s", umech->getType().c_str());
@@ -300,136 +305,100 @@ bool CombatManager::repairNearbyInjuredVehicles(const BWAPI::Unit * worker) {
 	//	}
 	//}
 	return false;
-
 }
 
-bool fleeFromLurker(const Unit* unit) {
-	return false;
-}
-
-bool attackingLurker(const Unit* unit) {
-
-
-	//Unit* lurker = (*unit)->getUnitsInRadius()
-	return false;
-}
-
+/**
+* Takes a vulture unit, and evaluates if it should lay down a mine
+* based on own state, enemy type and location.
+* @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
+* @param vulture Vulture The evaluated vulture
+*/
 bool CombatManager::shouldSetMine(Vulture* vulture) {
+	//Place mines if not figting terrans
 	if (!(Broodwar->enemy()->getRace() == Races::Terran) && vulture->canUseMine()) {
-
 		if (vulture->hasBeenOcupied == 0 && minesInDefensiveChokePosition.size() < 3 && (*vulture->unit)->getDistance(scoutingManager->startingChokePosition) < 50) {
-
+			//Lay down mines is home base
 			vulture->layDownMine(scoutingManager->startingChokePosition + Position(minesInDefensiveChokePosition.size() * 5, minesInDefensiveChokePosition.size() * 5));
 			return true;
 		}
 		else if (Broodwar->enemy()->getRace() == Races::Zerg && minesAtEnemeyBase.size() < 3 && (*vulture->unit)->getDistance(scoutingManager->enemyChokePosition) < 100 && (*vulture->unit)->getDistance((*vulture->unit)->getClosestUnit(Filter::GetType == UnitTypes::Terran_Vulture_Spider_Mine)) > 100) {
-
+			//Lay down mines near enemy choke position 1
 			vulture->layDownMine((*vulture->unit)->getPosition() + Position(2, 2));
 			return true;
 		}
 		else if (Broodwar->enemy()->getRace() == Races::Zerg && minesAtEnemeyBase.size() < 6 && (*vulture->unit)->getDistance(scoutingManager->inEnemyBasePosition) < 150 && (*vulture->unit)->getDistance((*vulture->unit)->getClosestUnit(Filter::GetType == UnitTypes::Terran_Vulture_Spider_Mine)) > 100) {
+			//Lay down mines near enemy choke position 2
 			vulture->layDownMine((*vulture->unit)->getPosition() + Position(2, 2));
 			return true;
 		}
-	}
-
-	return false;
-}
-
-bool CombatManager::shouldMoveAwayFromFriendlyUnits(const Unit* unit) {
-	Unit* closestAlly = new Unit((*unit)->getClosestUnit(Filter::GetType == UnitTypes::Terran_Vulture));
-	if (*closestAlly == NULL)
-		return false;
-	if ((*closestAlly)->getDistance((*unit)) < 5) {
-		Broodwar->sendText("Is fleeing from ally");
-		Broodwar->sendText("DISTANCE : %d", (*closestAlly)->getDistance((*unit)));
-		(*unit)->move((*unit)->getPosition() - ((*closestAlly)->getPosition() - (*unit)->getPosition()));
-		return true;
 	}
 	return false;
 }
 
 void CombatManager::attackDesiredUnit(CustomUnit* myUnit, BWAPI::Unit desiredUnitToAttack)
 {
-	//Med eller uden unitIsNewTarget!!
-
+	//Attack target unit, if not a dark templar
 	if (desiredUnitToAttack != NULL && desiredUnitToAttack->getType() != UnitTypes::Protoss_Dark_Templar
 		&& myUnit->unitIsNewTarget(desiredUnitToAttack)) {
-		//!(*myUnit->unit)->getType() == UnitTypes::Terran_Marine)
 		(*myUnit->unit)->attack(desiredUnitToAttack);
 		myUnit->targetEnemy = (desiredUnitToAttack);
 	}
+	//Remove target if unit is not attacking
 	else if (!(*myUnit->unit)->isAttacking()) {
 		myUnit->targetEnemy = NULL;
 	}
 }
-/**
-* main method of every class. Makes the combatmanager execute orders/relevant computations in every frame.
-* @see attackNearestEnemy()
-* @see Defendbase()
-* @author Asger Græsholt <s154099@dstudent.dtu.dk>
-*/
+
 void CombatManager::executeOrders() {
 
-	//Broodwar->sendText("%i", tanks._Mysize());
-
-	//defendingBase(1000);
-	//Broodwar->drawCircleMap(scoutingManager->inEnemyBasePosition, 200, Colors::Cyan, true);
-
-
+	//Evaluate if units are locally outnumbered by hydralisks
 	if (nearestHydra != NULL && (*nearestHydra)->isVisible()) {
 
 		int numberOfEnemies = 1;
 		int numberOfFriendlyUnits = 0;
 
+		//Count all friendly and enemy units
 		for (auto &u : (*nearestHydra)->getUnitsInRadius(UnitTypes::Zerg_Hydralisk.groundWeapon().maxRange() * 2)) {
-			if (u->getType() == UnitTypes::Terran_Vulture) {
-				numberOfFriendlyUnits++;
-			}
-			else if (u->getType() == UnitTypes::Zerg_Hydralisk) {
-				numberOfEnemies++;
-			}
+			if (u->getType() == UnitTypes::Terran_Vulture) numberOfFriendlyUnits++;
+			else if (u->getType() == UnitTypes::Zerg_Hydralisk) numberOfEnemies++;
 		}
 		outNumbered = numberOfEnemies + 3 > numberOfFriendlyUnits;
-
 	}
 	else {
+		//If no hydralisk nearby, units are not outnumbered.
 		distanceToHydra = -1;
 		outNumbered = false;
 	}
 
+	//Execute vulture actions
 	for (auto &u : vultures) {
-
 
 		Vulture* vulture = dynamic_cast<Vulture*>(u);
 		Unit* unit = (*vulture).nearestHydra(UnitTypes::Zerg_Hydralisk.groundWeapon().maxRange() * 2);
 
+		//Find nearest hydralisk
 		if (unit != NULL) {
-
 			int vultureHydraDistance = (*unit)->getDistance((*vulture->unit)->getPosition());
 			if (vultureHydraDistance < distanceToHydra || distanceToHydra == -1) {
 				nearestHydra = unit;
 				distanceToHydra = vultureHydraDistance;
 			}
 		}
-		//if (!shouldMoveAwayFromFriendlyUnits(u->unit)) {
-
+		//Attack if not on other task
 		if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
 			if (!fleeIfOutNumbered(vulture)) {
 				if (!vulture->isOcupied()) {
 					if (!shouldSetMine(vulture)) {
-						if (!attackingLurker(vulture->unit)) {
-							if (!shouldDefendBase(1000, u) && shouldAttack) {
+						if (!shouldDefendBase(1000, u) && shouldAttack) {
 								attackDesiredUnit(u, findMostWantedEnemyToKill(u->unit));
-							}
 						}
 					}
 				}
 			}
 		}
-		//}
 	}
 
+	//Execute actions for all tanks
 	for (auto &u : tanks) {
 		//Siege mode attack 1. prio
 		if (!tankCanMakeSiegeModeAttackOnStructure(u->unit)) {
@@ -444,50 +413,30 @@ void CombatManager::executeOrders() {
 				if (!shouldDefendBase(1000, u) && shouldAttack) {
 					//find and attack the desired enemy
 					attackDesiredUnit(u, findMostWantedEnemyToKill(u->unit));
-
 				}
 			}
 		}
 	}
 
+	//Execute actions for combatunits
+	for (auto &u : marines) if (!shouldDefendBase(1000, u) && shouldAttack) 
+		attackDesiredUnit(u, findMostWantedEnemyToKill(u->unit));
 
-	for (auto &u : marines) {
+	for (auto &u : wraiths) if (!shouldDefendBase(1000, u) && shouldAttack) 
+		attackDesiredUnit(u, findMostWantedEnemyToKill(u->unit));
 
-		if (!shouldDefendBase(1000, u) && shouldAttack) {
-
-			attackDesiredUnit(u, findMostWantedEnemyToKill(u->unit));
-
-		}
-
-	}
-
-	for (auto &u : wraiths) {
-
-		if (!shouldDefendBase(1000, u) && shouldAttack) {
-
-			attackDesiredUnit(u, findMostWantedEnemyToKill(u->unit));
-
-		}
-
-	}
-
-
-	for (auto &u : workers) {
-
-		/*if (!repairNearbyInjuredVehicles(u->unit) && vultures.size() > 0) {
-			(*u->unit)->move((*vultures.front()->unit)->getPosition());
-		}*/
-	}
-
-
+	
 	for (auto &u : getAllCombatUnits()) {
 
+		//Draw info on screen
 		Broodwar->drawText(CoordinateType::Map, (*u->unit)->getPosition().x, (*u->unit)->getPosition().y, (*u->unit)->getOrder().c_str());
 		Broodwar->drawLineMap((*u->unit)->getPosition(), (*u->unit)->getOrderTargetPosition(), Colors::Red);
 
+		//If unit still is idle, move to attacklocation.
 		if ((*u->unit)->isIdle() && shouldAttack && !u->isOcupied()) {
 			(*u->unit)->move(attackLocation);
 		}
+		//And if still idle move to defencelocation
 		else if ((*u->unit)->isIdle() && !shouldAttack && !u->isOcupied()) {
 			(*u->unit)->move(scoutingManager->defendBasePosition);
 		}

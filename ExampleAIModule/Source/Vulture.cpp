@@ -19,7 +19,7 @@ Vulture::~Vulture()
 
 void Vulture::putDownMineIfOutsideOfBase() {
 
-	// return (time + t) < Broodwar->getFrameCount();
+	//Attempt placement of mine, if time has passed since last placement
 	if (time + 20 < Broodwar->getFrameCount()) {
 		time = Broodwar->getFrameCount();
 
@@ -30,7 +30,6 @@ void Vulture::putDownMineIfOutsideOfBase() {
 			counter = counter + 30.0;
 			if (counter > 4000.0)
 				counter = 0;
-			
 		}
 	}
 }
@@ -44,12 +43,9 @@ bool Vulture::canUseMine() {
 	return (*unit)->canUseTechWithOrWithoutTarget(TechTypes::Spider_Mines); 
 }
 
-	
-
-
-
 Unit*  Vulture::nearestHydra(int radius)
 {
+	//Return nearest hydralisk if any exist
 	if ((*unit)->getClosestUnit(Filter::GetType == UnitTypes::Zerg_Hydralisk) == NULL)
 		return NULL; 
 	return new Unit((*unit)->getClosestUnit(Filter::GetType == UnitTypes::Zerg_Hydralisk));
@@ -60,7 +56,8 @@ bool Vulture::isOcupied() {
 }
 
 void Vulture::layDownMine(BWAPI::Position targetPosition)
-{
+{	
+	//Place mine at location, and update placement timer
 	hasBeenOcupied++; 
 	startTime = Broodwar->getFrameCount();
 	(*unit)->useTech(BWAPI::TechTypes::Spider_Mines, targetPosition);	

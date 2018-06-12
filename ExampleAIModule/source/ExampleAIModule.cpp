@@ -25,13 +25,12 @@ MapData* mapData;
 
 void ExampleAIModule::onStart()
 {
-	//Create managers
+	//Create manager classes
 	gatheringManager = new GatheringManager();
 	buildingManager = new BuildingManager();
 	unitManager = new UnitManager();
 	constructionManager = new ConstructionManager();
 	executionManager = new ExecutionManager();
-	
 	mapData = new MapData();
 	scoutingManager = new ScoutingManager(BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation()), mapData);
 	strategyManager = new StrategyManager();
@@ -52,18 +51,13 @@ void ExampleAIModule::onStart()
 	combatManager->scoutingManager = scoutingManager; 
 	constructionManager->gatheringManager = gatheringManager;
 
-
-	//Make managers aware of each other
+	//Set cross references (Old)
 	unitManager->setManagers(combatManager, gatheringManager, constructionManager, scoutingManager);
 	executionManager->referenceManagers(unitManager, buildingManager);
 	strategyManager->referenceManagers(executionManager, unitManager, buildingManager, combatManager);
 
-
   // Enable the UserInput flag, which allows us to control the bot and type messages.
   Broodwar->enableFlag(Flag::UserInput);
-
-  // Uncomment the following line and the bot will know about everything through the fog of war (cheat).
-  //Broodwar->enableFlag(Flag::CompleteMapInformation);
 
   // Set the command optimization level so that common commands can be grouped
   // and reduce the bot's APM (Actions Per Minute).
@@ -77,7 +71,6 @@ void ExampleAIModule::onStart()
 
 	  else if (u->getType().isResourceDepot())
 		  (*buildingManager).buildingCreated(&u);
-	 
   }
 }
 
@@ -87,8 +80,6 @@ void ExampleAIModule::onFrame()
 	// Display the game frame rate as text in the upper left area of the screen
 	Broodwar->drawTextScreen(200, 0, "FPS: %d", Broodwar->getFPS());
 	Broodwar->drawTextScreen(200, 20, "Average FPS: %f", Broodwar->getAverageFPS());
-
-	
 
 	// Return if the game is a replay or is paused
 	if (Broodwar->isReplay() || Broodwar->isPaused() || !Broodwar->self())
@@ -103,37 +94,32 @@ void ExampleAIModule::onFrame()
 	if (Broodwar->getFrameCount() > 2) {
 		strategyManager->calculateOrders();
 	}
-	
 }
 
 void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 {//When a unit build is complete
 	BWAPI::Unit* u = new Unit(unit);
 
-	//Make sure we are ingame 
-	// makes sure unit is ally unit
+	// makes sure unit is ally unit, and not a startup game unit
 	if (Broodwar->self()->isAlly((*u)->getPlayer()) && Broodwar->getFrameCount() > 10) {
 
-
+		//Add unit to unitmanager
 		if ((*u)->getType().isWorker()) 
 			(*unitManager).newWorker(u);
-		
 		else if ((*u)->getType() == UnitTypes::Terran_Marine)
 			(*unitManager).addUnit(u);
-
 		else if ((*u)->getType() == UnitTypes::Terran_Vulture)
 			(*unitManager).addUnit(u);
-
 		else if ((*u)->getType() == UnitTypes::Terran_Siege_Tank_Tank_Mode)
 			(*unitManager).addUnit(u);
 		else if ((*u)->getType() == UnitTypes::Terran_Wraith)
 			(*unitManager).addUnit(u);
 
+		//Add building to building manager
 		else if ((*u)->getType().isBuilding()) {
 			buildingManager->buildingCreated(u);
 			strategyManager->unitComplete(u);
 			unitManager->eventConstructionComplete(u);
-
 		}
 	}
 }
@@ -141,6 +127,8 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 {
 	BWAPI::Unit* u = new Unit(unit);
+
+	//Add mine to unit manager
 	if ((*u)->getType() == UnitTypes::Terran_Vulture_Spider_Mine) {
 		(*unitManager).addUnit(u);
 	}
@@ -156,15 +144,11 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 		}
 	}
 
-	//Broodwar->sendText("Creating");
-	//When construction of a unit has begun
-
+	//Notify managers of construction of building has begun
 	if (Broodwar->getFrameCount() > 10) {
 		if (unit->getType().isBuilding()) {
 			executionManager->eventConstructionInitiated(unit);
 			constructionManager->constructionBegun(unit);
-
-			//Variables sat so a new construction can be build, and the worker stops building
 			unitManager->newConstructionIsAvailable = true;
 		}
 	}
@@ -172,14 +156,8 @@ void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 
 void ExampleAIModule::onSendText(std::string text)
 {
-
   // Send the text to the game if it is not being processed.
   Broodwar->sendText("%s", text.c_str());
-
-
-  // Make sure to use %s and pass the text as a parameter,
-  // otherwise you may run into problems when you use the %(percent) character!
-
 }
 
 void ExampleAIModule::onReceiveText(BWAPI::Player player, std::string text)

@@ -31,6 +31,7 @@ void ConstructionManager::executeOrders() {
 
 		else if (!b->isValid()) removeBuilders.push_back(b);
 
+		//If not invalid continue with construction
 		else if (b->handleBuild()) {
 			const BWAPI::Unit* u = new Unit();
 			u = b->unit;

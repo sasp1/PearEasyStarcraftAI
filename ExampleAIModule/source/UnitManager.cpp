@@ -6,62 +6,55 @@
 using namespace BWAPI;
 using namespace Filter;
 
-
-int timer = 0;
 bool wantToScout = true;
 bool canAct = true;
 
 
 
 void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit) {
-
+	//Save state if refinery is built
 	if ((*unit)->getType() == UnitTypes::Terran_Refinery) {
 		newConstructionIsAvailable = true;
 	}
 }
 
 bool UnitManager::requestSupply() {
+	//Request construction of a supply depot if resources allow it
 
 	BWAPI::UnitType b = UnitTypes::Terran_Supply_Depot;
 	bool mineralPriceOk = Broodwar->self()->minerals() >= b.mineralPrice();
 	bool gasPriceOk = Broodwar->self()->gas() >= b.gasPrice();
-
 	bool isBuildOk = mineralPriceOk && gasPriceOk;
 
-	if (isBuildOk) {
-		constructionManager->createBuilding(b, gatheringManager->removeWorker());
-	}
+	if (isBuildOk) constructionManager->createBuilding(b, gatheringManager->removeWorker());
 	return isBuildOk;
 }
 
 bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals, int reservedGas) {
+	//Requests construction of a building
 
+	//Checks rescources
 	bool mineralPriceOk = Broodwar->self()->minerals() >= building.mineralPrice() + reservedMinerals;
 	bool gasPriceOk = Broodwar->self()->gas() >= building.gasPrice() + reservedGas;
-
-	//newConstruction is available/is sat whenever a building has started being created
 	bool requestIsAccepted = mineralPriceOk && gasPriceOk && newConstructionIsAvailable && canAct;
 
-	//Broodwar->sendText("Unitmanager: minerals: %s    gas: %s    newConstr: %s", (mineralPriceOk ? "OK" : "denied"), (gasPriceOk ? "OK" : "denied"), (newConstructionIsAvailable ? "OK" : "denied"));
-
+	//If rescources allow get construction manager to construct building
 	if (requestIsAccepted) {
 		constructionManager->createBuilding(building, gatheringManager->removeWorker());
 		newConstructionIsAvailable = false;
-		timer = timer - 550;
-		if (timer < 0) timer = 0;
 	}
 	return requestIsAccepted;
 }
 
 void UnitManager::executeOrders() {
-	// onFrame request to perform calculations. The "main" of this class
 
+	//Get lower managers to execute orders
 	gatheringManager->executeOrders();
 	scoutingManager->executeOrders();
 	combatManager->executeOrders();
 	constructionManager->executeOrders();
 
-	// Clean up units for each manager (if they are dead, remove them from lists): 
+	//Clean up units for each manager (if they are dead, remove them from lists): 
 	cleanUpUnits(scoutingManager->scoutingUnits);
 	cleanUpUnits(combatManager->vultures); 
 	cleanUpUnits(combatManager->tanks);
@@ -73,7 +66,7 @@ void UnitManager::executeOrders() {
 }
 
 void UnitManager::cleanUpUnits(std::list<const BWAPI::Unit*>& unitList) {
-
+	//Clean up a list of units, that is if unit is null or dead
 	for (auto &u : unitList) {
 		if (u != NULL && (*u)->getHitPoints() == 0) {
 			unitList.remove(u);
@@ -82,46 +75,40 @@ void UnitManager::cleanUpUnits(std::list<const BWAPI::Unit*>& unitList) {
 	}
 }
 
-
-void UnitManager::makeASCVHelpArmy() {
-	const BWAPI::Unit* worker = gatheringManager->removeWorker();
-	combatManager->addCombatUnit(worker);
-}
-
-
 void UnitManager::cleanUpUnits(std::list<CustomUnit*>& unitList) {
-
-	for (auto &u : unitList) {	
-		
+	// Clean up a list of custom units, that is if unit is null or dead
+	for (auto &u : unitList) {
 		if (u->unit != NULL && (*u->unit)->getHitPoints() == 0) {
 			unitList.remove(u);
-			 u->unit = NULL;			
+			u->unit = NULL;
 		}
 	}
 }
 
+void UnitManager::makeASCVHelpArmy() {
+	//Request SCV to be used in battle
+	const BWAPI::Unit* worker = gatheringManager->removeWorker();
+	combatManager->addCombatUnit(worker);
+}
+
 void UnitManager::newWorker(const BWAPI::Unit* worker) {
-	//When a new worker is created in game
+	//Add worker to gathering manager when created
 	gatheringManager->addWorker(worker);
 }
 
-//Initial class setup
 UnitManager::UnitManager() {
-
 }
 
 void UnitManager::addUnit(const BWAPI::Unit* unit) {
+	//Add unit as scout if there isn't any, and unit is a marine. Else add them as a combat unit
 	if ((scoutingManager->scoutingUnits._Mysize() < 1) & (*unit)->getType() == UnitTypes::Terran_Marine) {
 		(*scoutingManager).addScout(unit);
 	}
-	else {
-
-		(*combatManager).addCombatUnit(unit);
-	}
+	else (*combatManager).addCombatUnit(unit);
 }
 
 void UnitManager::setManagers(CombatManager* combatManager, GatheringManager* gatheringManager, ConstructionManager* constructionManager, ScoutingManager* scoutingManager) {
-	//Make unitmanager aware of the lowaer managers
+	//Make unitmanager aware of the lower managers
 	this->gatheringManager = gatheringManager;
 	this->combatManager = combatManager;
 	this->constructionManager = constructionManager;

@@ -18,12 +18,13 @@ public:
 	void UnitManager::makeASCVHelpArmy();
 	void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit);
 	void UnitManager::cleanUpUnits(std::list<const BWAPI::Unit*>& unitList); 
+	void UnitManager::cleanUpUnits(std::list<CustomUnit*>& unitList);
 	bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals, int reservedGas);
 	bool newConstructionIsAvailable = true;
 	CombatManager* combatManager;
 	GatheringManager* gatheringManager;
 	ConstructionManager* constructionManager;
 	ScoutingManager* scoutingManager;
-	void UnitManager::cleanUpUnits(std::list<CustomUnit*>& unitList); 
+	
 };
 

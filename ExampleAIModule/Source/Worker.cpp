@@ -33,7 +33,7 @@ void Worker::replaceUnit(const BWAPI::Unit* worker) {
 }
 
 void Worker::initBuild(BWAPI::UnitType type, BWAPI::Position pos) {
-	//Save building type, and positions
+	//Save type and position for building to be constructed
 	buildOrder = type;
 	spiral = new SpiralSearch(3000);
 	originPos = pos;

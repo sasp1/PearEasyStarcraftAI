@@ -37,7 +37,9 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 			gatheringManager->splitWorkers();
 		}
 		else {
+			//Add building to list
 			buildings.push_back(b);
+			//If armory, add techs to be researhed.
 			if ((*u)->getType() == UnitTypes::Terran_Armory) {
 				if (!addedArmoryTech) {
 					desiredUpgrades.push_back(UpgradeTypes::Terran_Vehicle_Weapons);
@@ -148,14 +150,10 @@ void BuildingManager::executeOrders() {
 	}
 }
 
-/**
-* Execute orders for build manager
-* @param buildWorkers that tells if a worker should be built.
-*/
 void BuildingManager::setIsDesiredToTrainWorkers(bool buildWorkers) {
+	//Should command centers build workers.
 	this->isDesiredToTrainWorkers = buildWorkers;
 }
-
 
 BuildingManager::BuildingManager()
 {
@@ -175,7 +173,7 @@ bool BuildingManager::scan(BWAPI::Position pos) {
 	const BWAPI::Unit* u = new Unit((*commandCenter)->getAddon());
 	if ((*u) == NULL) return false;
 
-	//Perform scan, and init draw on map
+	//Perform scan, and initiate draw on map
 	bool res = (*u)->useTech(TechTypes::Scanner_Sweep, pos);
 	if (res) {
 		Broodwar->sendText("Scanned");

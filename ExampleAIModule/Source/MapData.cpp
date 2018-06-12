@@ -3,6 +3,12 @@
 using namespace BWAPI;
 using namespace Filter;
 
+/**
+* @file
+* @author  Daniel Fjordhøj <s133198>
+* Database-type class that contains Postions for areas of importance
+*/
+
 MapData::MapData()
 {
 	northwestChokePointMid = BWAPI::Position(564, 927);

@@ -22,7 +22,7 @@ SpiralSearch::~SpiralSearch()
 }
 
 /**
-* Get next point in a spiral shaped outward search
+* Get next point in a outwards spiral shaped search
 * @param increment int Distance to add pr. spiral
 * @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
 */

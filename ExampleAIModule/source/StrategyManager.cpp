@@ -24,18 +24,17 @@ int retreats = 0;
 
 
 void StrategyManager::calculateOrders() {
-	//Handle workers and supplies
+	//Update supply count, and update if workers should be built
 	supplyUsed = Broodwar->self()->supplyUsed() / 2;
 	unusedSupplies = (Broodwar->self()->supplyTotal()) - Broodwar->self()->supplyUsed();
 	buildingManager->setIsDesiredToTrainWorkers(!(gatheringManager->workers.size() > numberOfWorkersLimit));
 	tanksAreDesiredToBuild = false;
 
 	 //Allow build of supply depots if long time since last build
-	
-	 if(!supplyDepotsAreNotUnderConstruction){ 
+	 if(!supplyDepotsAreNotUnderConstruction)
 		supplyDepotsAreNotUnderConstruction = (lastSupply + 1500 < Broodwar->getFrameCount());
-	 }
-	 
+
+	 //Request new supply depot if less than 20 % space for new units
 	 if (unusedSupplies/2 <= (Broodwar->self()->supplyTotal()/2)*0.2 && supplyDepotsAreNotUnderConstruction) {
 		 if (unitManager->requestSupply()) {
 			 lastSupply = Broodwar->getFrameCount();
@@ -43,15 +42,16 @@ void StrategyManager::calculateOrders() {
 		 }
 	 }
 
-	//Set executionManager orders
+	//Set strategy to follow
 	if (strategy == 1) executeTwoFactory();
 	else if (strategy == 2) executeExpandWithOneFactory();
 
+	//Activate executionManager
 	executionManager->executeOrders();
 }
 
 void StrategyManager::executeTwoFactory() {
-	//Build strategy 1 
+
 	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
 	if (scoutingManager->scoutingUnits._Mysize() > 0) buildingManager->barrackBuild = UnitTypes::None;
@@ -81,7 +81,7 @@ void StrategyManager::executeTwoFactory() {
 		factoriesOrdered++;
 	}
 
-	//Continue with next strategy with an extra factory STRATEGY // && Broodwar->enemy()->getRace() == Races::Protoss
+	//Continue with next strategy with an extra factory
 	if (!desireBuildingBarracks && factoriesOrdered == 2 ) {
 		strategy = 2;
 		Broodwar->sendText("Executing strategy: expandWithOneFactory");
@@ -90,15 +90,15 @@ void StrategyManager::executeTwoFactory() {
 
 
 void StrategyManager::executeExpandWithOneFactory() {
+
 	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
-
 	if ( (factoriesOrdered >=3 && Broodwar->self()->minerals() > mineralLimitOfWhenRessourcesAreFreeToUse || (scoutingManager->scoutingUnits._Mysize() < 1))) {
 			buildingManager->barrackBuild = UnitTypes::Terran_Marine;
 	}
 	else buildingManager->barrackBuild = UnitTypes::None;
 
-	//Spam voltures when no cannons are discovered
+	//If cannons exist, build tanks, else spam vultures
 	if (  ( ((tanksAreDesiredToBuild || EnemyHasAStructureMakingTanksRequired()) && combatManager->tanks._Mysize() <= 4 ) || 
 		(Broodwar->self()->minerals() > mineralLimitOfWhenRessourcesAreFreeToUse && Broodwar->self()->gas() > gasLimitOfWhenRessourcesAreFreeToUse ) )
 			&& combatManager->vultures._Mysize() >= 10) { 
@@ -108,19 +108,15 @@ void StrategyManager::executeExpandWithOneFactory() {
 	}
 	else buildingManager->factoryBuild = UnitTypes::Terran_Vulture;
 
-
-	//Train wraiths when starport
-	
+	//Train wraiths when starport exist
 	if (starportsOrdered >= 1) {
 		buildingManager->starportBuild = UnitTypes::Terran_Wraith;
 	}
 	
-
-	
 	//___________________________Building strategy________________________________
 	//Maintain 3 factories  AND EXPAND BASE!!!!!!
 
-	//command center
+	//Request command center
 	if (Broodwar->self()->supplyUsed() >= 72 && !hasExpanded && Broodwar->self()->minerals() > 400 && factoriesOrdered >= 3 && (Broodwar->enemy()->getRace() != Races::Terran || retreats>0) ) {
 		numberOfWorkersLimit *= 2;
 		Broodwar->sendText("adding command center to priorityQueue");
@@ -128,7 +124,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 		hasExpanded = true;
 	}
 
-	//Factories 
+	//Request Factories 
 	if (Broodwar->self()->supplyUsed() >= 72 && factoriesOrdered < 3 && (Broodwar->enemy()->getRace() != Races::Terran || retreats>0)) {
 		Broodwar->sendText("adding factory to priorityQueue");
 		executionManager->addPriorityItem(UnitTypes::Terran_Factory);
@@ -141,36 +137,28 @@ void StrategyManager::executeExpandWithOneFactory() {
 		factoriesOrdered++;
 	}
 
-	//academy
+	//Request academy
 	if (scoutingManager->enemyHasLurker && !academyOrdered) {
 		Broodwar->sendText("Adding academy to priorityqueue because lurker was spotted"); 
 		executionManager->addPriorityItem(UnitTypes::Terran_Academy);
 		academyOrdered = true; 
 	}
 
-
+	//Request armory
 	if (Broodwar->self()->minerals() > 2500 && !builtArmory) {
 		Broodwar->sendText("Adding armory and techs");
 		executionManager->addPriorityItem(UnitTypes::Terran_Armory);
 		builtArmory = true;
 	}
 
-
-	
+	//Request starport
 	if ( Broodwar->enemy()->getRace() == Races::Terran && retreats>0 && starportsOrdered < 1 && Broodwar->self()->minerals() > 2000 && Broodwar->self()->gas() > 700) {
 		Broodwar->sendText("adding starport to priorityQueue");
 		executionManager->addPriorityItem(UnitTypes::Terran_Starport);
 		starportsOrdered++;
 	}
 	
-
-	//else if (scoutingManager->enemyHasLurker && scoutingManager->enemyLurker != NULL) {
-	//	Broodwar->sendText("Enemylurker exists: %s", scoutingManager->enemyLurker->exists() ? "true" : "false"); 
-	//}
-	//else if (scoutingManager->enemyHasLurker) {
-	//	Broodwar->sendText("enemylurker is NULL: %s", scoutingManager->enemyLurker == NULL ? "true" : "false");
-	//}
-	// Desire Siege Mode for tanks
+	// Request Siege Mode research
 	if (!hasResearchedSiegeMode && tanksAreDesiredToBuild) {
 		Broodwar->sendText("adding SiegeMode to priorityQueue");
 		buildingManager->desiredResearchs.push_back(TechTypes::Tank_Siege_Mode);
@@ -179,6 +167,7 @@ void StrategyManager::executeExpandWithOneFactory() {
 
 	//___________________________Attacking strategy________________________________
 
+	//Execute attack strategy based on race
 	if (Broodwar->enemy()->getRace() == Races::Protoss) {
 		attackingStrategyProtoss();
 	} else if (Broodwar->enemy()->getRace() == Races::Terran) {
@@ -186,24 +175,19 @@ void StrategyManager::executeExpandWithOneFactory() {
 	} else if (Broodwar->enemy()->getRace() == Races::Zerg) {
 		attackingStrategyZerg();
 	}
-
-
 }
 
 void StrategyManager::attackingStrategyTerran() {
 
-		//First attack
-		if (combatManager->vultures._Mysize() >= 8 && scoutingManager->enemyBaseFound && !combatManager->shouldAttack && retreats < 1) {
+		//Execute initial vulture attack
+		if (combatManager->vultures._Mysize() >= 8 && scoutingManager->enemyBaseFound && !combatManager->shouldAttack && retreats < 1)
 			combatManager->attackEnemyBaseWhenVulturesAreGrouped(scoutingManager->lastEnemyBuildingPosition, 8);
-		}
 
-		//Second attack
-		if (combatManager->vultures._Mysize() >= 1 && scoutingManager->enemyBaseFound && !combatManager->shouldAttack && retreats > 0) {
+		//Execute subsequent vulture attacks
+		if (combatManager->vultures._Mysize() >= 1 && scoutingManager->enemyBaseFound && !combatManager->shouldAttack && retreats > 0)
 			combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
-		}
-	
 
-		//retreat
+		//Retreat if low on vultures
 		else if (combatManager->shouldAttack && combatManager->vultures._Mysize() <= 4) {
 			bool shouldRetreat = true;
 			for (auto &u : combatManager->vultures) {
@@ -222,13 +206,12 @@ void StrategyManager::attackingStrategyTerran() {
 
 
 void StrategyManager::attackingStrategyZerg() {
-
-	if (combatManager->vultures._Mysize() >= 1 ) {
+	//Attack constantly with all vultures if enemy base is fouund
+	if (combatManager->vultures._Mysize() >= 1 )
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
-	}
 }
 void StrategyManager::attackingStrategyProtoss() {
-
+	//Attack constantly with vultures if enemy base is found. Maintan one worker to repare units
 	if (combatManager->getAllCombatUnits()._Mysize() >= 2 && scoutingManager->enemyBaseFound) {
 		combatManager->attackEnemyBaseWithAllCombatUnits(scoutingManager->lastEnemyBuildingPosition);
 		if (combatManager->workers.size() < 1) unitManager->makeASCVHelpArmy();
@@ -236,6 +219,7 @@ void StrategyManager::attackingStrategyProtoss() {
 }
 
 bool StrategyManager::EnemyHasAStructureMakingTanksRequired() {
+	//Evaluate if tanks are needed
 	for (auto &eu : Broodwar->enemy()->getUnits()) {
 		if ((*eu).getType() == UnitTypes::Protoss_Photon_Cannon) {
 			return true;
@@ -246,13 +230,14 @@ bool StrategyManager::EnemyHasAStructureMakingTanksRequired() {
 
 
 void StrategyManager::unitComplete(const BWAPI::Unit* unit) {
-
+	//Allow construction of supply depots if one has been built
 	if ((*unit)->getType() == UnitTypes::Terran_Supply_Depot) {
 		supplyDepotsAreNotUnderConstruction = true;
 	}
 }
 
 void StrategyManager::onUnitDestroy(BWAPI::Unit unit) {
+	//Remove deisre for tanks if a cannon has been destroyed
 	if (unit->getPlayer()->isEnemy(Broodwar->self())) {
 		if (unit->getType() == UnitTypes::Protoss_Photon_Cannon ) {
 			Broodwar->sendText("Cannon killed");
@@ -261,7 +246,6 @@ void StrategyManager::onUnitDestroy(BWAPI::Unit unit) {
 	}
 }
 
-// Iniitial class setup
 void StrategyManager::referenceManagers(ExecutionManager* executionManager, UnitManager* unitManager, BuildingManager* buildingManager, CombatManager* combatManager) {
 	this->executionManager = executionManager;
 	this->unitManager = unitManager;

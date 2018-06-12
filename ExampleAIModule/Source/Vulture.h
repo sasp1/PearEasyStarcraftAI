@@ -9,15 +9,16 @@ public:
 	Vulture(const BWAPI::Unit* u, const BWAPI::Position basePosition);
 	~Vulture();
 	void putDownMineIfOutsideOfBase();
-	BWAPI::Position basePos;
-	int time;
+	bool isOcupied();
+	bool canUseMine();
 	bool Vulture::isUnitIdle();
 	void Vulture::layDownMine(BWAPI::Position targetPosition); 
 	bool hasLayedDownDefensiveMine = false; 
 	bool ocupiedLayingDownMine = false; 
-	int startTime = 0; 
 	Unit* nearestHydra(int radius); 
+	BWAPI::Position basePos;
 	int hasBeenOcupied = 0; 
-	bool isOcupied();
-	bool canUseMine(); 
+	int startTime = 0;
+	int time;
+
 };
