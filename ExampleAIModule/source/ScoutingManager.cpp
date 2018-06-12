@@ -174,6 +174,7 @@ void ScoutingManager::executeOrders() {
 	for (auto &u : scoutingUnits) {
 		if ((*u)->getHitPoints == 0) {
 			corner = (corner + 1) % 4;
+			Broodwar->sendText("NEW CORNER");
 		}
 
 		if (!enemyBaseFound || !isAvoidingNearbyEnemiesWithinRange(u, 500)) {
