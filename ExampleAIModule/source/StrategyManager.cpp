@@ -99,9 +99,9 @@ void StrategyManager::executeExpandWithOneFactory() {
 	else buildingManager->barrackBuild = UnitTypes::None;
 
 	//If cannons exist, build tanks, else spam vultures
-	if (  ( ((tanksAreDesiredToBuild || EnemyHasAStructureMakingTanksRequired()) && combatManager->tanks._Mysize() <= 4 ) || 
+	if ( ( ( ((tanksAreDesiredToBuild || EnemyHasAStructureMakingTanksRequired()) && combatManager->tanks._Mysize() <= 4 ) || 
 		(Broodwar->self()->minerals() > mineralLimitOfWhenRessourcesAreFreeToUse && Broodwar->self()->gas() > gasLimitOfWhenRessourcesAreFreeToUse ) )
-			&& combatManager->vultures._Mysize() >= 10) { 
+			&& combatManager->vultures._Mysize() >= 10    )  || combatManager->vultures._Mysize() > 20 ) { 
 
 		tanksAreDesiredToBuild = true;
 		buildingManager->factoryBuild = UnitTypes::Terran_Siege_Tank_Tank_Mode;
