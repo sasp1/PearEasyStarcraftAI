@@ -9,6 +9,11 @@ using namespace Filter;
 bool wantToScout = true;
 bool canAct = true;
 
+/**
+* @file UnitManager.cpp
+* @brief Handles allocation of all units to and between all lower unit controlling managers.
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+*/
 
 
 void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit) {

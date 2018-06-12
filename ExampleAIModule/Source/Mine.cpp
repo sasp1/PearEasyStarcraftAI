@@ -2,6 +2,12 @@
 
 using namespace BWAPI;
 
+/**
+* @file Mine.cpp
+* @brief Class representing a vulture mine.
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+*/
+
 Mine::Mine(const Unit * u) : CustomUnit(u)
 {
 	if ((*u)->getType() != UnitTypes::Terran_Vulture_Spider_Mine) {

@@ -10,9 +10,16 @@ std::list <UnitType> priorityQueue;
 int reservedMinerals = 0;
 int reservedGas = 0;
 
+/**
+* @file ExecutionManager.cpp
+* @brief The first manager to perform an action when strategy is updated.
+* Controls reservation of resources, and initiation of building constructions.
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+*/
+
 void ExecutionManager::executeOrders() {
 
-	//Request construction of a building if ther eis enough resources
+	//Request construction of a building if there is enough resources
 	if (priorityQueue._Mysize() > 0) {
 		BWAPI::UnitType building = priorityQueue.front();
 		if (unitManager->requestBuilding(building, reservedMinerals, reservedGas))

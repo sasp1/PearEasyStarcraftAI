@@ -13,8 +13,10 @@ bool addedArmoryTech = false;
 
 
 /**
-* @file
-* @author  Sebastian Arcos Specht <sebastian.a.specht@gmail.com>
+* @file BuildingManager.cpp
+* @brief Class responsible for handling all owned building.
+* Keeps track of owned buildings, executes add on construction, unit training, and researching
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
 */
 
 /**

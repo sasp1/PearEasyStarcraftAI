@@ -11,6 +11,12 @@ int gasWorkerLimit = 3;
 int gasWorkers = 0;
 int mineralWorkers = 0;
 
+/**
+* @file GatheringManager.cpp
+* @brief Handles gathering of all resources, and the workers assigned to gathering them
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+*/
+
 void GatheringManager::addWorker(const BWAPI::Unit* worker) {
 
 	//Set new worker as collecting minreals

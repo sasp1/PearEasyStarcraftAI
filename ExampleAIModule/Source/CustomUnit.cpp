@@ -1,5 +1,11 @@
 #include "CustomUnit.h"
 
+/**
+* @file CustomUnit.cpp
+* @brief Parent class used to represent unit in unit-specifc child-classes.
+* @author Sebastian Arcos Specht <@student.dtu.dk>
+*/
+
 bool CustomUnit::isValid()
 {
 	return !(*unit == NULL);

@@ -3,6 +3,12 @@
 using namespace BWAPI;
 using namespace Filter;
 
+/**
+* @file Worker.cpp
+* @brief Class representing a worker unit.
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+*/
+
 /*Workstates:
 Gathering - 0: Collecting mineral, 1: Collecting gas,
 Building - 0: Moving, 1: Attempt build, 2: Find build loc, 3: Scout, 4:Building, 5:Done

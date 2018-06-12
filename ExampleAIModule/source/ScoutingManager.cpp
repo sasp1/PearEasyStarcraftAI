@@ -8,6 +8,12 @@
 using namespace BWAPI;
 using namespace Filter;
 
+/**
+* @file ScoutingManager.cpp
+* @brief Handles scouting of the map, and enemy base.
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+*/
+
 //The map is 4096x4096 pixels (64^2)
 BWAPI::Position lastEnemyBuildingPosition = BWAPI::Position(0, 0);
 BWAPI::Position cornerCoords0= Position(100, 100);

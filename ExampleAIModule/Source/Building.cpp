@@ -5,10 +5,17 @@ using namespace Filter;
 
 SpiralSearch* spiral;
 bool startedBuild = false;
-
 int buildState = 0;
 //Buildstates
 //0: Attempt addon, 1: Find build loc, 2:Lift off 3: Move and land, 4:Landing, 5:Building, 6:Done
+
+
+/**
+* @file Building.cpp
+* @brief Class that represent an instance of an owned building.
+* Handles construction of addons, and training of units.
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+*/
 
 Building::Building(const BWAPI::Unit* u) {
 	unit = u;
@@ -23,7 +30,7 @@ bool Building::isUnitValid() {
 }
 
 void Building::initAddon(BWAPI::UnitType type) {
-	//Save current position, and addon type.
+	//Saves current position, and addon type.
 	addOnType = type;
 	spiral = new SpiralSearch(5000);
 	originPos = Position((*unit)->getPosition());
