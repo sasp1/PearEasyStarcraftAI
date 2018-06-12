@@ -2,6 +2,13 @@
 
 using namespace BWAPI;
 
+/**
+* @file SpiralSearch.cpp
+* @brief Adds 2D values in a outward griwing rectangular spiral shape, which is used to be added to an origin point
+* to find a valid point as close to the origin as possible
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+*/
+
 SpiralSearch::SpiralSearch(int dist){
 	maxDist = dist;
 }

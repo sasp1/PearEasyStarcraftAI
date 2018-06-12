@@ -23,6 +23,12 @@ ScoutingManager* scoutingManager;
 StrategyManager* strategyManager;
 MapData* mapData;
 
+/**
+* @file ExampleAIModule.cpp
+* @brief "Main" class of the program. This is where actions from Starcraft are called thorugh BWAPI.
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+*/
+
 void ExampleAIModule::onStart()
 {
 	//Create manager classes

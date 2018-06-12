@@ -3,6 +3,13 @@ using namespace BWAPI;
 using namespace Filter;
 
 int counter = 0; 
+
+/**
+* @file Vulture.cpp
+* @brief Class representing a vulture unit.
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+*/
+
 Vulture::Vulture(const BWAPI::Unit* u,  BWAPI::Position basePosition) : CustomUnit::CustomUnit(u){
 	if ((*u)->getType() == UnitTypes::Terran_Vulture) {
 		time = Broodwar->getFrameCount();

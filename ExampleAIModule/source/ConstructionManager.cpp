@@ -6,9 +6,9 @@
 
 /**
 * @file ConstructionManager.cpp
-* @brief Manager that handles construction of buildings,
-* and forwarding of addons.
-* @author  Daniel Fjordhøj <s133198gstudent.dtu.dk>
+* @brief Handles construction of requested buildings, 
+* and workers assigned to build them.
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
 */
 
 using namespace BWAPI;
@@ -16,10 +16,7 @@ using namespace Filter;
 
 std::list<Worker*> builders; //List of workers in the process of constructing buildings.
 std::list<Worker*> removeBuilders;
-/**
-* Clean up, and assign orders to controlled units
-* @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
-*/
+
 void ConstructionManager::executeOrders() {
 
 	//Prepare temp list
@@ -45,7 +42,7 @@ void ConstructionManager::executeOrders() {
 }
 
 /**
-* Assigns newly begun construction to unit who is building it
+* Assigns newly begun construction as variable to unit who is building it
 * @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
 * */
 void ConstructionManager::constructionBegun(BWAPI::Unit build) {

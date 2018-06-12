@@ -2,7 +2,11 @@
 
 using namespace BWAPI; 
 
-
+/**
+* @file Marine.cpp
+* @brief Class representing a marine unit.
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+*/
 
 Marine::Marine(const Unit * u) : CustomUnit(u) 
 {

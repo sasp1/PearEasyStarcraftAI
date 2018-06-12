@@ -5,8 +5,9 @@
 
 /**
 * @file CombatManager.cpp
-* @brief Controls the army, how it initiate combat and how units attack in combat.
-* @author  Thomas Dahl Heshe <s164399@student.dtu.dk>
+* @brief Handles units assigned to combat along with battle management.
+* Assigns prioritized enemy targets, and unit specific actions, both individually and as a group
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
 */
 using namespace BWAPI;
 using namespace Filter;
@@ -217,7 +218,6 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(const BWAPI::Unit * un
 
 
 void CombatManager::attackEnemyBaseWithAllCombatUnits(BWAPI::Position enemyBasePosition) {
-	//
 	attackLocation = enemyBasePosition;
 	shouldAttack = true;
 }
@@ -254,9 +254,8 @@ bool CombatManager::shouldDefendBase(int range, CustomUnit* unit) {
 
 void CombatManager::returnAllUnitsToBase() {
 	//Return all units to base for defence
-	for (auto &u : getAllCombatUnits()) {
+	for (auto &u : getAllCombatUnits()) 
 		(*u->unit)->move((*buildingManager->commandCenter)->getPosition());
-	}
 }
 
 bool tankCanMakeSiegeModeAttackOnStructure(const BWAPI::Unit * unit) {

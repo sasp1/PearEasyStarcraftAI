@@ -13,8 +13,10 @@ bool addedArmoryTech = false;
 
 
 /**
-* @file
-* @author  Sebastian Arcos Specht <sebastian.a.specht@gmail.com>
+* @file BuildingManager.cpp
+* @brief Class responsible for handling all owned building.
+* Keeps track of owned buildings, executes add on construction, unit training, and researching
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
 */
 
 /**
@@ -68,11 +70,6 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 	}
 }
 
-
-/**
-* Issues orders to buildings based on type and state of the game.
-* @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
-*/
 
 void BuildingManager::executeOrders() {
 	//Draw a recent scan

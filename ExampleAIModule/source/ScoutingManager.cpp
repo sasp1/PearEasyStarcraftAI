@@ -8,6 +8,12 @@
 using namespace BWAPI;
 using namespace Filter;
 
+/**
+* @file ScoutingManager.cpp
+* @brief Handles scouting of the map, and enemy base.
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+*/
+
 //The map is 4096x4096 pixels (64^2)
 BWAPI::Position lastEnemyBuildingPosition = BWAPI::Position(0, 0);
 BWAPI::Position cornerCoords0= Position(100, 100);
@@ -164,7 +170,6 @@ bool ScoutingManager::isAvoidingNearbyEnemiesWithinRange(const BWAPI::Unit * uni
 }
 
 void ScoutingManager::executeOrders() {
-
 	//Make unit scout enemy base, or unscouted corners.
 	for (auto &u : scoutingUnits) {
 		if (!enemyBaseFound || !isAvoidingNearbyEnemiesWithinRange(u, 500)) {
@@ -181,8 +186,7 @@ void ScoutingManager::returnToBase(const BWAPI::Unit* unit) {
 	}
 }
 
-void ScoutingManager::onUnitDiscover(BWAPI::Unit unit)
-{
+void ScoutingManager::onUnitDiscover(BWAPI::Unit unit) {
 	//If unit is enemy building, update enemy location.
 	 if ((BWAPI::Broodwar->self()->isEnemy(unit->getPlayer()) && (unit->getType().isBuilding()))){
 		enemyBaseFound = true;

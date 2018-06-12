@@ -9,6 +9,11 @@ using namespace Filter;
 bool wantToScout = true;
 bool canAct = true;
 
+/**
+* @file UnitManager.cpp
+* @brief Handles allocation of all units to and between all lower unit controlling managers.
+* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+*/
 
 
 void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit) {
@@ -18,6 +23,10 @@ void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit) {
 	}
 }
 
+/**
+* Tries to initiate construction af a supply depot, if there is enough rescources available
+* @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
+*/
 bool UnitManager::requestSupply() {
 	//Request construction of a supply depot if resources allow it
 
