@@ -54,50 +54,53 @@ void Worker::initBuild(BWAPI::UnitType type, BWAPI::Position pos) {
 */
 bool Worker::handleBuild() {
 
-	//State for moving to buildsite
-	if (workState == 0 && (*unit)->isIdle()) {
-		//Move close to origin point and attempt construction
-		if ((*unit)->getDistance(originPos) < 150) {
-			buildPos = originPos;
-			workState = 1;
-		}
-		else (*unit)->move(originPos);
-	}
+	if ((*unit) != NULL) {
 
-	//State for attempting construction
-	if (workState == 1) {
-		// If we are constructing, set as can be finished
-		if ((*unit)->isConstructing()) {
-			workState = 4;
-			time = Broodwar->getFrameCount();
-		}
-		//If position is invalid, do spiral search for new location.
-		else if (!hasLoc) {
-			buildPos = originPos + spiral->getNextPos();
-			Broodwar->drawCircleMap(buildPos, 30, Colors::Green, true);
-			
-			//Try to validate new locations
-			tilePos = Broodwar->getBuildLocation(buildOrder, TilePosition(buildPos));
-			hasLoc = (*unit)->build(buildOrder, tilePos);
-			if (!hasLoc) {
-				hasLoc = (*unit)->build(buildOrder, TilePosition(buildPos));
-				tilePos = TilePosition(buildPos);
+		//State for moving to buildsite
+		if (workState == 0 && (*unit)->isIdle()) {
+			//Move close to origin point and attempt construction
+			if ((*unit)->getDistance(originPos) < 150) {
+				buildPos = originPos;
+				workState = 1;
 			}
-			if (!hasLoc) {
-				hasLoc = (*unit)->build(buildOrder, TilePosition(originPos));
-				tilePos = TilePosition(originPos);
-			}
+			else (*unit)->move(originPos);
 		}
-		//If position is valid, attempt build at that location
-		else hasLoc = (*unit)->build(buildOrder, tilePos);	
-	}
 
-	//Evaluation state for if building is under construction for a longer period of time.
-	if (workState == 4) {
-		//If certain time has passed, and unit is constructing, consider building as being completed. Else try construction again.
-		if ((*unit)->isConstructing() && Broodwar->getFrameCount() > (time + 500)) workState = 5;
-		else if (!(*unit)->isConstructing()) {
-			workState = 1;
+		//State for attempting construction
+		if (workState == 1) {
+			// If we are constructing, set as can be finished
+			if ((*unit)->isConstructing()) {
+				workState = 4;
+				time = Broodwar->getFrameCount();
+			}
+			//If position is invalid, do spiral search for new location.
+			else if (!hasLoc) {
+				buildPos = originPos + spiral->getNextPos();
+				Broodwar->drawCircleMap(buildPos, 30, Colors::Green, true);
+
+				//Try to validate new locations
+				tilePos = Broodwar->getBuildLocation(buildOrder, TilePosition(buildPos));
+				hasLoc = (*unit)->build(buildOrder, tilePos);
+				if (!hasLoc) {
+					hasLoc = (*unit)->build(buildOrder, TilePosition(buildPos));
+					tilePos = TilePosition(buildPos);
+				}
+				if (!hasLoc) {
+					hasLoc = (*unit)->build(buildOrder, TilePosition(originPos));
+					tilePos = TilePosition(originPos);
+				}
+			}
+			//If position is valid, attempt build at that location
+			else hasLoc = (*unit)->build(buildOrder, tilePos);
+		}
+
+		//Evaluation state for if building is under construction for a longer period of time.
+		if (workState == 4) {
+			//If certain time has passed, and unit is constructing, consider building as being completed. Else try construction again.
+			if ((*unit)->isConstructing() && Broodwar->getFrameCount() > (time + 500)) workState = 5;
+			else if (!(*unit)->isConstructing()) {
+				workState = 1;
+			}
 		}
 	}
 
@@ -114,11 +117,11 @@ void Worker::collect() {
 	if (unit == NULL || *unit == NULL) {
 		return;
 	}
-	
+
 	//Collect minerals, or return cargo.
 	if (workState == 0 && (center != NULL)) {
 		BWAPI::Unit mine = (*center)->getClosestUnit(IsMineralField);
-		
+
 		if ((*unit)->isIdle()) {
 			if ((*unit)->isCarryingGas() || (*unit)->isCarryingMinerals())
 				(*unit)->returnCargo();
