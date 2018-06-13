@@ -16,9 +16,9 @@ bool canAct = true;
 */
 
 
-void UnitManager::eventConstructionComplete(const BWAPI::Unit* unit) {
+void UnitManager::eventConstructionComplete(BWAPI::UnitInterface* unit) {
 	//Save state if refinery is built
-	if ((*unit)->getType() == UnitTypes::Terran_Refinery) {
+	if (unit->getType() == UnitTypes::Terran_Refinery) {
 		newConstructionIsAvailable = true;
 	}
 }
@@ -74,10 +74,10 @@ void UnitManager::executeOrders() {
 
 }
 
-void UnitManager::cleanUpUnits(std::list<const BWAPI::Unit*>& unitList) {
+void UnitManager::cleanUpUnits(std::list<BWAPI::UnitInterface*>& unitList) {
 	//Clean up a list of units, that is if unit is null or dead
 	for (auto &u : unitList) {
-		if (u != NULL && (*u)->getHitPoints() == 0) {
+		if (u != NULL && u->getHitPoints() == 0) {
 			unitList.remove(u);
 			u = NULL;
 		}
@@ -87,7 +87,7 @@ void UnitManager::cleanUpUnits(std::list<const BWAPI::Unit*>& unitList) {
 void UnitManager::cleanUpUnits(std::list<CustomUnit*>& unitList) {
 	// Clean up a list of custom units, that is if unit is null or dead
 	for (auto &u : unitList) {
-		if (u->unit != NULL && (*u->unit)->getHitPoints() == 0) {
+		if (u->unit != NULL && u->unit->getHitPoints() == 0) {
 			unitList.remove(u);
 			u->unit = NULL;
 		}
@@ -96,11 +96,11 @@ void UnitManager::cleanUpUnits(std::list<CustomUnit*>& unitList) {
 
 void UnitManager::makeASCVHelpArmy() {
 	//Request SCV to be used in battle
-	const BWAPI::Unit* worker = gatheringManager->removeWorker();
+	BWAPI::UnitInterface* worker = gatheringManager->removeWorker();
 	combatManager->addCombatUnit(worker);
 }
 
-void UnitManager::newWorker(const BWAPI::Unit* worker) {
+void UnitManager::newWorker(BWAPI::UnitInterface* worker) {
 	//Add worker to gathering manager when created
 	gatheringManager->addWorker(worker);
 }
@@ -108,9 +108,9 @@ void UnitManager::newWorker(const BWAPI::Unit* worker) {
 UnitManager::UnitManager() {
 }
 
-void UnitManager::addUnit(const BWAPI::Unit* unit) {
+void UnitManager::addUnit(BWAPI::UnitInterface* unit) {
 	//Add unit as scout if there isn't any, and unit is a marine. Else add them as a combat unit
-	if ((scoutingManager->scoutingUnits._Mysize() < 1) & (*unit)->getType() == UnitTypes::Terran_Marine) {
+	if ((scoutingManager->scoutingUnits._Mysize() < 1) & unit->getType() == UnitTypes::Terran_Marine) {
 		(*scoutingManager).addScout(unit);
 	}
 	else (*combatManager).addCombatUnit(unit);

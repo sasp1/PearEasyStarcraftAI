@@ -30,8 +30,7 @@ void ConstructionManager::executeOrders() {
 
 		//If not invalid continue with construction
 		else if (b->handleBuild()) {
-			const BWAPI::Unit* u = new Unit();
-			u = b->unit;
+			BWAPI::UnitInterface* u = b->unit; 
 			unitManager->newWorker(u);
 			removeBuilders.push_back(b);
 		}
@@ -45,14 +44,14 @@ void ConstructionManager::executeOrders() {
 * Assigns newly begun construction as variable to unit who is building it
 * @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
 * */
-void ConstructionManager::constructionBegun(BWAPI::Unit build) {
+void ConstructionManager::constructionBegun(BWAPI::UnitInterface* build) {
 
-	const BWAPI::Unit* newBuild = new Unit(build);
+	BWAPI::UnitInterface* newBuild = build; 
 	bool isAssigned = false;
 
 	//Assign building in construction to unit constructing building of that type 
 	for (auto &u : builders) {
-		if (u->construct == NULL && ((*newBuild)->getType() == u->buildOrder) && !isAssigned) {
+		if (u->construct == NULL && (newBuild->getType() == u->buildOrder) && !isAssigned) {
 			u->construct = newBuild;
 			isAssigned = true;
 		}
@@ -65,11 +64,11 @@ void ConstructionManager::constructionBegun(BWAPI::Unit build) {
 * @param worker Unit worker assigned to this building
 * @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
 */
-void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::Unit* worker) {
+void ConstructionManager::createBuilding(BWAPI::UnitType building, BWAPI::UnitInterface* worker) {
 
 	//Stop workers action
-	if (*worker != NULL) {
-		(*worker)->stop();
+	if (worker != NULL) {
+		worker->stop();
 
 		//Perform unique action for special buildings
 		if (building == BWAPI::UnitTypes::Terran_Command_Center) {
@@ -85,13 +84,13 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, const BWAPI::
 		//Attempt build at location for ordinary building types, and add worker to list
 		else {
 			Worker* w = new Worker(worker);
-			w->initBuild(building, (*worker)->getPosition());
+			w->initBuild(building, worker->getPosition());
 			builders.push_back(w);
 		}
 	}
 }
 
-void ConstructionManager::createBuildingAtPos(BWAPI::UnitType building, const BWAPI::Unit* worker, BWAPI::Position pos) {
+void ConstructionManager::createBuildingAtPos(BWAPI::UnitType building, BWAPI::UnitInterface* worker, BWAPI::Position pos) {
 	//Request construction af building at a specific location, and add worker to list
 	Worker* w = new Worker(worker);
 	w->initBuild(building, pos);
@@ -108,7 +107,7 @@ void ConstructionManager::requestFromDead(Worker* w) {
 * @param Unit worker Worker to build construction
 * @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
 */
-void ConstructionManager::expandBase(const BWAPI::Unit* worker) {
+void ConstructionManager::expandBase(BWAPI::UnitInterface* worker) {
 
 	//Issue order to build commandcenter at given location, and add worker to list
 	Worker* w = new Worker(worker);
@@ -117,28 +116,28 @@ void ConstructionManager::expandBase(const BWAPI::Unit* worker) {
 	builders.push_back(w);
 }
 
-void ConstructionManager::buildRefinery(const BWAPI::Unit* worker) {
+void ConstructionManager::buildRefinery(BWAPI::UnitInterface* worker) {
 
 	//Init geyserobject, and set compare distance to be virtual unlimited
-	BWAPI::Unit* gasLocation = new Unit();
+	BWAPI::UnitInterface* gasLocation; 
 	int distance = 10000;
 
 	//Get last built command center.
-	const BWAPI::Unit* cc = buildingManager->commandCenters.back()->unit;
+	BWAPI::UnitInterface* cc = buildingManager->commandCenters.back()->unit;
 
 	//Loop through all geysers, and if distance is smaller than last target, set this as new build target.
 	for (auto &u : Broodwar->getGeysers())
 	{
-		if ((*cc)->getDistance(u) < distance) {
-			*gasLocation = u;
-			distance = (*cc)->getDistance(u);
+		if (cc->getDistance(u) < distance) {
+			gasLocation = u;
+			distance = cc->getDistance(u);
 		}
 	}
 
 	//If geyser is found, construct at location, and add worker to list
 	if (distance != 10000) {
 		Worker* w = new Worker(worker);
-		w->initBuild(UnitTypes::Terran_Refinery, (*gasLocation)->getPosition());
+		w->initBuild(UnitTypes::Terran_Refinery, gasLocation->getPosition());
 		builders.push_back(w);
 	}
 }

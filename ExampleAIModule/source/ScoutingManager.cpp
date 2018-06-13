@@ -35,7 +35,7 @@ ScoutingManager::~ScoutingManager()
 {
 }
 
-void ScoutingManager::addScout(const BWAPI::Unit* scout) {
+void ScoutingManager::addScout(BWAPI::UnitInterface* scout) {
 	//Receive control of a new scoutUnit 
 	scoutingUnits.push_back(scout);
 }
@@ -111,7 +111,7 @@ void ScoutingManager::setEnemyCorner(BWAPI::Position pos) {
 	}
 }
 
-void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
+void ScoutingManager::scoutCornersClockwise(BWAPI::UnitInterface* scout) {
 	//Scout clockwise each corner of the map
 
 	//Set enemy corner as remaining corner, if 3 are scouted.
@@ -128,66 +128,66 @@ void ScoutingManager::scoutCornersClockwise(const BWAPI::Unit* scout) {
 
 	//Send scout to corner
 	if (corner == 0) {
-		(*scout)->move(cornerCoords0);
+		scout->move(cornerCoords0);
 		checkIfCornerDiscovered(scout, cornerCoords0);
 	}
 	else if (corner == 1) {
-		(*scout)->move(cornerCoords1);
+		scout->move(cornerCoords1);
 		checkIfCornerDiscovered(scout, cornerCoords1);
 	}
 	else if (corner == 2) {
-		(*scout)->move(cornerCoords2);
+		scout->move(cornerCoords2);
 		checkIfCornerDiscovered(scout, cornerCoords2);
 	}
 	else {
-		(*scout)->move(cornerCoords3);
+		scout->move(cornerCoords3);
 		checkIfCornerDiscovered(scout, cornerCoords3);
 	}
 }
 
-void ScoutingManager::checkIfCornerDiscovered(const BWAPI::Unit * unit, BWAPI::Position cornerCord) {
+void ScoutingManager::checkIfCornerDiscovered(BWAPI::UnitInterface* unit, BWAPI::Position cornerCord) {
 	// Set corner as discovered if scout is nearby
-	if ((*unit)->getDistance(cornerCord) < 300) {
+	if (unit->getDistance(cornerCord) < 300) {
 		corner = (corner + 1) % 4;
 	}
 }
 
-bool ScoutingManager::isAvoidingNearbyEnemiesWithinRange(const BWAPI::Unit * unit, int range) {
+bool ScoutingManager::isAvoidingNearbyEnemiesWithinRange(BWAPI::UnitInterface * unit, int range) {
 	//Prepare enemy search
 	bool enemiesInCriticalRange = false;
 	BWAPI::Position centerOfMass = Position(0, 0);
 
 	//Calculate evasion area if enemies are too close
-	for (auto &eu : (*unit)->getUnitsInRadius(range, IsEnemy)) {
-		centerOfMass = centerOfMass + ((*eu).getPosition() - (*unit)->getPosition());
+	for (auto &eu : unit->getUnitsInRadius(range, IsEnemy)) {
+		centerOfMass = centerOfMass + ((*eu).getPosition() - unit->getPosition());
 		enemiesInCriticalRange = true;
 	}
 
 	//Move unit to evasion area
-	BWAPI::Position movePosition = (*unit)->getPosition() - centerOfMass;
-	if (enemiesInCriticalRange) (*unit)->move(movePosition);
+	BWAPI::Position movePosition = unit->getPosition() - centerOfMass;
+	if (enemiesInCriticalRange) unit->move(movePosition);
 	return enemiesInCriticalRange;
 }
 
 void ScoutingManager::executeOrders() {
 	//Make unit scout enemy base, or unscouted corners.
 	for (auto &u : scoutingUnits) {
-		if ((*u)->getHitPoints() == 0) {
+		if (u->getHitPoints() == 0) {
 			corner = (corner + 1) % 4;
 			Broodwar->sendText("NEW CORNER");
 		}
 
 		if (!enemyBaseFound || !isAvoidingNearbyEnemiesWithinRange(u, 500)) {
 			if (!enemyBaseFound) scoutCornersClockwise(u);
-			else (*u)->move(lastEnemyBuildingPosition);
+			else u->move(lastEnemyBuildingPosition);
 		}
 	}
 }
 
-void ScoutingManager::returnToBase(const BWAPI::Unit* unit) {
+void ScoutingManager::returnToBase(BWAPI::UnitInterface* unit) {
 	//Return scout to base
-	if ((*unit)->getTargetPosition() != (*buildingManager->commandCenter)->getPosition()) {
-		(*unit)->move((*buildingManager->commandCenter)->getPosition());
+	if (unit->getTargetPosition() != buildingManager->commandCenter->getPosition()) {
+		unit->move(buildingManager->commandCenter->getPosition());
 	}
 }
 

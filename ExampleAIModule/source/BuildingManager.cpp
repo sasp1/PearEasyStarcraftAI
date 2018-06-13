@@ -24,16 +24,16 @@ bool addedArmoryTech = false;
 * @param u Unit the building that is constructed
 * @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
 */
-void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
+void BuildingManager::buildingCreated(BWAPI::UnitInterface* u) {
 
 	//Creates building class if not supply depot.
-	if ((*u)->getType() != UnitTypes::Terran_Supply_Depot)
+	if (u->getType() != UnitTypes::Terran_Supply_Depot)
 	{
 		Building* b = new Building(u);
-		if ((*u)->getType() == UnitTypes::Terran_Academy) addComSat = true;
+		if (u->getType() == UnitTypes::Terran_Academy) addComSat = true;
 
 		//Adds command center as separate variable
-		if ((*u)->getType() == UnitTypes::Terran_Command_Center) {
+		if (u->getType() == UnitTypes::Terran_Command_Center) {
 			commandCenters.push_back(b);
 			commandCenter = (commandCenters.front()->unit);
 			gatheringManager->splitWorkers();
@@ -42,7 +42,7 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 			//Add building to list
 			buildings.push_back(b);
 			//If armory, add techs to be researhed.
-			if ((*u)->getType() == UnitTypes::Terran_Armory) {
+			if (u->getType() == UnitTypes::Terran_Armory) {
 				if (!addedArmoryTech) {
 					desiredUpgrades.push_back(UpgradeTypes::Terran_Vehicle_Weapons);
 					desiredUpgrades.push_back(UpgradeTypes::Terran_Vehicle_Plating);
@@ -50,16 +50,16 @@ void BuildingManager::buildingCreated(const BWAPI::Unit* u) {
 				}
 			}
 			//If factory, adds request machine shop addon for first two factories.
-			if ((*u)->getType() == UnitTypes::Terran_Factory) {
+			if (u->getType() == UnitTypes::Terran_Factory) {
 				factories++;
 				if (factories < 3) {
 					b->shouldBuildAddon = true;
 					b->initAddon(UnitTypes::Terran_Machine_Shop);
 				}
-				(*u)->setRallyPoint((*scoutingManager).defendBasePosition);
+				u->setRallyPoint((*scoutingManager).defendBasePosition);
 			}
 			//If machine shop, add researchs for first one.
-			if ((*u)->getType() == UnitTypes::Terran_Machine_Shop) {
+			if (u->getType() == UnitTypes::Terran_Machine_Shop) {
 				if (!addedMachineTech) {
 					desiredResearchs.push_front(TechTypes::Spider_Mines);
 					desiredUpgrades.push_front(UpgradeTypes::Ion_Thrusters);
@@ -96,49 +96,49 @@ void BuildingManager::executeOrders() {
 	//Issue and execute orders for all other buildings
 	for (auto &b : buildings) {
 		if (!b->isUnitValid()) buildings.remove(b);
-		else if ((*b->unit)->isIdle()) {
-			const BWAPI::Unit* u = b->unit;
+		else if (b->unit->isIdle()) {
+			BWAPI::UnitInterface* u = b->unit;
 
 			//Barrack, build units
 			if (b->getType() == UnitTypes::Terran_Barracks) {
 				if (barrackBuild != UnitTypes::None) {
-					(*u)->train(barrackBuild);
+					u->train(barrackBuild);
 				}
 			}
 			//Armory, research techs
-			if ((*u)->getType() == UnitTypes::Terran_Armory) {
+			if (u->getType() == UnitTypes::Terran_Armory) {
 				if (desiredUpgrades.front() == UpgradeTypes::Terran_Vehicle_Weapons) {
-					(*u)->upgrade(UpgradeTypes::Terran_Vehicle_Weapons);
-					if ((*u)->isUpgrading()) desiredUpgrades.pop_front();
+					u->upgrade(UpgradeTypes::Terran_Vehicle_Weapons);
+					if (u->isUpgrading()) desiredUpgrades.pop_front();
 				}
 				else if (desiredUpgrades.front() == UpgradeTypes::Terran_Vehicle_Plating) {
-					(*u)->upgrade(UpgradeTypes::Terran_Vehicle_Plating);
-					if ((*u)->isUpgrading()) desiredUpgrades.pop_front();
+					u->upgrade(UpgradeTypes::Terran_Vehicle_Plating);
+					if (u->isUpgrading()) desiredUpgrades.pop_front();
 				}
 			}
 			//Starport, build units.
 			if (b->getType() == UnitTypes::Terran_Starport) {
 				if (starportBuild != UnitTypes::None) {
-					(*u)->train(starportBuild);
+					u->train(starportBuild);
 				}
 			}
 			//Machine shop, research techs
 			if ((b->getType() == UnitTypes::Terran_Machine_Shop)) {
 				if (desiredResearchs.front() == TechTypes::Spider_Mines) {
-					(*u)->research(TechTypes::Spider_Mines);
-					if ((*u)->isResearching()) desiredResearchs.pop_front();
+					u->research(TechTypes::Spider_Mines);
+					if (u->isResearching()) desiredResearchs.pop_front();
 				}
 				else if (desiredUpgrades.front() == UpgradeTypes::Ion_Thrusters) {
-					(*u)->upgrade(UpgradeTypes::Ion_Thrusters);
-					if ((*u)->isUpgrading())desiredUpgrades.pop_front();
+					u->upgrade(UpgradeTypes::Ion_Thrusters);
+					if (u->isUpgrading())desiredUpgrades.pop_front();
 				}
 				else if (desiredResearchs.front() == TechTypes::Tank_Siege_Mode) {
-					(*u)->research(TechTypes::Tank_Siege_Mode);
-					if ((*u)->isUpgrading())desiredResearchs.pop_front();
+					u->research(TechTypes::Tank_Siege_Mode);
+					if (u->isUpgrading())desiredResearchs.pop_front();
 				}
 			}
 			//Factory, build units
-			if (b->getType() == UnitTypes::Terran_Factory && (*b->unit)->isIdle()) {
+			if (b->getType() == UnitTypes::Terran_Factory && b->unit->isIdle()) {
 				//Handle machiine shop build
 				b->trainType = factoryBuild;
 				b->doCenterOrder();
@@ -167,11 +167,11 @@ BuildingManager::BuildingManager()
 bool BuildingManager::scan(BWAPI::Position pos) {
 
 	//Get main command center
-	const BWAPI::Unit* u = new Unit((*commandCenter)->getAddon());
-	if ((*u) == NULL) return false;
+	BWAPI::UnitInterface* u = commandCenter->getAddon();
+	if (u == NULL) return false;
 
 	//Perform scan, and initiate draw on map
-	bool res = (*u)->useTech(TechTypes::Scanner_Sweep, pos);
+	bool res = u->useTech(TechTypes::Scanner_Sweep, pos);
 	if (res) {
 		Broodwar->sendText("Scanned");
 		drawTimer = 0;

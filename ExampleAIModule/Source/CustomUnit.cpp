@@ -8,14 +8,14 @@
 
 bool CustomUnit::isValid()
 {
-	return !(*unit == NULL);
+	return !(unit == NULL);
 }
 
-CustomUnit::CustomUnit(const BWAPI::Unit * u) {
+CustomUnit::CustomUnit(BWAPI::UnitInterface * u) {
 	unit = u;
 	targetEnemy = NULL;
 }
 
-bool CustomUnit::unitIsNewTarget(BWAPI::Unit unit) {
+bool CustomUnit::unitIsNewTarget(BWAPI::UnitInterface* unit) {
 	return  targetEnemy == NULL || ((unit)->getID() != (targetEnemy)->getID());
 }

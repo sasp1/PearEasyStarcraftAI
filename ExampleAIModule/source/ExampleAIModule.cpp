@@ -73,10 +73,10 @@ void ExampleAIModule::onStart()
   for (auto &u : Broodwar->self()->getUnits())
   {
 	  if (u->getType().isWorker())
-		  (*unitManager).newWorker(&u);
+		  (*unitManager).newWorker(u);
 
 	  else if (u->getType().isResourceDepot())
-		  (*buildingManager).buildingCreated(&u);
+		  (*buildingManager).buildingCreated(u);
   }
 }
 
@@ -104,25 +104,25 @@ void ExampleAIModule::onFrame()
 
 void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 {//When a unit build is complete
-	BWAPI::Unit* u = new Unit(unit);
+	BWAPI::UnitInterface* u = unit; 
 
 	// makes sure unit is ally unit, and not a startup game unit
-	if (Broodwar->self()->isAlly((*u)->getPlayer()) && Broodwar->getFrameCount() > 10) {
+	if (Broodwar->self()->isAlly(u->getPlayer()) && Broodwar->getFrameCount() > 10) {
 
 		//Add unit to unitmanager
-		if ((*u)->getType().isWorker()) 
+		if (u->getType().isWorker()) 
 			(*unitManager).newWorker(u);
-		else if ((*u)->getType() == UnitTypes::Terran_Marine)
+		else if (u->getType() == UnitTypes::Terran_Marine)
 			(*unitManager).addUnit(u);
-		else if ((*u)->getType() == UnitTypes::Terran_Vulture)
+		else if (u->getType() == UnitTypes::Terran_Vulture)
 			(*unitManager).addUnit(u);
-		else if ((*u)->getType() == UnitTypes::Terran_Siege_Tank_Tank_Mode)
+		else if (u->getType() == UnitTypes::Terran_Siege_Tank_Tank_Mode)
 			(*unitManager).addUnit(u);
-		else if ((*u)->getType() == UnitTypes::Terran_Wraith)
+		else if (u->getType() == UnitTypes::Terran_Wraith)
 			(*unitManager).addUnit(u);
 
 		//Add building to building manager
-		else if ((*u)->getType().isBuilding()) {
+		else if (u->getType().isBuilding()) {
 			buildingManager->buildingCreated(u);
 			strategyManager->unitComplete(u);
 			unitManager->eventConstructionComplete(u);
@@ -132,10 +132,10 @@ void ExampleAIModule::onUnitComplete(BWAPI::Unit unit)
 
 void ExampleAIModule::onUnitCreate(BWAPI::Unit unit)
 {
-	BWAPI::Unit* u = new Unit(unit);
+	BWAPI::UnitInterface* u = unit; 
 
 	//Add mine to unit manager
-	if ((*u)->getType() == UnitTypes::Terran_Vulture_Spider_Mine) {
+	if (u->getType() == UnitTypes::Terran_Vulture_Spider_Mine) {
 		(*unitManager).addUnit(u);
 	}
 	if (Broodwar->isReplay())

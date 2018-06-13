@@ -200,7 +200,7 @@ void StrategyManager::attackingStrategyTerran() {
 		else if (combatManager->shouldAttack && combatManager->vultures._Mysize() <= 4) {
 			bool shouldRetreat = true;
 			for (auto &u : combatManager->vultures) {
-				if ((*u->unit)->getDistance(scoutingManager->lastEnemyBuildingPosition) < 1000) {
+				if (u->unit->getDistance(scoutingManager->lastEnemyBuildingPosition) < 1000) {
 					shouldRetreat = false;
 				}
 			}
@@ -238,9 +238,9 @@ bool StrategyManager::EnemyHasAStructureMakingTanksRequired() {
 }
 
 
-void StrategyManager::unitComplete(const BWAPI::Unit* unit) {
+void StrategyManager::unitComplete(BWAPI::UnitInterface* unit) {
 	//Allow construction of supply depots if one has been built
-	if ((*unit)->getType() == UnitTypes::Terran_Supply_Depot) {
+	if (unit->getType() == UnitTypes::Terran_Supply_Depot) {
 		supplyDepotsAreNotUnderConstruction = true;
 	}
 }

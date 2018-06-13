@@ -11,7 +11,7 @@ class BuildingManager
 public:
 	BuildingManager();
 	~BuildingManager();
-	void BuildingManager::buildingCreated(const BWAPI::Unit* u);
+	void BuildingManager::buildingCreated(BWAPI::UnitInterface* u);
 	void BuildingManager::executeOrders();
 	void BuildingManager::draw();
 	void BuildingManager::setIsDesiredToTrainWorkers(bool buildWorkers);
@@ -27,7 +27,7 @@ public:
 	bool addComSat = false;
 	bool haveAcademy = false;
 	bool startedBuild = false;
-	const BWAPI::Unit* commandCenter;
+	BWAPI::UnitInterface* commandCenter;
 	BWAPI::UnitType factoryBuild;
 	BWAPI::UnitType barrackBuild;
 	BWAPI::UnitType starportBuild;

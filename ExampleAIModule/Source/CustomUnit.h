@@ -8,9 +8,9 @@ class CustomUnit
 public: 
 	virtual bool isOcupied() = 0;
 	virtual bool isValid(); 
-	bool unitIsNewTarget(BWAPI::Unit unit);
-	CustomUnit(const BWAPI::Unit* u); 
-	const BWAPI::Unit* unit = NULL; 
+	bool unitIsNewTarget(BWAPI::UnitInterface* unit);
+	CustomUnit(BWAPI::UnitInterface* u); 
+	BWAPI::UnitInterface* unit = NULL; 
 	BWAPI::Unit targetEnemy;
 
 };

@@ -8,9 +8,9 @@ using namespace BWAPI;
 * @author Daniel Fjordhøj <s133198@student.dtu.dk>
 */
 
-Mine::Mine(const Unit * u) : CustomUnit(u)
+Mine::Mine(UnitInterface * u) : CustomUnit(u)
 {
-	if ((*u)->getType() != UnitTypes::Terran_Vulture_Spider_Mine) {
+	if (u->getType() != UnitTypes::Terran_Vulture_Spider_Mine) {
 		Broodwar->sendText("ERROR, tried to assign non-mine unit to mine object!!!");
 	}
 }

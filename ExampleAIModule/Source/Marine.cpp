@@ -8,9 +8,9 @@ using namespace BWAPI;
 * @author Daniel Fjordhøj <s133198@student.dtu.dk>
 */
 
-Marine::Marine(const Unit * u) : CustomUnit(u) 
+Marine::Marine(UnitInterface * u) : CustomUnit(u) 
 {
-	if ((*u)->getType() != UnitTypes::Terran_Marine) {
+	if (u->getType() != UnitTypes::Terran_Marine) {
 		Broodwar->sendText("ERROR, tried to assign non-marine unit to marine object!!!");
 	}
 }

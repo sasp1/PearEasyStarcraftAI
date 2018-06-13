@@ -8,9 +8,9 @@ using namespace BWAPI;
 * @author Daniel Fjordhøj <s133198@student.dtu.dk>
 */
 
-Wraith::Wraith(const Unit * u) : CustomUnit(u)
+Wraith::Wraith(UnitInterface * u) : CustomUnit(u)
 {
-	if ((*u)->getType() != UnitTypes::Terran_Wraith)
+	if (u->getType() != UnitTypes::Terran_Wraith)
 		Broodwar->sendText("ERROR, tried to assign non-wraith unit to wraith object!!!");
 }
 

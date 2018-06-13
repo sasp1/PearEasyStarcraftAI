@@ -4,8 +4,8 @@
 class Building
 {
 public:
-	Building(const BWAPI::Unit* u);
-	const BWAPI::Unit* unit;
+	Building(BWAPI::UnitInterface* u);
+	BWAPI::UnitInterface* unit;
 	int time = 0;
 	bool shouldBuildAddon = false;
 	BWAPI::UnitType Building::getType();

@@ -5,10 +5,10 @@
 class SiegeTank : public CustomUnit
 {
 public:
-	SiegeTank(const BWAPI::Unit* u);
+	SiegeTank(BWAPI::UnitInterface* u);
 	~SiegeTank();
 	bool SiegeTank::isUnitIdle();
-	BWAPI::Unit SiegeTank::getUnit();
+	BWAPI::UnitInterface* SiegeTank::getUnit();
 	bool SiegeTank::isSiege();
 	bool isOcupied(); 
 };

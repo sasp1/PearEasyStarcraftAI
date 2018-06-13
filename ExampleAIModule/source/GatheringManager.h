@@ -9,12 +9,12 @@ public:
 	std::list<Worker*> workers;
 	GatheringManager();
 	~GatheringManager();
-	void GatheringManager::addWorker(const BWAPI::Unit* worker);
+	void GatheringManager::addWorker(BWAPI::UnitInterface* worker);
 	void GatheringManager::executeOrders();
 	void GatheringManager::allocateWorker(bool addToGas);
 	void GatheringManager::addGasworker();
 	void GatheringManager::splitWorkers();
-	const BWAPI::Unit* GatheringManager::removeWorker();
+	BWAPI::UnitInterface* GatheringManager::removeWorker();
 	BuildingManager* buildingManager;
 	
 	

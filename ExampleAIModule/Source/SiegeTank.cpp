@@ -8,9 +8,9 @@ using namespace Filter;
 * @author Daniel Fjordhøj <s133198@student.dtu.dk>
 */
 
-SiegeTank::SiegeTank(const BWAPI::Unit* u) : CustomUnit(u)
+SiegeTank::SiegeTank(BWAPI::UnitInterface* u) : CustomUnit(u)
 {
-	if ((*u)->getType() != UnitTypes::Terran_Siege_Tank_Tank_Mode) {
+	if (u->getType() != UnitTypes::Terran_Siege_Tank_Tank_Mode) {
 		Broodwar->sendText("ERROR, tried to assign non-siege-tank unit to siege-tank object!!!");
 	}
 }
@@ -20,16 +20,16 @@ SiegeTank::~SiegeTank()
 }
 
 bool SiegeTank::isUnitIdle() {
-	return (*unit)->isIdle();
+	return unit->isIdle();
 }
 
-BWAPI::Unit SiegeTank::getUnit() {
-	return *unit;
+BWAPI::UnitInterface* SiegeTank::getUnit() {
+	return unit;
 }
 
 
 bool SiegeTank::isSiege() {
-	return BWAPI::UnitTypes::Terran_Siege_Tank_Siege_Mode == (*unit)->getType();
+	return BWAPI::UnitTypes::Terran_Siege_Tank_Siege_Mode == unit->getType();
 }
 
 bool SiegeTank::isOcupied()

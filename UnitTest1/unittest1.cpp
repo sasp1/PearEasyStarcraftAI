@@ -24,7 +24,7 @@ namespace UnitTest1
 		TEST_METHOD(shouldTrainWorkers)
 		{
 			UnitManager manager;
-			BWAPI::Unit* unit = new BWAPI::Unit(); 
+			BWAPI::UnitInterface* unit = new BWAPI::Unit(); 
 
 		/*	int numberOfWorkers = manager.workers.size();
 			Assert::AreEqual(0, numberOfWorkers);
@@ -36,9 +36,9 @@ namespace UnitTest1
 		TEST_METHOD(shouldScoutCornerClockwise) {
 			ScoutingManager* manager = new ScoutingManager(BWAPI::Position(0,0)); 
 			
-			BWAPI::Unit* unit = new BWAPI::Unit();
+			BWAPI::UnitInterface* unit = new BWAPI::Unit();
 			
-			BWAPI::Unit* fakeUnit = new BWAPI::Unit(new UnitMock());  
+			BWAPI::UnitInterface* fakeUnit = new BWAPI::Unit(new UnitMock());  
 
 			CombatManager* manager2 = new CombatManager(); 
 			//int hej = manager2->combatUnits.size(); 

@@ -5,6 +5,6 @@
 class Wraith : public CustomUnit
 {
 public:
-	Wraith(const BWAPI::Unit* u);
+	Wraith(BWAPI::UnitInterface* u);
 	bool isOcupied();
 };

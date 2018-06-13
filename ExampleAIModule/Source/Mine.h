@@ -5,6 +5,6 @@
 class Mine : public CustomUnit
 {
 public:
-	Mine(const BWAPI::Unit* u);
+	Mine(BWAPI::UnitInterface* u);
 	bool isOcupied(); 
 };

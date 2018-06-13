@@ -6,7 +6,7 @@
 using namespace BWAPI;
 using namespace Filter;
 
-BWAPI::Unit* gas = NULL;
+BWAPI::UnitInterface* gas = NULL;
 int gasWorkerLimit = 3;
 int gasWorkers = 0;
 int mineralWorkers = 0;
@@ -17,7 +17,7 @@ int mineralWorkers = 0;
 * @author Daniel Fjordhøj <s133198@student.dtu.dk>
 */
 
-void GatheringManager::addWorker(const BWAPI::Unit* worker) {
+void GatheringManager::addWorker(BWAPI::UnitInterface* worker) {
 
 	//Set new worker as collecting minreals
 	Worker* w = new Worker(worker);
@@ -25,12 +25,12 @@ void GatheringManager::addWorker(const BWAPI::Unit* worker) {
 
 	//Set virtual commandcenter to unlimited distance away
 	int tempDist = 10000;
-	const BWAPI::Unit* nextCenter = NULL;
+	BWAPI::UnitInterface* nextCenter = NULL;
 
 	//Find closest commandcenter
 	for (auto &c : (*buildingManager).commandCenters) {
-		const BWAPI::Unit* center = c->unit;
-		int dist = (*center)->getDistance(*worker);
+		BWAPI::UnitInterface* center = c->unit;
+		int dist = center->getDistance(worker->getPosition());
 
 		if (dist < tempDist) {
 
@@ -92,10 +92,10 @@ void GatheringManager::splitWorkers() {
 	}
 }
 
-const BWAPI::Unit* GatheringManager::removeWorker() {
+BWAPI::UnitInterface* GatheringManager::removeWorker() {
 
 	// Lose control of first found mineral collector.
-	const BWAPI::Unit* u = new Unit();
+	BWAPI::UnitInterface* u; 
 	for (auto &w : workers) {
 		if (w->workState == 0) {
 			u = w->unit;
@@ -148,8 +148,7 @@ void GatheringManager::executeOrders() {
 		for (auto &u : Broodwar->getAllUnits()) {
 			if (u->getType().isBuilding()) {
 				if (u->getType() == UnitTypes::Terran_Refinery && (u->isCompleted())) {
-					gas = new Unit();
-					*gas = u;
+					gas = u;
 				}
 			}
 		}

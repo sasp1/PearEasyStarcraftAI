@@ -20,7 +20,7 @@ public:
 	void StrategyManager::referenceManagers(ExecutionManager* executionManager, UnitManager* unitManager, BuildingManager* buildingManager, CombatManager* combatManager);
 	void StrategyManager::executeTwoFactory();
 	void StrategyManager::executeExpandWithOneFactory();
-	void StrategyManager::unitComplete(const BWAPI::Unit* unit);
+	void StrategyManager::unitComplete(BWAPI::UnitInterface* unit);
 	void StrategyManager::onUnitDestroy(BWAPI::Unit unit);
 	void StrategyManager::attackingStrategyProtoss();
 	void StrategyManager::attackingStrategyTerran();
