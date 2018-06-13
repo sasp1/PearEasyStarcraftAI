@@ -24,6 +24,12 @@
     <ClInclude Include="UnitMock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="VultureUnitMock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VultureUnitMockFarAway.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -33,6 +39,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UnitMock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StrategyManagerTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpiralSearchTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CombatManagerTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VultureUnitMock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VultureUnitMockFarAway.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
