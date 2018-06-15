@@ -8,7 +8,7 @@ using namespace Filter;
 * @brief Handles the overall strategy decision of the team.
 * Keeps track of the state of the game, and thereby decides which building to construct,
 * units to train, and actions to perform.
-* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+* @author Thomas Heshe
 */
 
 bool academyOrdered = false; 

@@ -7,7 +7,7 @@ int counter = 0;
 /**
 * @file Vulture.cpp
 * @brief Class representing a vulture unit.
-* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+* @author Sebastian Arcos 
 */
 
 Vulture::Vulture(BWAPI::UnitInterface* u,  BWAPI::Position basePosition, int frameCount) : CustomUnit::CustomUnit(u){

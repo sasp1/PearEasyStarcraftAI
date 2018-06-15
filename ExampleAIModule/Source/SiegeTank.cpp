@@ -5,7 +5,7 @@ using namespace Filter;
 /**
 * @file SiegeTanke.cpp
 * @brief Class representing a tank unit.
-* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+* @author Thomas Heshe
 */
 
 SiegeTank::SiegeTank(BWAPI::UnitInterface* u) : CustomUnit(u)

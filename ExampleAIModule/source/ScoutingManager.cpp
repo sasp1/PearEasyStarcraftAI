@@ -11,7 +11,7 @@ using namespace Filter;
 /**
 * @file ScoutingManager.cpp
 * @brief Handles scouting of the map, and enemy base.
-* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+* @author Asger Græsholt
 */
 
 //The map is 4096x4096 pixels (64^2)

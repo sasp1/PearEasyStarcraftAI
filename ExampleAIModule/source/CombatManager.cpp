@@ -7,7 +7,7 @@
 * @file CombatManager.cpp
 * @brief Handles units assigned to combat along with battle management.
 * Assigns prioritized enemy targets, and unit specific actions, both individually and as a group
-* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+* @author Sebsatian Arcos 
 */
 using namespace BWAPI;
 using namespace Filter;
@@ -68,7 +68,7 @@ std::list<CustomUnit*> CombatManager::getAllCombatUnits() {
 
 /**
 * A method for selecting a prioritized enemy to attack. Uses attackEnemyIfInRange()
-* @author Asger Græsholt <s154099@dstudent.dtu.dk>
+* @author Thomas Heshe
 * @param unit a BWAPI unit who is to attack a nearby enemy, if any
 * @see attackEnemyIfInRange()
 */
@@ -288,7 +288,7 @@ bool CombatManager::fleeIfOutNumbered(Vulture* vulture, bool outNumbered) {
 
 /**
 * Deprecated method. Makes a worker unit repair any nearby damaged vehicles.
-* @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
+* @author Thomas Heshe
 * @param worker Unit The worker assigned to repairs
 */
 bool CombatManager::repairNearbyInjuredVehicles(BWAPI::Unit * worker) {
@@ -308,7 +308,7 @@ bool CombatManager::repairNearbyInjuredVehicles(BWAPI::Unit * worker) {
 /**
 * Takes a vulture unit, and evaluates if it should lay down a mine
 * based on own state, enemy type and location.
-* @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
+* @author Sebastian Arcos
 * @param vulture Vulture The evaluated vulture
 */
 bool CombatManager::shouldSetMine(Vulture* vulture, Race enemyRace, int frameCount) {

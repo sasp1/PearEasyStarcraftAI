@@ -5,7 +5,7 @@ using namespace Filter;
 
 /**
 * @file
-* @author  Daniel Fjordhøj <s133198>
+* @author Asger Græsholt
 * Database-type class that contains Postions for areas of importance
 */
 
