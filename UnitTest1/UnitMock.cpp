@@ -8,7 +8,6 @@ UnitMock::UnitMock()
 	
 }
 
-
 UnitMock::~UnitMock()
 {
 }
@@ -20,7 +19,7 @@ int UnitMock::getID() const
 
 bool UnitMock::exists() const
 {
-	return false;
+	return existsBool;
 }
 
 int UnitMock::getReplayID() const
@@ -35,12 +34,12 @@ BWAPI::Player UnitMock::getPlayer() const
 
 BWAPI::UnitType UnitMock::getType() const
 {
-	return BWAPI::UnitType();
+	return type;
 }
 
 BWAPI::Position UnitMock::getPosition() const
 {
-	return BWAPI::Position(1,1);
+	return position;
 }
 
 double UnitMock::getAngle() const
@@ -305,7 +304,7 @@ BWAPI::Unit UnitMock::getRallyUnit() const
 
 BWAPI::Unit UnitMock::getAddon() const
 {
-	return BWAPI::Unit();
+	return addon;
 }
 
 BWAPI::Unit UnitMock::getNydusExit() const
@@ -415,7 +414,7 @@ bool UnitMock::isCompleted() const
 
 bool UnitMock::isConstructing() const
 {
-	return false;
+	return constructing;
 }
 
 bool UnitMock::isDetected() const
@@ -440,7 +439,7 @@ bool UnitMock::isHallucination() const
 
 bool UnitMock::isIdle() const
 {
-	return false;
+	return idle;
 }
 
 bool UnitMock::isInterruptible() const
@@ -985,12 +984,12 @@ bool UnitMock::canCancelUpgrade(bool checkCommandibility) const
 
 bool UnitMock::canUseTechWithOrWithoutTarget(bool checkCommandibility) const
 {
-	return false;
+	return useTechWithOrWithoutTarget;
 }
 
 bool UnitMock::canUseTechWithOrWithoutTarget(BWAPI::TechType tech, bool checkCanIssueCommandType, bool checkCommandibility) const
 {
-	return false;
+	return useTechWithOrWithoutTarget;
 }
 
 bool UnitMock::canUseTech(BWAPI::TechType tech, BWAPI::Position target, bool checkCanTargetUnit, bool checkTargetsType, bool checkCanIssueCommandType, bool checkCommandibility) const

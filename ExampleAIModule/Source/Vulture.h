@@ -6,7 +6,7 @@ using namespace BWAPI;
 class Vulture : public CustomUnit
 {
 public:
-	Vulture(BWAPI::UnitInterface* u, BWAPI::Position basePosition);
+	Vulture(BWAPI::UnitInterface* u, BWAPI::Position basePosition, int frameCount);
 	~Vulture();
 	void putDownMineIfOutsideOfBase();
 	bool isOcupied();

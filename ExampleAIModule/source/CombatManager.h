@@ -36,11 +36,11 @@ public:
 	bool CombatManager::isMelee(BWAPI::UnitInterface* unit);
 	bool CombatManager::repairNearbyInjuredVehicles(BWAPI::Unit * worker);
 	void CombatManager::executeOrders();
-	bool CombatManager::fleeIfOutNumbered(Vulture* vulture);
+	bool CombatManager::fleeIfOutNumbered(Vulture* vulture, bool outNumbered);
 	void attackDesiredUnit(CustomUnit* myUnit, BWAPI::Unit desiredUnitToAttack);
 	bool shallMoveAwayFromEnemyInCriticalRange(BWAPI::UnitInterface* unit, int range);
 	bool shouldSetMine(Vulture* vulture, Race enemyRace, int frameCount);
 	std::list<CustomUnit*> CombatManager::getAllCombatUnits();
-
+	bool calcOutNumbered(UnitInterface* nearestHydra);
 };
 

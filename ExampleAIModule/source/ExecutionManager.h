@@ -9,11 +9,14 @@ class ExecutionManager : public BWAPI::AIModule
 	BuildingManager* buildingManager;
 
 public:
+	std::list <UnitType> priorityQueue;
+	int reservedMinerals = 0;
+	int reservedGas = 0;
+
 	ExecutionManager();
-	~ExecutionManager();
 	void ExecutionManager::addPriorityItem(BWAPI::UnitType unit);
 	void ExecutionManager::executeOrders();
 	void ExecutionManager::referenceManagers(UnitManager* unitManager, BuildingManager* buildingManager);
-	void ExecutionManager::eventConstructionInitiated(BWAPI::Unit unit);
+	void ExecutionManager::eventConstructionInitiated(BWAPI::UnitInterface* unit);
 };
 

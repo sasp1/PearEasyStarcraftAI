@@ -52,7 +52,7 @@ void Worker::initBuild(BWAPI::UnitType type, BWAPI::Position pos) {
 * Find a suitable location and start constructing a building.
 * @author Daniel Fjordhøj <s133198@dstudent.dtu.dk>
 */
-bool Worker::handleBuild() {
+bool Worker::handleBuild(int frameCount) {
 
 	if (unit != NULL) {
 
@@ -71,7 +71,7 @@ bool Worker::handleBuild() {
 			// If we are constructing, set as can be finished
 			if (unit->isConstructing()) {
 				workState = 4;
-				time = Broodwar->getFrameCount();
+				time = frameCount;
 			}
 			//If position is invalid, do spiral search for new location.
 			else if (!hasLoc) {
@@ -97,7 +97,7 @@ bool Worker::handleBuild() {
 		//Evaluation state for if building is under construction for a longer period of time.
 		if (workState == 4) {
 			//If certain time has passed, and unit is constructing, consider building as being completed. Else try construction again.
-			if (unit->isConstructing() && Broodwar->getFrameCount() > (time + 500)) workState = 5;
+			if (unit->isConstructing() && frameCount > (time + 500)) workState = 5;
 			else if (!unit->isConstructing()) {
 				workState = 1;
 			}

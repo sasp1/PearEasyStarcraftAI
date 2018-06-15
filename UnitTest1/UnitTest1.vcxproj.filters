@@ -24,10 +24,7 @@
     <ClInclude Include="UnitMock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VultureUnitMock.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VultureUnitMockFarAway.h">
+    <ClInclude Include="BroodWarMock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,10 +47,22 @@
     <ClCompile Include="CombatManagerTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="VultureUnitMock.cpp">
+    <ClCompile Include="GatheringManagerTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="VultureUnitMockFarAway.cpp">
+    <ClCompile Include="UnitManagerTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomUnitTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstructionManagerTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BroodWarMock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutionManagerTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

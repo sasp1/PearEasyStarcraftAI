@@ -6,9 +6,7 @@
 using namespace BWAPI;
 using namespace Filter;
 
-std::list <UnitType> priorityQueue;
-int reservedMinerals = 0;
-int reservedGas = 0;
+
 
 /**
 * @file ExecutionManager.cpp
@@ -22,7 +20,7 @@ void ExecutionManager::executeOrders() {
 	//Request construction of a building if there is enough resources
 	if (priorityQueue._Mysize() > 0) {
 		BWAPI::UnitType building = priorityQueue.front();
-		if (unitManager->requestBuilding(building, reservedMinerals, reservedGas))
+		if (unitManager->requestBuilding(building, reservedMinerals, reservedGas, Broodwar->self()->minerals(), Broodwar->self()->gas()))
 		{
 			priorityQueue.pop_front();
 			reservedMinerals = reservedMinerals + building.mineralPrice();
@@ -40,7 +38,7 @@ void ExecutionManager::addPriorityItem(BWAPI::UnitType unit) {
 	priorityQueue.push_back(unit);
 }
 
-void ExecutionManager::eventConstructionInitiated(BWAPI::Unit unit) {
+void ExecutionManager::eventConstructionInitiated(BWAPI::UnitInterface* unit) {
 	//Remove reserved funds when constrution of a building has begun
 	if (unit->getType().isBuilding()) {
 		reservedMinerals = reservedMinerals - unit->getType().mineralPrice();
@@ -55,9 +53,5 @@ void ExecutionManager::referenceManagers(UnitManager* unitManager, BuildingManag
 }
 
 ExecutionManager::ExecutionManager()
-{
-}
-
-ExecutionManager::~ExecutionManager()
 {
 }

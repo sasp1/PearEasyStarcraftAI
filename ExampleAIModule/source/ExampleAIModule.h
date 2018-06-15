@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include "ExecutionManager.h"
+#include "BWAPI/Game.h"
 
 
 // Remember not to use "Broodwar" in any global class constructor!

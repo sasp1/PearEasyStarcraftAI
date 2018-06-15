@@ -19,7 +19,7 @@ public:
 	void UnitManager::eventConstructionComplete(BWAPI::UnitInterface* unit);
 	void UnitManager::cleanUpUnits(std::list<BWAPI::UnitInterface*>& unitList); 
 	void UnitManager::cleanUpUnits(std::list<CustomUnit*>& unitList);
-	bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals, int reservedGas);
+	bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals, int reservedGas, int minerals, int gas);
 	bool newConstructionIsAvailable = true;
 	CombatManager* combatManager;
 	GatheringManager* gatheringManager;

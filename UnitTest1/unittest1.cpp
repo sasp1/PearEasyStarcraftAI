@@ -6,6 +6,7 @@
 
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+using namespace BWAPI; 
 
 namespace UnitTest1
 {		
@@ -24,7 +25,7 @@ namespace UnitTest1
 		TEST_METHOD(shouldTrainWorkers)
 		{
 			UnitManager manager;
-			BWAPI::UnitInterface* unit = new BWAPI::Unit(); 
+			UnitMock* unit = new UnitMock(); 
 
 		/*	int numberOfWorkers = manager.workers.size();
 			Assert::AreEqual(0, numberOfWorkers);
@@ -34,24 +35,23 @@ namespace UnitTest1
 		}
 
 		TEST_METHOD(shouldScoutCornerClockwise) {
-			ScoutingManager* manager = new ScoutingManager(BWAPI::Position(0,0)); 
+			ScoutingManager* manager = new ScoutingManager(Position(0,0), new MapData()); 
 			
-			BWAPI::UnitInterface* unit = new BWAPI::Unit();
+			UnitMock* mock = new UnitMock(); 
 			
-			BWAPI::UnitInterface* fakeUnit = new BWAPI::Unit(new UnitMock());  
+			UnitMock* fakeUnit = new UnitMock();  
 
 			CombatManager* manager2 = new CombatManager(); 
 			//int hej = manager2->combatUnits.size(); 
-			int hej = 2;
-
+			int hej = 0;
 
 			Assert::AreEqual(0, hej);
 			manager->addScout(fakeUnit);
 			hej = manager->scoutingUnits.size(); 
 			Assert::AreEqual(1, hej); 
 
-			manager->scoutCornersClockwise(fakeUnit); 
-			Assert::AreEqual(2, manager->corner); 
+			manager->scoutCornersClockwise(mock);
+			Assert::AreEqual(1, manager->corner); 
 		}
 	};
 }

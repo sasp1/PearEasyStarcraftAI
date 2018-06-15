@@ -3,9 +3,8 @@
 using namespace BWAPI;
 using namespace Filter;
 
-SpiralSearch* spiral;
-bool startedBuild = false;
-int buildState = 0;
+
+SpiralSearch* spiral; 
 //Buildstates
 //0: Attempt addon, 1: Find build loc, 2:Lift off 3: Move and land, 4:Landing, 5:Building, 6:Done
 
@@ -36,7 +35,7 @@ void Building::initAddon(BWAPI::UnitType type) {
 	buildPos = Position(0, 0);
 }
 
-void Building::buildAddon() {
+void Building::buildAddon(Game* broodWar, int frameCount, int mineralsAvailable, int gasAvailable) {
 	//If we have addon, set as finished
 	if (unit->getAddon() != NULL) buildState = 5;
 
@@ -44,16 +43,16 @@ void Building::buildAddon() {
 	if (buildState == 0) {	
 
 		//If we are constructing, set as finished, else search for new location
-		if (startedBuild && time + 30 < Broodwar->getFrameCount()) {
+		if (startedBuild && time + 30 < frameCount) {
 			if (unit->isConstructing() || unit->getAddon() != NULL) buildState = 5;
 			else if (unit->isIdle()) buildState = 1;
 		}
 
 		//Attempt construction if we can afford addon, and is building idle
-		if ((Broodwar->self()->minerals() > addOnType.mineralPrice()) && (Broodwar->self()->gas() > addOnType.gasPrice()) && unit->isIdle() && !startedBuild) {
+		if ((mineralsAvailable > addOnType.mineralPrice()) && (gasAvailable > addOnType.gasPrice()) && unit->isIdle() && !startedBuild) {
 			unit->buildAddon(addOnType);
 			startedBuild = true;
-			time = Broodwar->getFrameCount();
+			time = frameCount;
 		}	
 	}
 	//State for finding  a new build location
@@ -62,8 +61,8 @@ void Building::buildAddon() {
 		if (unit->isIdle()) {
 			startedBuild = false;
 			buildPos = originPos + spiral->getNextPos();
-			Broodwar->drawCircleMap(buildPos, 40, Colors::Red, true);
-			if (Broodwar->canBuildHere(TilePosition(buildPos), addOnType, unit)) buildState = 2;
+			broodWar->drawCircleMap(buildPos, 40, Colors::Red, true);
+			if (broodWar->canBuildHere(TilePosition(buildPos), addOnType, unit)) buildState = 2;
 		}
 	}
 	//State for taking off from ground
@@ -95,7 +94,7 @@ void Building::buildAddon() {
 void Building::doCenterOrder() {
 	//Build addon if requested, else build unit.
 	if (unit->isIdle()) {
-		if (shouldBuildAddon && unit->getAddon() == NULL) buildAddon();
+		if (shouldBuildAddon && unit->getAddon() == NULL) buildAddon(BroodwarPtr, Broodwar->getFrameCount(), Broodwar->self()->minerals(), Broodwar->self()->gas());
 		else unit->train(trainType);
 	}
 }

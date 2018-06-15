@@ -8,12 +8,21 @@
 #include <../include/BWAPI/UnitCommand.h>
 #include "../BWAPI/Unit.h"
 #include <../BWAPI/Unit.h>
-
+#include "../ExampleAIModule/Source/ExecutionManager.h"
+using namespace BWAPI; 
 #pragma once
 class UnitMock : public BWAPI::UnitInterface
 {
 	
 public:
+	bool existsBool = true; 
+	UnitType type; 
+	Position position;
+	bool idle; 
+	bool constructing; 
+	bool useTechWithOrWithoutTarget; 
+	UnitInterface* addon; 
+
 	UnitMock();
 	~UnitMock();
 	// Inherited via UnitInterface

@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 #include "BuildingManager.h"
+#include "BWAPI/Game.h"
 
 class UnitManager;
 class ScoutingManager; 

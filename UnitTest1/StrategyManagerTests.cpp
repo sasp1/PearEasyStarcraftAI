@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "UnitMock.h"
-#include "VultureUnitMock.h"
-#include "VultureUnitMockFarAway.h"
+
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

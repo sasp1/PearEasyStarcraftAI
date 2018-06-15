@@ -39,12 +39,12 @@ bool UnitManager::requestSupply() {
 	return isBuildOk;
 }
 
-bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals, int reservedGas) {
+bool UnitManager::requestBuilding(BWAPI::UnitType building, int reservedMinerals, int reservedGas, int minerals, int gas) {
 	//Requests construction of a building
 
 	//Checks rescources
-	bool mineralPriceOk = Broodwar->self()->minerals() >= building.mineralPrice() + reservedMinerals;
-	bool gasPriceOk = Broodwar->self()->gas() >= building.gasPrice() + reservedGas;
+	bool mineralPriceOk = minerals >= building.mineralPrice() + reservedMinerals;
+	bool gasPriceOk = gas >= building.gasPrice() + reservedGas;
 	bool requestIsAccepted = mineralPriceOk && gasPriceOk && newConstructionIsAvailable && canAct;
 
 	//If rescources allow get construction manager to construct building

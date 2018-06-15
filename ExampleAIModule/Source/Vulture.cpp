@@ -10,9 +10,9 @@ int counter = 0;
 * @author Daniel Fjordhøj <s133198@student.dtu.dk>
 */
 
-Vulture::Vulture(BWAPI::UnitInterface* u,  BWAPI::Position basePosition) : CustomUnit::CustomUnit(u){
+Vulture::Vulture(BWAPI::UnitInterface* u,  BWAPI::Position basePosition, int frameCount) : CustomUnit::CustomUnit(u){
 	if (u->getType() == UnitTypes::Terran_Vulture) {
-		time = Broodwar->getFrameCount();
+		time = frameCount; 
 		basePos = basePosition;
 	}
 	else {
@@ -50,7 +50,7 @@ bool Vulture::canUseMine() {
 	return unit->canUseTechWithOrWithoutTarget(TechTypes::Spider_Mines); 
 }
 
-UnitInterface*  Vulture::nearestHydra(int radius)
+UnitInterface* Vulture::nearestHydra(int radius)
 {
 	//Return nearest hydralisk if any exist
 	if (unit->getClosestUnit(Filter::GetType == UnitTypes::Zerg_Hydralisk) == NULL)

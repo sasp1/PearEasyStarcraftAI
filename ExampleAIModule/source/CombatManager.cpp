@@ -17,7 +17,6 @@ BWAPI::Position attackLocation;
 BWAPI::Position enemyPos;
 UnitInterface* nearestHydra = NULL;
 int distanceToHydra = -1;
-bool outNumbered = false;
 int startTime = 0;
 
 CombatManager::CombatManager() {
@@ -32,7 +31,7 @@ void CombatManager::addCombatUnit(BWAPI::UnitInterface* unit) {
 	if (unit->getType() == BWAPI::UnitTypes::Terran_Vulture) {
 		Building* b = buildingManager->commandCenters.front();
 		BWAPI::Position pos = b->unit->getPosition();
-		vultures.push_back(new Vulture(unit, pos));
+		vultures.push_back(new Vulture(unit, pos, Broodwar->getFrameCount()));
 	}
 	else if (unit->getType() == BWAPI::UnitTypes::Terran_Siege_Tank_Tank_Mode)
 		tanks.push_back(new SiegeTank(unit));
@@ -184,7 +183,7 @@ bool CombatManager::shallMoveAwayFromEnemyInCriticalRange(BWAPI::UnitInterface* 
 
 			BWAPI::Position movePosition = unit->getPosition() - (((*eu).getPosition() - unit->getPosition()));
 			unit->move(movePosition);
-			Broodwar->drawCircleMap(movePosition, 20, Colors::Cyan, true);
+			//Broodwar->drawCircleMap(movePosition, 20, Colors::Cyan, true);
 			return true;
 		}
 	}
@@ -274,9 +273,9 @@ bool tankCanMakeSiegeModeAttackOnStructure(BWAPI::UnitInterface* unit) {
 	return false;
 }
 
-bool CombatManager::fleeIfOutNumbered(Vulture* vulture) {
+bool CombatManager::fleeIfOutNumbered(Vulture* vulture, bool outNumbered) {
 	//Stop fleeing if not outnumbered, or near hydralisk
-	if (nearestHydra == NULL || outNumbered == false) {
+	if (nearestHydra == NULL || outNumbered ) {
 		return false;
 	}
 	//Flee if near hydralisk
@@ -348,9 +347,7 @@ void CombatManager::attackDesiredUnit(CustomUnit* myUnit, BWAPI::Unit desiredUni
 	}
 }
 
-void CombatManager::executeOrders() {
-
-	//Evaluate if units are locally outnumbered by hydralisks
+bool CombatManager::calcOutNumbered(UnitInterface* nearestHydra) {
 	if (nearestHydra != NULL && nearestHydra->isVisible()) {
 
 		int numberOfEnemies = 1;
@@ -361,14 +358,19 @@ void CombatManager::executeOrders() {
 			if (u->getType() == UnitTypes::Terran_Vulture) numberOfFriendlyUnits++;
 			else if (u->getType() == UnitTypes::Zerg_Hydralisk) numberOfEnemies++;
 		}
-		outNumbered = numberOfEnemies + 3 > numberOfFriendlyUnits;
+		return numberOfEnemies + 3 > numberOfFriendlyUnits;
 	}
 	else {
 		//If no hydralisk nearby, units are not outnumbered.
 		distanceToHydra = -1;
-		outNumbered = false;
+		return false;
 	}
+}
 
+void CombatManager::executeOrders() {
+	//Evaluate if units are locally outnumbered by hydralisks
+	
+	bool outNumbered = calcOutNumbered(nearestHydra); 
 	//Execute vulture actions
 	for (auto &u : vultures) {
 
@@ -385,7 +387,7 @@ void CombatManager::executeOrders() {
 		}
 		//Attack if not on other task
 		if (!shallMoveAwayFromEnemyInCriticalRange(u->unit, 120)) {
-			if (!fleeIfOutNumbered(vulture)) {
+			if (!fleeIfOutNumbered(vulture, outNumbered)) {
 				if (!vulture->isOcupied()) {
 					if (!shouldSetMine(vulture, Broodwar->enemy()->getRace(), Broodwar->getFrameCount())) {
 						if (!shouldDefendBase(1000, u) && shouldAttack) {

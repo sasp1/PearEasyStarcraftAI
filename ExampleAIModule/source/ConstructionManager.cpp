@@ -29,7 +29,7 @@ void ConstructionManager::executeOrders() {
 		else if (!b->isValid()) removeBuilders.push_back(b);
 
 		//If not invalid continue with construction
-		else if (b->handleBuild()) {
+		else if (b->handleBuild(Broodwar->getFrameCount())) {
 			BWAPI::UnitInterface* u = b->unit; 
 			unitManager->newWorker(u);
 			removeBuilders.push_back(b);

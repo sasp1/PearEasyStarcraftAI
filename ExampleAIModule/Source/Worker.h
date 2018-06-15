@@ -21,7 +21,7 @@ public:
 	void Worker::stop();
 	void Worker::replaceUnit(BWAPI::UnitInterface* worker);
 	void Worker::initBuild(BWAPI::UnitType type, BWAPI::Position pos);
-	bool Worker::handleBuild();
+	bool Worker::handleBuild(int frameCount);
 	bool Worker::isUnitIdle();
 	bool Worker::isOcupied();
 };
