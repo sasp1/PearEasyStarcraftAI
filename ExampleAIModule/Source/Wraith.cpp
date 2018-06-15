@@ -5,7 +5,7 @@ using namespace BWAPI;
 /**
 * @file Marine.cpp
 * @brief Class representing a wraith unit.
-* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+* @author Thomas Heshe
 */
 
 Wraith::Wraith(UnitInterface * u) : CustomUnit(u)

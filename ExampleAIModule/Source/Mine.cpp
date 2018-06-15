@@ -5,7 +5,7 @@ using namespace BWAPI;
 /**
 * @file Mine.cpp
 * @brief Class representing a vulture mine.
-* @author Daniel Fjordhøj <s133198@student.dtu.dk>
+* @author Sebastian Arcos
 */
 
 Mine::Mine(UnitInterface * u) : CustomUnit(u)

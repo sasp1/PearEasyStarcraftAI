@@ -3,7 +3,7 @@
 /**
 * @file CustomUnit.cpp
 * @brief Parent class used to represent unit in unit-specifc child-classes.
-* @author Sebastian Arcos Specht <@student.dtu.dk>
+* @author Sebastian Arcos Specht
 */
 
 bool CustomUnit::isValid()
