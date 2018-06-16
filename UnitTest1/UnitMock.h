@@ -9,6 +9,7 @@
 #include "../BWAPI/Unit.h"
 #include <../BWAPI/Unit.h>
 #include "../ExampleAIModule/Source/ExecutionManager.h"
+#include "../ExampleAIModule/Source/StrategyManager.h"
 using namespace BWAPI; 
 #pragma once
 class UnitMock : public BWAPI::UnitInterface

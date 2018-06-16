@@ -36,10 +36,10 @@ void ExampleAIModule::onStart()
 	buildingManager = new BuildingManager();
 	unitManager = new UnitManager();
 	constructionManager = new ConstructionManager();
-	executionManager = new ExecutionManager();
+	executionManager = new ExecutionManager(BroodwarPtr);
 	mapData = new MapData();
-	scoutingManager = new ScoutingManager(BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation()), mapData);
-	strategyManager = new StrategyManager();
+	scoutingManager = new ScoutingManager(mapData, BroodwarPtr);
+	strategyManager = new StrategyManager(BroodwarPtr);
 	combatManager = new CombatManager();
 
 	// Setting cross-references:

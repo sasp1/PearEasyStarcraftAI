@@ -17,10 +17,14 @@ using namespace Filter;
 
 void ExecutionManager::executeOrders() {
 
+	//Broodwar->sendText("%d", Broodwar->elapsedTime()); 
 	//Request construction of a building if there is enough resources
-	if (priorityQueue._Mysize() > 0) {
+	if (buildingPriorityQueue.size() > 0) {
+
+
+	}else if (priorityQueue._Mysize() > 0) {
 		BWAPI::UnitType building = priorityQueue.front();
-		if (unitManager->requestBuilding(building, reservedMinerals, reservedGas, Broodwar->self()->minerals(), Broodwar->self()->gas()))
+		if (unitManager->requestBuilding(building, reservedMinerals, reservedGas, broodWar->self()->minerals(), broodWar->self()->gas()))
 		{
 			priorityQueue.pop_front();
 			reservedMinerals = reservedMinerals + building.mineralPrice();
@@ -37,6 +41,9 @@ void ExecutionManager::addPriorityItem(BWAPI::UnitType unit) {
 	//Add requested building to queue
 	priorityQueue.push_back(unit);
 }
+void ExecutionManager::addPriorityItem(UnitType unit, TilePosition unitPosition) {
+	buildingPriorityQueue.push_back(std::make_pair(unit, unitPosition)); 
+}
 
 void ExecutionManager::eventConstructionInitiated(BWAPI::UnitInterface* unit) {
 	//Remove reserved funds when constrution of a building has begun
@@ -52,6 +59,7 @@ void ExecutionManager::referenceManagers(UnitManager* unitManager, BuildingManag
 	this->unitManager = unitManager;
 }
 
-ExecutionManager::ExecutionManager()
+ExecutionManager::ExecutionManager(Game* broodwar)
 {
+	broodWar = broodwar; 
 }

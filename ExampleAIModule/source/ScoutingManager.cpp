@@ -22,13 +22,16 @@ BWAPI::Position cornerCoords2 = Position(4000, 4000);
 BWAPI::Position cornerCoords3 = Position(100, 4000);
 int scoutedCorners = 0; 
 int enemeyMarinesSpotted = 0;
+Game* broodWar; 
 
-
-ScoutingManager::ScoutingManager(BWAPI::Position startingPosition, MapData* mapData)
+ScoutingManager::ScoutingManager(MapData* mapData, Game* _broodwar)
 {
+
 	this->mapData = mapData; 
-	setStartingCorner(startingPosition);
+	setStartingCorner(Position(_broodwar->self()->getStartLocation()));
 	scoutingUnits.clear(); 
+	broodWar = _broodwar; 
+	zerglings = new Unitset(); 
 }
 
 ScoutingManager::~ScoutingManager()
@@ -174,7 +177,7 @@ void ScoutingManager::executeOrders() {
 	for (auto &u : scoutingUnits) {
 		if (u->getHitPoints() == 0) {
 			corner = (corner + 1) % 4;
-			Broodwar->sendText("NEW CORNER");
+			broodWar->sendText("NEW CORNER");
 		}
 
 		if (!enemyBaseFound || !isAvoidingNearbyEnemiesWithinRange(u, 500)) {
@@ -192,8 +195,9 @@ void ScoutingManager::returnToBase(BWAPI::UnitInterface* unit) {
 }
 
 void ScoutingManager::onUnitDiscover(BWAPI::Unit unit) {
+
 	//If unit is enemy building, update enemy location.
-	 if ((BWAPI::Broodwar->self()->isEnemy(unit->getPlayer()) && (unit->getType().isBuilding()))){
+	 if ((broodWar->self()->isEnemy(unit->getPlayer()) && (unit->getType().isBuilding()))){
 		enemyBaseFound = true;
 		lastEnemyBuildingPosition = unit->getPosition();
 		setEnemyCorner(lastEnemyBuildingPosition);
@@ -203,7 +207,11 @@ void ScoutingManager::onUnitDiscover(BWAPI::Unit unit) {
 	 if (unit->getType() == UnitTypes::Zerg_Lurker || unit->getType() == UnitTypes::Zerg_Lurker_Egg) {
 		 enemyLurker = unit; 
 		 enemyHasLurker = true;
-		 Broodwar->sendText("Lurker at: %d, %d", unit->getPosition().x, unit->getPosition().y);
+		 broodWar->sendText("Lurker at: %d, %d", unit->getPosition().x, unit->getPosition().y);
 		 buildingManager->scan(unit->getPosition());
+	 }
+
+	 if (unit->getType() == UnitTypes::Zerg_Zergling) {
+		 zerglings->insert(unit); 
 	 }
 }

@@ -275,7 +275,7 @@ bool tankCanMakeSiegeModeAttackOnStructure(BWAPI::UnitInterface* unit) {
 
 bool CombatManager::fleeIfOutNumbered(Vulture* vulture, bool outNumbered) {
 	//Stop fleeing if not outnumbered, or near hydralisk
-	if (nearestHydra == NULL || outNumbered ) {
+	if (nearestHydra == NULL || !outNumbered) {
 		return false;
 	}
 	//Flee if near hydralisk

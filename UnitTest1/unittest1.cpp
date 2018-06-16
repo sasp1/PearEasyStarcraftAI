@@ -35,7 +35,7 @@ namespace UnitTest1
 		}
 
 		TEST_METHOD(shouldScoutCornerClockwise) {
-			ScoutingManager* manager = new ScoutingManager(Position(0,0), new MapData()); 
+			ScoutingManager* manager = new ScoutingManager(new MapData(), BroodwarPtr); 
 			
 			UnitMock* mock = new UnitMock(); 
 			

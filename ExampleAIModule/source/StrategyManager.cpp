@@ -30,7 +30,6 @@ bool tanksAreDesiredToBuild;
 bool hasExpanded = false;
 int retreats = 0;
 
-
 void StrategyManager::calculateOrders() {
 	//Update supply count, and update if workers should be built
 	supplyUsed = Broodwar->self()->supplyUsed() / 2;
@@ -58,9 +57,16 @@ void StrategyManager::calculateOrders() {
 	executionManager->executeOrders();
 }
 
+bool StrategyManager::isEnemyRushing()
+{
+	int zerglingsSpotted = scoutingManager->zerglings->size(); 
+	return zerglingsSpotted > MAX_ZERGLINGS_FOR_RUSH && broodWar->elapsedTime() < ZERG_RUSH_TIME; 
+}
+
 
 void StrategyManager::executeTwoFactory() {
 
+	
 	//___________________________Moving units________________________________
 	//Maintain 1 soldier for scouting
 	if (scoutingManager->scoutingUnits._Mysize() > 0) buildingManager->barrackBuild = UnitTypes::None;
@@ -266,6 +272,9 @@ StrategyManager::~StrategyManager()
 {
 }
 
-StrategyManager::StrategyManager()
+StrategyManager::StrategyManager(Game* _broodWar)
 {
+	broodWar = _broodWar; 
+	startTime = broodWar->elapsedTime();
+	enemyRace = broodWar->enemy()->getRace(); 
 }

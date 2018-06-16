@@ -25,7 +25,7 @@ namespace CombatManagerTests
 			vulture = new Vulture(unitMock, Position(1, 1), 0);
 			manager = new CombatManager();
 			mapData = new MapData();
-			manager->scoutingManager = new ScoutingManager(Position(1, 1), mapData);
+			manager->scoutingManager = new ScoutingManager( mapData, BroodwarPtr);
 			vultureUnitMock = new UnitMock(); 
 			vultureUnitMock->type = UnitTypes::Terran_Vulture; 
 		}
@@ -56,7 +56,7 @@ namespace CombatManagerTests
 			vulture = new Vulture(unitMock, BWAPI::Position(1, 1), 0);
 			manager = new CombatManager();
 			mapData = new MapData();
-			manager->scoutingManager = new ScoutingManager(Position(1, 1), mapData);
+			manager->scoutingManager = new ScoutingManager( mapData, BroodwarPtr);
 		}
 		TEST_METHOD(shouldNotFindNearestHydra) {
 

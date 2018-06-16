@@ -8,6 +8,7 @@ class ScoutingManager
 {
 	
 public:
+	Unitset* zerglings; 
 	BWAPI::Position lastEnemyBuildingPosition = BWAPI::Position(0, 0);
 	BWAPI::Position secondaryMineralFieldPosition = BWAPI::Position(0, 0);
 	BWAPI::Position defendBasePosition = BWAPI::Position(0, 0);
@@ -28,7 +29,7 @@ public:
 	bool enemyHasLurker = false;
 	int corner = 0;
 	std::list< BWAPI::UnitInterface*> scoutingUnits;
-	ScoutingManager(BWAPI::Position startingPosition, MapData* mapData);
+	ScoutingManager(MapData* mapData, Game* broodwar);
 	~ScoutingManager();
 	void setEnemyCorner(BWAPI::Position pos);
 	void ScoutingManager::addScout(BWAPI::UnitInterface* scout);

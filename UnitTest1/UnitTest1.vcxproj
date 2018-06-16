@@ -159,6 +159,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BroodWarMock.h" />
+    <ClInclude Include="PlayerMock.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="UnitMock.h" />
@@ -170,6 +171,7 @@
     <ClCompile Include="CustomUnitTests.cpp" />
     <ClCompile Include="ExecutionManagerTests.cpp" />
     <ClCompile Include="GatheringManagerTests.cpp" />
+    <ClCompile Include="PlayerMock.cpp" />
     <ClCompile Include="SpiralSearchTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -181,6 +183,7 @@
     <ClCompile Include="UnitManagerTests.cpp" />
     <ClCompile Include="UnitMock.cpp" />
     <ClCompile Include="unittest1.cpp" />
+    <ClCompile Include="ZergRushTests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

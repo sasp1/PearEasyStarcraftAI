@@ -91,10 +91,29 @@ void ConstructionManager::createBuilding(BWAPI::UnitType building, BWAPI::UnitIn
 }
 
 void ConstructionManager::createBuildingAtPos(BWAPI::UnitType building, BWAPI::UnitInterface* worker, BWAPI::Position pos) {
-	//Request construction af building at a specific location, and add worker to list
-	Worker* w = new Worker(worker);
-	w->initBuild(building, pos);
-	builders.push_back(w);
+	if (worker != NULL) {
+
+		worker->stop();
+
+		//Perform unique action for special buildings
+		if (building == BWAPI::UnitTypes::Terran_Command_Center) {
+			expandBase(worker);
+		}
+		else if (building == BWAPI::UnitTypes::Terran_Refinery) {
+			buildRefinery(worker);
+		}
+		else if (building == BWAPI::UnitTypes::Terran_Comsat_Station) {
+			buildingManager->addComSat = true;
+		}
+
+		//Request construction af building at a specific location, and add worker to list
+		else {
+			Worker* w = new Worker(worker);
+			w->initBuild(building, pos);
+			builders.push_back(w);
+		}
+	}
+
 }
 
 void ConstructionManager::requestFromDead(Worker* w) {
